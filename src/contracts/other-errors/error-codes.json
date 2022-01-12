@@ -1,0 +1,11 @@
+{
+    "required_environment_variables_loading_failed": "required_environment_variables_loading_failed",
+    "node_env_is_invalid": "node_env_is_invalid",
+    "sa_username_should_be_string": "sa_username_should_be_string",
+    "sa_password_should_be_string": "sa_password_should_be_string",
+    "app_host_should_be_string": "app_host_should_be_string",
+    "app_port_should_be_integer": "app_port_should_be_integer",
+    "app_exposed_port_should_be_integer": "app_exposed_port_should_be_integer",
+    "swagger_path_should_be_string": "swagger_path_should_be_string",
+    "webAppConfigs_should_be_object_not_undefined": "webAppConfigs_should_be_object_not_undefined"
+}

@@ -1,0 +1,6 @@
+{
+    "content_should_be_string": "content_should_be_string",
+    "title_should_be_string": "title_should_be_string",
+    "published_should_be_boolean": "published_should_be_boolean",
+    "userId_should_be_uuid_v4": "userId_should_be_uuid_v4"
+}
