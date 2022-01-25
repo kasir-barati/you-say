@@ -13,6 +13,7 @@ export interface webAppConfigs {
     };
     host: string;
     port: number;
+    baseUrl?: string;
     exposedPort: number;
     swaggerPath: string;
 }

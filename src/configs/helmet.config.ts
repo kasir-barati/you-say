@@ -1,9 +1,9 @@
 import { HelmetOptions } from 'helmet';
+import { registerAs } from '@nestjs/config';
 
-export function helmetConfigsGenerator(): {
-    helmetConfigs: HelmetOptions;
-} {
-    const helmetConfigs: HelmetOptions = {
+export default registerAs(
+    'helmetConfigs',
+    (): HelmetOptions => ({
         contentSecurityPolicy: true,
         crossOriginEmbedderPolicy: true,
         crossOriginOpenerPolicy: true,
@@ -19,7 +19,5 @@ export function helmetConfigsGenerator(): {
         permittedCrossDomainPolicies: true,
         referrerPolicy: true,
         xssFilter: true,
-    };
-
-    return { helmetConfigs };
-}
+    }),
+);

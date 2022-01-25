@@ -1,4 +1,5 @@
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { registerAs } from '@nestjs/config';
 
 // allowedOrigins restrict requests from unusual source
 const allowedOrigins = [
@@ -14,8 +15,9 @@ const allowedOrigins = [
     'null',
 ];
 
-export function corsConfigsGenerator(): { corsConfigs: CorsOptions } {
-    const corsConfigs: CorsOptions = {
+export default registerAs(
+    'corsConfigs',
+    (): CorsOptions => ({
         origin: function (origin, callback) {
             // allow requests with no origin
             // (like mobile apps or curl requests)
@@ -28,7 +30,5 @@ export function corsConfigsGenerator(): { corsConfigs: CorsOptions } {
             }
             return callback(null, true);
         },
-    };
-
-    return { corsConfigs };
-}
+    }),
+);

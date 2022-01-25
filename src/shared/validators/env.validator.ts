@@ -7,7 +7,7 @@ import {
     validateSync,
 } from 'class-validator';
 
-import { NodeEnv } from 'src/contracts/types/web.type';
+import { NodeEnv } from 'src/shared/types/web.type';
 import {
     app_exposed_port_should_be_integer,
     app_host_should_be_string,

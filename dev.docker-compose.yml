@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: you-say-postgresql
+    image: postgres:13
+    ports:
+    - "5432:5432"
+    volumes:
+    - /data/postgres:/data/postgres
+    env_file:
+    - docker.env
+    networks:
+    - postgres
+ 
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: you-say-pgadmin
+    image: dpage/pgadmin4
+    ports:
+    - "8080:80"
+    volumes:
+    - /data/pgadmin:/root/.pgadmin
+    env_file:
+    - docker.env
+    networks:
+    - postgres
+ 
+networks:
+  postgres:
+    driver: bridge

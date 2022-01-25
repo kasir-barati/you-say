@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
+import { ConsoleLogger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import csurf from 'csurf';
@@ -8,28 +9,31 @@ import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 // All general configs for RESTful API
-import { corsConfigsGenerator } from './configs/cors.config';
-import { helmetConfigsGenerator } from './configs/helmet.config';
-import { webAppConfigs } from './contracts/types/web.type';
+import corsConfig from './configs/cors.config';
+import helmetConfig from './configs/helmet.config';
+import winstonConfig from './configs/winston.config';
+import webAppConfig from './configs/web-app.config';
 
 // All Middleware
-import { csrfMiddlewareError } from './commons/middlewares/errors/csrf.middleware';
-import { csrfMiddleware } from './commons/middlewares/generals/csrf.middleware';
-
-import { webAppConfigs_should_be_object_not_undefined } from './contracts/other-errors/error-codes.json';
+import { csrfMiddlewareError } from './shared/middlewares/errors/csrf.middleware';
+import { csrfMiddleware } from './shared/middlewares/generals/csrf.middleware';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    const { corsConfigs } = corsConfigsGenerator();
-    const { helmetConfigs } = helmetConfigsGenerator();
-    const configService = app.get(ConfigService);
-    const appConfigs =
-        configService.get<webAppConfigs>('webAppConfigs');
-
-    if (!appConfigs) {
-        throw new Error(webAppConfigs_should_be_object_not_undefined);
-    }
-
+    const app = await NestFactory.create(AppModule, {
+        bufferLogs: true,
+    });
+    const webAppConfigs = app.get<ConfigType<typeof webAppConfig>>(
+        webAppConfig.KEY,
+    );
+    const corsConfigs = app.get<ConfigType<typeof corsConfig>>(
+        corsConfig.KEY,
+    );
+    const helmetConfigs = app.get<ConfigType<typeof helmetConfig>>(
+        helmetConfig.KEY,
+    );
+    const winstonConfigs = app.get<ConfigType<typeof winstonConfig>>(
+        winstonConfig.KEY,
+    );
     // initialize Swagger using the SwaggerModule class
     const documentBuilderConfig = new DocumentBuilder()
         .setTitle('Headless weblog')
@@ -44,6 +48,7 @@ async function bootstrap() {
         documentBuilderConfig,
     );
 
+    app.useLogger(app.get(ConsoleLogger));
     app.use(cookieParser());
     app.use(
         csurf({
@@ -55,8 +60,12 @@ async function bootstrap() {
     app.use(csrfMiddlewareError);
     app.enableCors(corsConfigs);
     app.use(helmet(helmetConfigs));
-    SwaggerModule.setup(appConfigs.swaggerPath, app, swaggerDocument);
+    SwaggerModule.setup(
+        webAppConfigs.swaggerPath,
+        app,
+        swaggerDocument,
+    );
 
-    await app.listen(appConfigs.port);
+    await app.listen(webAppConfigs.port);
 }
 bootstrap();
