@@ -17,7 +17,7 @@ import {
     sa_username_should_be_string,
     swagger_path_should_be_string,
     required_environment_variables_loading_failed,
-} from 'src/contracts/other-errors/error-codes.json';
+} from '@you-say/src/shared/contracts/other-errors/error-codes.json';
 
 class EnvironmentVariables {
     @IsEnum(NodeEnv, { message: node_env_is_invalid })

@@ -6,8 +6,7 @@ import helmet from 'helmet';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 
-import { AppModule } from './app.module';
-
+import { AppModule } from './app/app.module';
 // All general configs for RESTful API
 import corsConfig from './configs/cors.config';
 import helmetConfig from './configs/helmet.config';

@@ -3,12 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaService } from './prisma/prisma.service';
-import webAppConfig from './configs/web-app.config';
-import winstonConfig from './configs/winston.config';
-import { PostsModule } from './posts/posts.module';
-import { UsersModule } from './users/users.module';
-import { validate } from './shared/validators/env.validator';
+import { PrismaService } from '../prisma/prisma.service';
+import webAppConfig from '../configs/web-app.config';
+import winstonConfig from '../configs/winston.config';
+import { PostsModule } from '../packages/posts/posts.module';
+import { UsersModule } from '../packages/users/users.module';
+import { validate } from '../shared/validators/env.validator';
 
 @Module({
     imports: [

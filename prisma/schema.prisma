@@ -19,13 +19,29 @@ model Post {
   title     String
   content   String?
   published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    String?
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#now
+  createdAt DateTime @default(now())
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#updatedat
+  updatedAt DateTime @updatedAt
+  // https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
+  deletedAt DateTime?
+
+  @@map("posts")
 }
 
 model User {
-  id    Int     @id @default(dbgenerated("uuid"))
-  email String  @unique
-  name  String?
-  posts Post[]
+  id             String   @id @default(dbgenerated("uuid"))
+  name           String
+  family         String
+  posts          Post[]
+  email          String   @unique(map: "email_unique_constraint")
+  hashedPassword String
+  avatar         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  @@map("users")
 }

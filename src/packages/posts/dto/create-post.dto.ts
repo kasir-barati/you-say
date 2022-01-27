@@ -10,7 +10,7 @@ import {
     title_should_be_string,
     published_should_be_boolean,
     userId_should_be_uuid_v4,
-} from '../../contracts/class-validator-errors/error-codes.json';
+} from '@you-say/src/shared/contracts/class-validator-errors/error-codes.json';
 
 export class CreatePostDto {
     @IsString({ message: title_should_be_string })
