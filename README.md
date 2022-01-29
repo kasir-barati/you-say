@@ -60,12 +60,12 @@ $ npm run test:cov
 
 ## Support
 
-This repo is an GNU v3.0-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [Contribute in #copyleft projects like this one](https://github.com/nodejsdeveloperskh/node.js-weblog).
+This repo is an GNU v3.0-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [Contribute in #copyleft projects like this one](https://github.com/kasir-barati/you-say).
 
 ## Stay in touch
 
 -   Author - [Kasir Barati](https://www.linkedin.com/in/kasir-barati/)
--   Website/Portfolio - [nodejsdeveloperskh](https://nodejsdeveloperskh.github.io/)
+-   Website/Portfolio - [kasir-barati](https://kasir-barati.github.io/)
 
 ## License
 
