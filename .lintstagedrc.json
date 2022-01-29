@@ -1,4 +1,4 @@
 {
     "{src,apps,libs,test}/**/*.ts": "eslint --cache --fix",
-    "'**/*.ts' '**/*.js' '**/*.json'": "prettier --write"
+    "*.{ts,js,json}": "prettier --write"
 }
