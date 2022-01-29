@@ -21,7 +21,7 @@ import {
 
 class EnvironmentVariables {
     @IsEnum(NodeEnv, { message: node_env_is_invalid })
-    NODE_ENV!: NodeEnv;
+    NODE_ENV: NodeEnv;
 
     @IsOptional()
     @IsString({ message: sa_username_should_be_string })
@@ -32,13 +32,13 @@ class EnvironmentVariables {
     SA_PASSWORD?: string;
 
     @IsString({ message: app_host_should_be_string })
-    APP_HOST!: string;
+    APP_HOST: string;
 
     @IsInt({ message: app_port_should_be_integer })
-    APP_PORT!: number;
+    APP_PORT: number;
 
     @IsInt({ message: app_exposed_port_should_be_integer })
-    APP_EXPOSED_PORT!: number;
+    APP_EXPOSED_PORT: number;
 
     @IsOptional()
     @IsString({ message: swagger_path_should_be_string })

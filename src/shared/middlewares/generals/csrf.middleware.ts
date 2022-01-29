@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 export function csrfMiddleware(
-    req: any,
+    req: Request,
     res: Response,
     next: NextFunction,
 ) {

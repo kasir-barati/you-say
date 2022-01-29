@@ -5,7 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from '../prisma/prisma.service';
 import webAppConfig from '../configs/web-app.config';
-import winstonConfig from '../configs/winston.config';
+import winstonConfig from '../packages/logger/winston.config';
+import corsConfig from '../configs/cors.config';
+import helmetConfig from '../configs/helmet.config';
 import { PostsModule } from '../packages/posts/posts.module';
 import { UsersModule } from '../packages/users/users.module';
 import { validate } from '../shared/validators/env.validator';
@@ -15,7 +17,12 @@ import { validate } from '../shared/validators/env.validator';
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: ['.env'],
-            load: [webAppConfig, winstonConfig],
+            load: [
+                webAppConfig,
+                winstonConfig,
+                corsConfig,
+                helmetConfig,
+            ],
             cache: true,
             validate,
         }),
