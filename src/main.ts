@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigType } from '@nestjs/config';
-import { ConsoleLogger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import csurf from 'csurf';
@@ -17,10 +16,17 @@ import webAppConfig from './configs/web-app.config';
 import { csrfMiddlewareError } from './shared/middlewares/errors/csrf.middleware';
 import { csrfMiddleware } from './shared/middlewares/generals/csrf.middleware';
 
+// Services
+import { LoggerService } from './packages/logger/logger.service';
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
         bufferLogs: true,
     });
+
+    // Define custom logger
+    app.useLogger(app.get(LoggerService));
+
     const webAppConfigs = app.get<ConfigType<typeof webAppConfig>>(
         webAppConfig.KEY,
     );
@@ -33,6 +39,7 @@ async function bootstrap() {
     const winstonConfigs = app.get<ConfigType<typeof winstonConfig>>(
         winstonConfig.KEY,
     );
+
     // initialize Swagger using the SwaggerModule class
     const documentBuilderConfig = new DocumentBuilder()
         .setTitle('Headless weblog')
@@ -47,7 +54,6 @@ async function bootstrap() {
         documentBuilderConfig,
     );
 
-    app.useLogger(app.get(ConsoleLogger));
     app.use(cookieParser());
     app.use(
         csurf({
