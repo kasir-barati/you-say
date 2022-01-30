@@ -7,10 +7,10 @@ export function csrfMiddlewareError(
     res: Response,
     next: NextFunction,
 ) {
-    console.log(err);
-    console.log(req.body);
-    console.log(req.query);
-    console.log(req.headers);
+    // console.log(err);
+    // console.log(req.body);
+    // console.log(req.query);
+    // console.log(req.headers);
     if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
     // Tampered with cross-site request forgery!
