@@ -10,6 +10,7 @@ import corsConfig from '../configs/cors.config';
 import helmetConfig from '../configs/helmet.config';
 import { PostsModule } from '../packages/posts/posts.module';
 import { UsersModule } from '../packages/users/users.module';
+import { LoggerModule } from '../packages/logger/logger.module';
 import { validate } from '../shared/validators/env.validator';
 
 @Module({
@@ -28,6 +29,7 @@ import { validate } from '../shared/validators/env.validator';
         }),
         PostsModule,
         UsersModule,
+        LoggerModule,
     ],
     controllers: [AppController],
     providers: [AppService, PrismaService],
