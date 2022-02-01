@@ -2,29 +2,23 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { createLogger, Logger as WinstonLogger } from 'winston';
 import { ConfigType } from '@nestjs/config';
 
-import webAppConfig from '@you-say/src/configs/web-app.config';
-import { NodeEnv } from '@you-say/src/shared/types/web.type';
 import {
     DebugParams,
     ErrorParams,
     VerboseParams,
     WarnParams,
-    WinstonDefaultLogLevels,
 } from './logger.type';
-import winstonConfig from './winston.config';
+import loggerConfig from './logger.config';
+import { winstonTransports } from './winston.transport';
 
 @Injectable()
 export class LoggerService extends Logger {
     private winstonLogger: WinstonLogger;
+
     constructor(
-        context: string,
-        @Inject(winstonConfig.KEY)
-        private readonly winstonConfigs: ConfigType<
-            typeof winstonConfig
-        >,
-        @Inject(webAppConfig.KEY)
-        private readonly webAppConfigs: ConfigType<
-            typeof webAppConfig
+        @Inject(loggerConfig.KEY)
+        private readonly loggerConfigs: ConfigType<
+            typeof loggerConfig
         >,
     ) {
         super();
@@ -36,27 +30,24 @@ export class LoggerService extends Logger {
         // webAppConfigs.nodeEnv === NodeEnv.production
         //     ? 'warn'
         //     : 'silly',
-        this.winstonLogger = createLogger({
-            ...this.winstonConfigs,
-            level:
-                this.webAppConfigs.nodeEnv === NodeEnv.production
-                    ? WinstonDefaultLogLevels.warn
-                    : WinstonDefaultLogLevels.silly,
-            defaultMeta: { context },
-        });
+        const winstonTransporters = winstonTransports(
+            this.loggerConfigs,
+        );
+
+        this.winstonLogger = createLogger(winstonTransporters);
     }
 
     /**
      * Write a 'log' level log, if the configured level allows for it.
      * Prints to `stdout` with newline.
      */
-    info(message: any): void;
+    info(message: any, context: string): void;
     info(message: any, ...optionalParams: [...any, string?]): void;
-    info(message: any, optionalParams?: string): void {
-        if (typeof optionalParams === 'string') {
-            this.winstonLogger.info(message, optionalParams);
+    info(message: any, contextOrOptionalParams?: string): void {
+        if (typeof contextOrOptionalParams === 'string') {
+            this.winstonLogger.info(message, contextOrOptionalParams);
         } else {
-            this.winstonLogger.info(message, optionalParams);
+            this.winstonLogger.info(message, contextOrOptionalParams);
         }
     }
 

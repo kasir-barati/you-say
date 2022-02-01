@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from '../prisma/prisma.service';
 import webAppConfig from '../configs/web-app.config';
-import winstonConfig from '../packages/logger/winston.config';
+import loggerConfig from '../packages/logger/logger.config';
 import corsConfig from '../configs/cors.config';
 import helmetConfig from '../configs/helmet.config';
 import { PostsModule } from '../packages/posts/posts.module';
@@ -20,7 +20,7 @@ import { validate } from '../shared/validators/env.validator';
             envFilePath: ['.env'],
             load: [
                 webAppConfig,
-                winstonConfig,
+                loggerConfig,
                 corsConfig,
                 helmetConfig,
             ],

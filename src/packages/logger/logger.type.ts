@@ -22,6 +22,14 @@ export interface VerboseParams {
     anything: any;
 }
 
+export interface LoggerConfig {
+    level: WinstonDefaultLogLevels;
+    isRotateLoggerFilesActivated: boolean;
+    loggerName: string;
+    loggerMaxSize: string;
+    loggerMaxFile: string;
+}
+
 export enum WinstonDefaultLogLevels {
     error = 'error',
     warn = 'warn',

@@ -18,8 +18,9 @@ import {
     swagger_path_should_be_string,
     required_environment_variables_loading_failed,
 } from '@you-say/src/shared/contracts/other-errors/error-codes.json';
+import { LoggerEnvironmentVariables } from '@you-say/src/packages/logger/logger-env.validator';
 
-class EnvironmentVariables {
+class EnvironmentVariables extends LoggerEnvironmentVariables {
     @IsEnum(NodeEnv, { message: node_env_is_invalid })
     NODE_ENV: NodeEnv;
 

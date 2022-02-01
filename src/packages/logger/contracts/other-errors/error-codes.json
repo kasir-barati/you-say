@@ -1,0 +1,7 @@
+{
+    "logger_level_is_invalid": "logger_level_is_invalid",
+    "logger_max_size_should_be_string": "logger_max_size_should_be_string",
+    "logger_max_files_should_be_string": "logger_max_files_should_be_string",
+    "is_rotate_logger_files_activated_should_be_boolean": "is_rotate_logger_files_activated_should_be_boolean",
+    "logger_name_should_be_string": "logger_name_should_be_string"
+}
