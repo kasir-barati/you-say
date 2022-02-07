@@ -19,17 +19,11 @@ import { csrfMiddleware } from './shared/middlewares/generals/csrf.middleware';
 import { LoggerService } from './packages/logger/logger.service';
 
 async function bootstrap() {
-    const app = await NestFactory.create(
-        AppModule,
-        // {
-        //     bufferLogs: true,
-        // }
-    );
+    const app = await NestFactory.create(AppModule, {
+        bufferLogs: true,
+    });
 
-    // Define custom logger
-    //                 BUG:
-    // It will never print logs in terminal
-    // app.useLogger(app.get(LoggerService));
+    app.useLogger(app.get(LoggerService));
 
     const webAppConfigs = app.get<ConfigType<typeof webAppConfig>>(
         webAppConfig.KEY,

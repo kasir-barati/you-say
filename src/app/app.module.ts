@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from '../prisma/prisma.service';
 import webAppConfig from '../configs/web-app.config';
-import loggerConfig from '../packages/logger/logger.config';
 import corsConfig from '../configs/cors.config';
 import helmetConfig from '../configs/helmet.config';
 import { PostsModule } from '../packages/posts/posts.module';
@@ -16,14 +15,8 @@ import { validate } from '../shared/validators/env.validator';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            isGlobal: true,
             envFilePath: ['.env'],
-            load: [
-                webAppConfig,
-                loggerConfig,
-                corsConfig,
-                helmetConfig,
-            ],
+            load: [webAppConfig, corsConfig, helmetConfig],
             cache: true,
             validate,
         }),
