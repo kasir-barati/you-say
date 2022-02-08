@@ -1,5 +1,3 @@
-/// <reference path="./src/packages/logger/module.d.ts" />
-
 import { NodeEnv } from './src/shared/types/web.type';
 
 import 'src/packages/logger/module';
