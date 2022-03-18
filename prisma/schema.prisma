@@ -15,16 +15,16 @@ generator prismaClassGenerator {
 }
 
 model Post {
-  id        Int     @id @default(dbgenerated("uuid"))
+  id        Int       @id @default(dbgenerated("uuid"))
   title     String
   content   String?
-  published Boolean @default(false)
-  user      User?   @relation(fields: [userId], references: [id])
+  published Boolean   @default(false)
+  user      User?     @relation(fields: [userId], references: [id])
   userId    String?
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#now
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#updatedat
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
   // https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
   deletedAt DateTime?
 
@@ -32,16 +32,31 @@ model Post {
 }
 
 model User {
-  id             String   @id @default(dbgenerated("uuid"))
+  id             String    @id @default(dbgenerated("uuid"))
   name           String
   family         String
   posts          Post[]
-  email          String   @unique(map: "email_unique_constraint")
+  email          String    @unique(map: "email_unique_constraint")
   hashedPassword String
   avatar         String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
+  Admin Admin?
+
   @@map("users")
+}
+
+model Admin {
+  id        String   @unique(map: "admin_id_unique_constraint")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Rlationships
+  userId String @unique @map("user_id")
+  User   User   @relation(references: [id], fields: [userId])
+
+  @@id([userId, id])
+  @@map("admins")
 }

@@ -24,6 +24,8 @@ async function bootstrap() {
     });
 
     app.useLogger(app.get(LoggerService));
+    app.setGlobalPrefix('api/v1');
+    app.use(json({ limit: '20mb' }));
 
     const webAppConfigs = app.get<ConfigType<typeof webAppConfig>>(
         webAppConfig.KEY,
@@ -43,6 +45,7 @@ async function bootstrap() {
         )
         .setVersion('1.0')
         .addTag('weblog')
+        .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' })
         .build();
     const swaggerDocument = SwaggerModule.createDocument(
         app,
@@ -60,11 +63,14 @@ async function bootstrap() {
     app.use(csrfMiddlewareError);
     app.enableCors(corsConfigs);
     app.use(helmet(helmetConfigs));
-    SwaggerModule.setup(
-        webAppConfigs.swaggerPath,
-        app,
-        swaggerDocument,
-    );
+
+    if (process.env.SWAGGER) {
+        SwaggerModule.setup(
+            webAppConfigs.swaggerPath,
+            app,
+            swaggerDocument,
+        );
+    }
 
     await app.listen(webAppConfigs.port);
 }
