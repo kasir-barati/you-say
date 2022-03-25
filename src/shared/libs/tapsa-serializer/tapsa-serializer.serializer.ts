@@ -1,4 +1,4 @@
-import { Pagination } from '@src/shared/libs/tapsa-repository/tapsa-repository.type';
+import { Pagination } from '@you-say/src/shared/libs/tapsa-repository/tapsa-repository.type';
 
 import {
     PaginatedSerializable,

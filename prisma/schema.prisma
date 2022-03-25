@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -56,7 +56,38 @@ model Admin {
   // Rlationships
   userId String @unique @map("user_id")
   User   User   @relation(references: [id], fields: [userId])
+  Files  File[]
 
   @@id([userId, id])
   @@map("admins")
+}
+
+model File {
+  id        String   @id
+  filename  String   @db.VarChar(500)
+  size      Int?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relationships
+  adminUserId String   @map("admin_user_id")
+  adminId     String   @map("admin_id")
+  Admin       Admin    @relation(fields: [adminId, adminUserId], references: [userId, id])
+  mimetypeKey String
+  Mimetype    Mimetype @relation(fields: [mimetypeKey], references: [key])
+
+  @@map("files")
+}
+
+model Mimetype {
+  key                   String   @id
+  value                 String   @unique(map: "mime_type_value_unique_constraint")
+  maximumSizeInMegabyte Int      @db.SmallInt
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relationships
+  Files File[]
+
+  @@map("mime_types")
 }

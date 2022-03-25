@@ -49,11 +49,14 @@ export class SerializerInterceptor implements NestInterceptor {
                 }),
             );
 
-            return serializedProperties.reduce((result, { key, value }) => {
-                result[key] = value;
+            return serializedProperties.reduce(
+                (result, { key, value }) => {
+                    (result as any)[key] = value;
 
-                return result;
-            }, {});
+                    return result;
+                },
+                {},
+            );
         }
     }
 

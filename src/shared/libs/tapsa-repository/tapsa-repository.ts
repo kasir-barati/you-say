@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 
-import { Id } from '@src/shared/types';
 import {
     IPaginationLinks,
     IPaginationOptions,
@@ -41,14 +40,21 @@ export abstract class BasePrismaRepository<
         const hasPreviousPage = route && currentPage > 1;
         const hasNextPage = route && currentPage < totalPages;
         const hasLastPage = route;
-        const symbol = route && new RegExp(/\?/).test(route) ? '&' : '?';
+        const symbol =
+            route && new RegExp(/\?/).test(route) ? '&' : '?';
         const routes: IPaginationLinks = {
-            first: hasFirstPage ? `${route}${symbol}take=${take}` : '',
+            first: hasFirstPage
+                ? `${route}${symbol}take=${take}`
+                : '',
             previous: hasPreviousPage
-                ? `${route}${symbol}page=${currentPage - 1}&take=${take}`
+                ? `${route}${symbol}page=${
+                      currentPage - 1
+                  }&take=${take}`
                 : '',
             next: hasNextPage
-                ? `${route}${symbol}page=${currentPage + 1}&take=${take}`
+                ? `${route}${symbol}page=${
+                      currentPage + 1
+                  }&take=${take}`
                 : '',
             last: hasLastPage
                 ? `${route}${symbol}page=${totalPages}&take=${take}`
@@ -70,7 +76,7 @@ export abstract class BasePrismaRepository<
 
     resolveOptions(
         paginationOptions: IPaginationOptions,
-    ): [number, number, string] {
+    ): [number, number, string | undefined] {
         const page = paginationOptions.page;
         const take = paginationOptions.take;
         const route = paginationOptions.route;
@@ -83,14 +89,21 @@ export abstract class BasePrismaRepository<
         paginationOptions: IPaginationOptions,
         obj: GA,
     ): Promise<Pagination<Tentity>> {
-        const [page, take, route] = this.resolveOptions(paginationOptions);
+        const [page, take, route] =
+            this.resolveOptions(paginationOptions);
 
         if (page < 1) {
-            return this.createPaginationObject([], 0, page, take, route);
+            return this.createPaginationObject(
+                [],
+                0,
+                page,
+                take,
+                route,
+            );
         }
 
         const skip = this.calculateOffset(take, page);
-        const totalCount = await this.count(obj.where);
+        const totalCount = await this.count(obj.where!);
         const itemIds =
             totalCount > 0
                 ? (
@@ -100,7 +113,7 @@ export abstract class BasePrismaRepository<
                           take: take,
                           skip: skip,
                       })
-                  ).map((i: { id: Id }) => i.id)
+                  ).map((i: { id: string }) => i.id)
                 : [];
 
         obj.where = { id: { in: itemIds } };
@@ -121,13 +134,17 @@ export abstract class BasePrismaRepository<
             return await this.repo.create(obj);
         } catch (error) {
             if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2002'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2002'
             ) {
                 throw new EntityDuplicate('entity is duplicated');
             } else if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2025'
             ) {
-                throw new EntityRelationNotFound('relation entities not found');
+                throw new EntityRelationNotFound(
+                    'relation entities not found',
+                );
             } else {
                 throw error;
             }
@@ -139,16 +156,20 @@ export abstract class BasePrismaRepository<
             return await this.repo.update(obj);
         } catch (error) {
             if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2002'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2002'
             ) {
                 throw new EntityDuplicate('entity is duplicated');
             } else if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2025'
             ) {
                 if (
-                    (error as Prisma.PrismaClientKnownRequestError).meta[
-                        'cause'
-                    ] === 'Record to update not found.'
+                    (
+                        (
+                            error as Prisma.PrismaClientKnownRequestError
+                        ).meta as any
+                    )['cause'] === 'Record to update not found.'
                 ) {
                     throw new EntityNotFound('entity not found');
                 } else {
@@ -167,13 +188,17 @@ export abstract class BasePrismaRepository<
             return await this.repo.updateMany(obj);
         } catch (error) {
             if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2002'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2002'
             ) {
                 throw new EntityDuplicate('entity is duplicated');
             } else if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2025'
             ) {
-                throw new EntityNotFound('relation entities not found');
+                throw new EntityNotFound(
+                    'relation entities not found',
+                );
             } else {
                 throw error;
             }
@@ -213,7 +238,8 @@ export abstract class BasePrismaRepository<
             await this.repo.delete(obj);
         } catch (error) {
             if (
-                (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
+                (error as Prisma.PrismaClientKnownRequestError)
+                    .code === 'P2025'
             ) {
                 throw new EntityNotFound('relation not found');
             } else {

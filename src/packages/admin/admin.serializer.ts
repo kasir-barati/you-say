@@ -17,6 +17,7 @@ export class AdminSerializer extends BaseSerializer<
         if (outputType === 'AdminRoDto') {
             return new AdminRoDto(admin);
         }
+        return new AdminRoDto(admin);
     }
 
     public async serializePaginated(
@@ -26,6 +27,12 @@ export class AdminSerializer extends BaseSerializer<
         let paginated: Pagination<AdminRoDto>;
 
         if (outputType === 'AdminRoDto') {
+            paginated = new Pagination<AdminRoDto>(
+                value.items.map((admin) => new AdminRoDto(admin)),
+                value.meta,
+                value.links,
+            );
+        } else {
             paginated = new Pagination<AdminRoDto>(
                 value.items.map((admin) => new AdminRoDto(admin)),
                 value.meta,

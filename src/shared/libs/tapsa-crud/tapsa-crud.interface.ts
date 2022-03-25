@@ -1,5 +1,5 @@
-import { IPaginationOptions } from '@src/shared/libs/tapsa-repository/tapsa-repository.interface';
-import { Pagination } from '@src/shared/libs/tapsa-repository/tapsa-repository.type';
+import { IPaginationOptions } from '@you-say/src/shared/libs/tapsa-repository/tapsa-repository.interface';
+import { Pagination } from '@you-say/src/shared/libs/tapsa-repository/tapsa-repository.type';
 
 export interface IBaseService<Tentity> {
     add(entity: Tentity, include?: Record<string, any>): Promise<Tentity>;

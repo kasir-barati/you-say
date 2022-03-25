@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
+import { json } from 'express';
 
 import { AppModule } from './app/app.module';
 // All general configs for RESTful API
@@ -45,7 +46,12 @@ async function bootstrap() {
         )
         .setVersion('1.0')
         .addTag('weblog')
-        .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' })
+        .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            in: 'header',
+        })
         .build();
     const swaggerDocument = SwaggerModule.createDocument(
         app,

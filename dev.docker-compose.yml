@@ -9,7 +9,7 @@ services:
     volumes:
     - /data/postgres:/data/postgres
     env_file:
-    - docker.env
+    - .postgresql.env
     networks:
     - postgres
  
@@ -17,13 +17,13 @@ services:
     links:
       - postgres:postgres
     container_name: you-say-pgadmin
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:6.5
     ports:
     - "8080:80"
     volumes:
     - /data/pgadmin:/root/.pgadmin
     env_file:
-    - docker.env
+    - .pgadmin.env
     networks:
     - postgres
  

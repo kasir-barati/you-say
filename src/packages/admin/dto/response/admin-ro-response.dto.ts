@@ -1,5 +1,5 @@
 import { File, User } from '@prisma/client';
-import { AdminWithRelations } from '@src/admin/admin.type';
+import { AdminWithRelations } from '../../admin.type';
 
 export class AdminRoDto {
     id: string;
