@@ -15,51 +15,78 @@ generator prismaClassGenerator {
 }
 
 model Post {
-  id        Int       @id @default(dbgenerated("uuid"))
+  id        Int     @id @default(dbgenerated("uuid"))
   title     String
   content   String?
-  published Boolean   @default(false)
+  published Boolean @default(false)
+
+  // relationshipts
   user      User?     @relation(fields: [userId], references: [id])
-  userId    String?
+  userId    String?   @map("user_id")
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#now
-  createdAt DateTime  @default(now())
+  createdAt DateTime  @default(now()) @map("created_at")
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#updatedat
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @map("updated_at")
   // https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
-  deletedAt DateTime?
+  deletedAt DateTime? @map("delated_at")
 
   @@map("posts")
 }
 
 model User {
-  id             String    @id @default(dbgenerated("uuid"))
+  id             String    @id @db.Char(21) // nanoid
   name           String
   family         String
-  posts          Post[]
-  email          String    @unique(map: "email_unique_constraint")
-  hashedPassword String
+  email          String    @unique(map: "user_email_unique_constraints")
+  username       String    @unique(map: "user_username_unique_constraints") @db.Char(200)
+  hashedPassword String    @map("hashed_password")
   avatar         String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
   deletedAt      DateTime?
 
-  Admin Admin?
-
+  // Relationships
+  Account Account?
+  Files   File[]
+  posts   Post[]
   @@map("users")
 }
 
-model Admin {
-  id        String   @unique(map: "admin_id_unique_constraint")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model Account {
+  id     String @unique(map: "account_id_constraints") @db.Char(21) // nanoid
+  userId String @unique(map: "account_user_id_constraints") @map("user_id") @db.VarChar(21)
+  bio    String @db.VarChar(500)
 
-  // Rlationships
-  userId String @unique @map("user_id")
-  User   User   @relation(references: [id], fields: [userId])
-  Files  File[]
+  // Relationships
+  skills AccountSkill[]
+  User   User           @relation(fields: [userId], references: [id], map: "account_user_id_fkey")
+  // TODO:
+  // feedbackedTo, and responededTo, is many to many self relationship
+  // followers, and following, is many to many self relationship
+  // accountFriends, and friendTo is another many to many self relationship
+  @@id(fields: [id, userId], name: "account_id")
+  @@map("accounts")
+}
 
-  @@id([userId, id])
-  @@map("admins")
+model AccountSkill {
+  experienceLevel    String @db.VarChar(20)
+  yearsOffExperience Int    @db.SmallInt
+
+  skillId   String @map("account_skill_skill_id") @db.Char(21)
+  accountId String @map("account_skill_account_id") @db.Char(21)
+
+  Account       Account? @relation(fields: [accountId, accountUserId], references: [id, userId])
+  accountUserId String?  @db.VarChar(21)
+  Skill         Skill    @relation(fields: [skillId], references: [id])
+  @@id(fields: [skillId, accountId])
+}
+
+model Skill {
+  id    String @id @db.Char(21) // nanoid
+  title String @db.VarChar(255)
+
+  // Relationships
+  Account AccountSkill[]
 }
 
 model File {
@@ -70,9 +97,8 @@ model File {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relationships
-  adminUserId String   @map("admin_user_id")
-  adminId     String   @map("admin_id")
-  Admin       Admin    @relation(fields: [adminId, adminUserId], references: [userId, id])
+  userId      String   @map("user_id")
+  User        User?    @relation(fields: [userId], references: [id])
   mimetypeKey String
   Mimetype    Mimetype @relation(fields: [mimetypeKey], references: [key])
 
