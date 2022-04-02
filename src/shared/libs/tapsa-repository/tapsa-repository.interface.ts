@@ -54,8 +54,14 @@ export interface IRepository<Tentity> {
         queryOptions?: Record<string, any>,
         include?: Record<string, any>,
     ): Promise<Tentity>;
-    remove(where: Record<string, any>, checkExist?: boolean): Promise<void>;
-    removeOne(where: Record<string, any>, checkExist?: boolean): Promise<void>;
+    remove(
+        where: Record<string, any>,
+        checkExist?: boolean,
+    ): Promise<void>;
+    removeOne(
+        where: Record<string, any>,
+        checkExist?: boolean,
+    ): Promise<void>;
     get(
         fields?: string[],
         where?: Record<string, any>,

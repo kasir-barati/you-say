@@ -2,7 +2,10 @@ import { IPaginationOptions } from '@you-say/src/shared/libs/tapsa-repository/ta
 import { Pagination } from '@you-say/src/shared/libs/tapsa-repository/tapsa-repository.type';
 
 export interface IBaseService<Tentity> {
-    add(entity: Tentity, include?: Record<string, any>): Promise<Tentity>;
+    add(
+        entity: Tentity,
+        include?: Record<string, any>,
+    ): Promise<Tentity>;
 
     editOne(
         where: Record<string, any>,
@@ -23,7 +26,10 @@ export interface IBaseService<Tentity> {
         include?: Record<string, any>,
     ): Promise<Tentity>;
 
-    remove(where: Record<string, any>, checkExist?: boolean): Promise<void>;
+    remove(
+        where: Record<string, any>,
+        checkExist?: boolean,
+    ): Promise<void>;
 
     get(
         fields?: string[] | string,

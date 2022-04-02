@@ -11,7 +11,8 @@ export class FileRoDto {
         // adminId,
         // adminUserId,
         // size,
-        const { mimetypeKey, id, createdAt, updatedAt, filename } = file;
+        const { mimetypeKey, id, createdAt, updatedAt, filename } =
+            file;
         this.id = id;
         this.mimetypeKey = mimetypeKey;
         this.filename = filename;

@@ -9,6 +9,7 @@ export class PostsService {
     constructor(private readonly loggerService: LoggerService) {}
 
     create(createPostDto: CreatePostDto) {
+        createPostDto;
         this.loggerService.info('Hello winston');
         return 'This action adds a new post';
     }
@@ -22,6 +23,7 @@ export class PostsService {
     }
 
     update(id: string, updatePostDto: UpdatePostDto) {
+        updatePostDto;
         return `This action updates a #${id} post`;
     }
 

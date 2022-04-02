@@ -4,7 +4,6 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 import { ServiceErrorMessage } from '.';
 import { BasePrismaRepository } from '../tapsa-repository';
@@ -47,7 +46,9 @@ export abstract class BaseService<
             return await this.repo.add(obj);
         } catch (error) {
             if (error instanceof EntityRelationNotFound) {
-                throw new NotFoundException('مجودیت یکی از روابط یافت نشد');
+                throw new NotFoundException(
+                    'مجودیت یکی از روابط یافت نشد',
+                );
             } else if (error instanceof EntityDuplicate) {
                 throw new HttpException(
                     this.errorMessage.DUPLICATE,
@@ -63,9 +64,13 @@ export abstract class BaseService<
             return await this.repo.editOne(obj);
         } catch (error) {
             if (error instanceof EntityNotFound) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             } else if (error instanceof EntityRelationNotFound) {
-                throw new NotFoundException('مجودیت یکی از روابط یافت نشد');
+                throw new NotFoundException(
+                    'مجودیت یکی از روابط یافت نشد',
+                );
             } else if (error instanceof EntityDuplicate) {
                 throw new HttpException(
                     this.errorMessage.DUPLICATE,
@@ -81,7 +86,9 @@ export abstract class BaseService<
             await this.repo.edit(obj);
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             } else if (error instanceof EntityDuplicate) {
                 throw new HttpException(
                     this.errorMessage.DUPLICATE,
@@ -107,7 +114,9 @@ export abstract class BaseService<
             return result;
         } catch (error) {
             if (error instanceof EntityNotFound) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             }
             throw new InternalServerErrorException(error);
         }
@@ -126,7 +135,10 @@ export abstract class BaseService<
         obj: GA,
     ): Promise<Pagination<Tentity>> {
         try {
-            return await this.repo.getAndPaginate(paginationOptions, obj);
+            return await this.repo.getAndPaginate(
+                paginationOptions,
+                obj,
+            );
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
@@ -144,7 +156,9 @@ export abstract class BaseService<
             await this.repo.checkExistOrFail(obj, false);
         } catch (error) {
             if (error instanceof EntityNotFound) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             }
             throw new InternalServerErrorException(error);
         }
@@ -155,7 +169,9 @@ export abstract class BaseService<
             return await this.repo.remove(obj);
         } catch (error) {
             if (error instanceof EntityNotFound) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             }
             throw new InternalServerErrorException(error);
         }
@@ -166,7 +182,9 @@ export abstract class BaseService<
             return await this.repo.removeOne(obj);
         } catch (error) {
             if (error instanceof EntityNotFound) {
-                throw new NotFoundException(this.errorMessage.NOT_FOUND);
+                throw new NotFoundException(
+                    this.errorMessage.NOT_FOUND,
+                );
             }
             throw new InternalServerErrorException(error);
         }
