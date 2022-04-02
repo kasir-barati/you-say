@@ -8,9 +8,9 @@ import { json } from 'express';
 
 import { AppModule } from './app/app.module';
 // All general configs for RESTful API
-import corsConfig from './configs/cors.config';
-import helmetConfig from './configs/helmet.config';
-import webAppConfig from './configs/web-app.config';
+import corsConfig from './app/configs/cors.config';
+import helmetConfig from './app/configs/helmet.config';
+import webAppConfig from './app/configs/web-app.config';
 
 // All Middleware
 import { csrfMiddlewareError } from './shared/middlewares/errors/csrf.middleware';

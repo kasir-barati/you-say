@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Matches, MaxLength, MinLength } from 'class-validator';
 
-const usernameRegex = /^[\w+\d_\-.]+$/gi;
+import {
+    passwordAtLeastTwoLowerCaseLetter,
+    passwordAtLeastTwoNumber,
+    passwordAtLeastTwoUpperCaseLetter,
+    passwordSpecialCharRegex,
+    usernameRegex,
+} from '@you-say/src/shared/contracts/statics-values/static-values';
 
 export class LoginUserRequestDto {
     @ApiProperty({
@@ -23,13 +29,17 @@ export class LoginUserRequestDto {
     @ApiProperty({
         name: 'password',
         title: 'password',
-        description:
-            'Password should follow these rules: at least 2 number, at least 2 upper case letter, at least 2 lower case letter and minimum length o 12',
-        example: 'This Is 123.',
+        description: `Password should be at least 8 character, contains ${passwordSpecialCharRegex}, and be a combination of numbers and words`,
+        example: '123aBBc@#!',
         minLength: 12,
+        type: String,
         isArray: false,
         required: true,
-        type: String,
     })
-    passport: string;
+    @MinLength(12)
+    @Matches(passwordSpecialCharRegex)
+    @Matches(passwordAtLeastTwoLowerCaseLetter)
+    @Matches(passwordAtLeastTwoUpperCaseLetter)
+    @Matches(passwordAtLeastTwoNumber)
+    password: string;
 }

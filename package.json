@@ -17,7 +17,7 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "test:e2e": "jest --config ./test/jest-e2e.ts --watch",
         "prepare": "husky install"
     },
     "dependencies": {
@@ -30,6 +30,8 @@
         "@nestjs/platform-express": "^8.0.0",
         "@nestjs/swagger": "^5.1.5",
         "@prisma/client": "^3.8.1",
+        "@types/bcryptjs": "^2.4.2",
+        "bcryptjs": "^2.4.3",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.13.2",
         "cookie-parser": "^1.4.6",

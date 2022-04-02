@@ -1,27 +1,70 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { BaseService } from '@you-say/src/shared/libs/tapsa-crud';
+import { CreateUserRequestDto } from './dto';
+import bcryptjs from 'bcryptjs';
 
-import { CreateUserDto } from './dto/request/create-user.dto';
-import { UpdateUserDto } from './dto/request/update-user.dto';
+import { UserWithRelations } from './types/user.type';
+import { UserRepository } from './users-repository';
+import { nanoidGenerator } from '@you-say/src/shared/helpers/nanoid-generator.helper';
 
 @Injectable()
-export class UsersService {
-    create(createUserDto: CreateUserDto) {
-        return 'This action adds a new user';
+export class UsersService extends BaseService<
+    UserWithRelations,
+    Prisma.UserCreateArgs,
+    Prisma.UserUpdateArgs,
+    Prisma.UserUpdateManyArgs,
+    Prisma.UserFindFirstArgs,
+    Prisma.UserFindManyArgs,
+    Prisma.UserDeleteArgs,
+    Prisma.UserDeleteManyArgs
+> {
+    constructor(public userRepository: UserRepository) {
+        super(userRepository, {
+            DUPLICATE: 'Duplicate user',
+            NOT_FOUND: 'User not found',
+        });
     }
 
-    findAll() {
-        return `This action returns all users`;
+    async create(
+        createUserRequestDto: CreateUserRequestDto,
+    ): Promise<UserWithRelations> {
+        const hashedPassword = this.hashPassword(
+            createUserRequestDto.password,
+        );
+        const { avatar, email, username, family, name } =
+            createUserRequestDto;
+
+        return this.add({
+            data: {
+                id: nanoidGenerator(),
+                hashedPassword: await hashedPassword,
+                avatar,
+                email,
+                username,
+                family,
+                name,
+            },
+        });
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} user`;
+    comparePassword({
+        plainTextPassword,
+        hashedPassword,
+    }: {
+        plainTextPassword: string;
+        hashedPassword: string;
+    }) {
+        return bcryptjs.compare(plainTextPassword, hashedPassword);
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        return `This action updates a #${id} user`;
-    }
+    async hashPassword(plainTextPassword: string): Promise<string> {
+        const salt = bcryptjs.genSalt(10);
+        const hashedPassword = bcryptjs.hash(
+            plainTextPassword,
+            await salt,
+        );
 
-    remove(id: number) {
-        return `This action removes a #${id} user`;
+        return await hashedPassword;
     }
 }

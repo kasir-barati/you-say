@@ -1,7 +1,13 @@
 import { customAlphabet } from 'nanoid';
 
-const PUBLIC_ID_SEED = '123456789ACDFGHJKLPQRSTUVWXYZ';
+const PUBLIC_ID_SEED =
+    '_-acdfghjklpqrstuvwxyz123456789ACDFGHJKLPQRSTUVWXYZ';
 
-export function nanoidGenerator(length = 20) {
+/**
+ *
+ * @param {number} length The predefined value in the prisma.schema
+ * @returns {string}
+ */
+export function nanoidGenerator(length = 21) {
     return customAlphabet(PUBLIC_ID_SEED, length)();
 }

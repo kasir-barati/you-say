@@ -1,4 +1,21 @@
 {
     "collection": "@nestjs/schematics",
-    "sourceRoot": "src"
+    "sourceRoot": "src",
+    "compilerOptions": {
+        "deleteOutDir": true,
+        "plugins": [
+            {
+                "name": "@nestjs/swagger",
+                "options": {
+                    "classValidatorShim": false,
+                    "introspectComments": true
+                }
+            }
+        ],
+        "assets": [
+            { "include": "**/*.hbs", "outDir": "dist/src" },
+            { "include": "**/*.xml", "outDir": "dist/src" }
+        ],
+        "watchAssets": true
+    }
 }

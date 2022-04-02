@@ -35,12 +35,12 @@ model Post {
 
 model User {
   id             String    @id @db.Char(21) // nanoid
-  name           String
-  family         String
-  email          String    @unique(map: "user_email_unique_constraints")
+  name           String?   @db.Char(200)
+  family         String?   @db.Char(200)
+  email          String    @unique(map: "user_email_unique_constraints") @db.VarChar(320)
   username       String    @unique(map: "user_username_unique_constraints") @db.Char(200)
   hashedPassword String    @map("hashed_password")
-  avatar         String
+  avatar         String?
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
   deletedAt      DateTime?
@@ -48,7 +48,7 @@ model User {
   // Relationships
   Account Account?
   Files   File[]
-  posts   Post[]
+  Posts   Post[]
   @@map("users")
 }
 
