@@ -18,7 +18,9 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.ts --watch",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "compose:dev:up": "docker-compose -f dev.docker-compose.yml up",
+        "compose:dev:down": "docker-compose -f dev.docker-compose.yml down --remove-orphans"
     },
     "dependencies": {
         "@nestjs/common": "^8.0.0",
