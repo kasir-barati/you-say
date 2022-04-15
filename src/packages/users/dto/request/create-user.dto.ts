@@ -110,7 +110,7 @@ export class CreateUserRequestDto {
     })
     @Match(
         CreateUserRequestDto,
-        (CreateUserRequestDto) => CreateUserRequestDto.password,
+        (createUserRequestDto) => createUserRequestDto.password,
     )
     confirmPassword: string;
 
