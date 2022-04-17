@@ -5,13 +5,13 @@ import { IsInt, IsString, validateSync } from 'class-validator';
 import { AuthConfig } from '../types/auth-config.type';
 
 export default registerAs('authConfigs', (): AuthConfig => {
-    const config: AuthConfig = {
-        jwtSecret: process.env.JWT_SECRET,
-        accessTokenTtl: +process.env.ACCESS_TOKEN_TTL,
-        refreshTokenTtl: +process.env.REFRESH_TOKEN_TTL,
-    };
+    const validatedEnvs = validate(process.env);
 
-    validate(config as unknown as any);
+    const config: AuthConfig = {
+        jwtSecret: validatedEnvs.JWT_SECRET,
+        accessTokenTtl: validatedEnvs.ACCESS_TOKEN_TTL,
+        refreshTokenTtl: validatedEnvs.REFRESH_TOKEN_TTL,
+    };
 
     return config;
 });
@@ -27,7 +27,9 @@ class EnvironmentVariables {
     REFRESH_TOKEN_TTL: number;
 }
 
-function validate(config: Record<string, unknown>) {
+function validate(
+    config: Record<string, unknown>,
+): EnvironmentVariables {
     const validatedConfigs = plainToClass(
         EnvironmentVariables,
         config,
