@@ -11,11 +11,6 @@ export class JwtModuleConfig implements JwtOptionsFactory {
     ) {}
 
     createJwtOptions(): JwtModuleOptions | Promise<JwtModuleOptions> {
-        console.log(this.authConfigs);
-        console.log(this.authConfigs);
-        console.log(this.authConfigs);
-        console.log(this.authConfigs);
-        console.log(this.authConfigs);
         return {
             secret: this.authConfigs.jwtSecret,
             signOptions: {

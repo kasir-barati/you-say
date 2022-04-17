@@ -15,6 +15,8 @@ import { JwtModuleConfig } from './configs/jwt.config';
         UsersModule,
         ConfigModule.forFeature(authConfig),
         JwtModule.registerAsync({
+            imports: [ConfigModule.forFeature(authConfig)],
+            inject: [ConfigService],
             useClass: JwtModuleConfig,
         }),
     ],
