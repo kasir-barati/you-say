@@ -1,14 +1,26 @@
+import { Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { JwtModuleOptions } from '@nestjs/jwt';
+import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
+
 import authConfig from './auth.config';
 
-export function jwtModuleFactory(
-    authConfigs: ConfigType<typeof authConfig>,
-): JwtModuleOptions {
-    return {
-        secret: authConfigs.jwtSecret,
-        signOptions: {
-            expiresIn: authConfigs.accessTokenTtl,
-        },
-    };
+export class JwtModuleConfig implements JwtOptionsFactory {
+    constructor(
+        @Inject(authConfig.KEY)
+        private readonly authConfigs: ConfigType<typeof authConfig>,
+    ) {}
+
+    createJwtOptions(): JwtModuleOptions | Promise<JwtModuleOptions> {
+        console.log(this.authConfigs);
+        console.log(this.authConfigs);
+        console.log(this.authConfigs);
+        console.log(this.authConfigs);
+        console.log(this.authConfigs);
+        return {
+            secret: this.authConfigs.jwtSecret,
+            signOptions: {
+                expiresIn: this.authConfigs.accessTokenTtl,
+            },
+        };
+    }
 }

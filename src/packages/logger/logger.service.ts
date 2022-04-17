@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
 import { createLogger, Logger as WinstonLogger } from 'winston';
 import { ConfigType } from '@nestjs/config';
 
@@ -12,7 +12,7 @@ import loggerConfig from './logger.config';
 import { winstonTransports } from './winston.transport';
 
 @Injectable()
-export class LoggerService extends Logger {
+export class LoggerService extends ConsoleLogger {
     private winstonLogger: WinstonLogger;
 
     constructor(

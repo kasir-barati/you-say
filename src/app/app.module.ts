@@ -11,6 +11,8 @@ import { PostsModule } from '../packages/posts/posts.module';
 import { UsersModule } from '../packages/users/users.module';
 import { LoggerModule } from '../packages/logger/logger.module';
 import { validate } from '../shared/validators/env.validator';
+import { AuthModule } from '../packages/auth/auth.module';
+import { AuthController } from '../packages/auth/auth.controller';
 
 @Module({
     imports: [
@@ -21,10 +23,11 @@ import { validate } from '../shared/validators/env.validator';
             validate,
         }),
         PostsModule,
+        AuthModule,
         UsersModule,
         LoggerModule,
     ],
-    controllers: [AppController],
+    controllers: [AppController, AuthController],
     providers: [AppService, PrismaService],
 })
 export class AppModule {}

@@ -35,9 +35,9 @@ export class FilesController {
         }
         const uploadedFile = await this.filesService.add({
             data: {
-                Admin: {
+                User: {
                     connect: {
-                        userId: 'user.id',
+                        id: 'user.id',
                     },
                 },
                 filename: file.filename,
