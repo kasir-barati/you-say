@@ -21,6 +21,12 @@ export class FilesController {
         private readonly fileSerializer: FilesSerializer,
     ) {}
 
+    /**
+     * @summary
+     * # Upload files
+     *
+     * - You have to send it multipart
+     */
     @Post('upload')
     @ApiBearerAuth()
     @UseInterceptors(
