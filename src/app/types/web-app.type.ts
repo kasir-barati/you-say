@@ -1,9 +1,4 @@
-export enum NodeEnv {
-    development = 'development',
-    production = 'production',
-    test = 'test',
-    provision = 'provision',
-}
+import { NodeEnv } from '@you-say/src/shared/types/web.type';
 
 export interface webAppConfigs {
     nodeEnv: NodeEnv;

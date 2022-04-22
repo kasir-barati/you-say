@@ -10,7 +10,7 @@ import helmetConfig from './configs/helmet.config';
 import { PostsModule } from '../packages/posts/posts.module';
 import { UsersModule } from '../packages/users/users.module';
 import { LoggerModule } from '../packages/logger/logger.module';
-import { validate } from '../shared/validators/env.validator';
+import { validate } from './validators/env.validator';
 import { AuthModule } from '../packages/auth/auth.module';
 import { AuthController } from '../packages/auth/auth.controller';
 
@@ -20,7 +20,7 @@ import { AuthController } from '../packages/auth/auth.controller';
             envFilePath: ['.env'],
             load: [webAppConfig, corsConfig, helmetConfig],
             cache: true,
-            validate,
+            validate: validate,
         }),
         PostsModule,
         AuthModule,
