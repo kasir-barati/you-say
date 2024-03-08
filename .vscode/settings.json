@@ -1,0 +1,33 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit",
+    "source.sortMembers": "explicit"
+  },
+  "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’_",
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "javascript.preferences.importModuleSpecifier": "project-relative",
+  "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
+  "[terraform]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "[terraform-vars]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "files.exclude": {
+    "**/.next": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/jest-integration.config.d.ts": true,
+    "**/jest-integration.config.js": true,
+    "**/next-env.d.ts": true,
+    "**/node_modules": true,
+    "**/openApi.json": true,
+    "**/tsconfig.release.tsbuildinfo": true
+  }
+}

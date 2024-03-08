@@ -1,3 +1,9 @@
+```cmd
+npx create-nx-workspace@latest you-say --preset=nest
+nx add @nx/next
+nx g @nx/next:app apps/frontend
+```
+
 # YouSay
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>

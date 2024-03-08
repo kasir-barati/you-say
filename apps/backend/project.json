@@ -1,21 +1,21 @@
 {
-  "name": "you-say",
+  "name": "backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/you-say/src",
+  "sourceRoot": "apps/backend/src",
   "projectType": "application",
   "targets": {
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "you-say:build"
+        "buildTarget": "backend:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "you-say:build:development"
+          "buildTarget": "backend:build:development"
         },
         "production": {
-          "buildTarget": "you-say:build:production"
+          "buildTarget": "backend:build:production"
         }
       }
     }

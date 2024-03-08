@@ -1,6 +1,6 @@
 {
-  "name": "@you-say/source",
-  "version": "0.0.0",
+  "name": "you-say",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {},
   "private": true,
