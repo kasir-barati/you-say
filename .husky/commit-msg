@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running commitlint..."
+npx --no -- commitlint --config commitlint.config.ts --edit "$1"
