@@ -28,6 +28,7 @@
     "**/next-env.d.ts": true,
     "**/node_modules": true,
     "**/openApi.json": true,
-    "**/tsconfig.release.tsbuildinfo": true
+    "**/tsconfig.release.tsbuildinfo": true,
+    "**/.nx": true
   }
 }
