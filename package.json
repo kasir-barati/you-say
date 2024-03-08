@@ -2,11 +2,36 @@
   "name": "you-say",
   "version": "0.0.1",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "NX",
+    "e2e",
+    "TDD",
+    "jest",
+    "husky",
+    "docker",
+    "NestJS",
+    "NextJS",
+    "mongodb",
+    "mongoose",
+    "prettier",
+    "monorepo",
+    "unit-test",
+    "Typescript",
+    "commitlint",
+    "fusionAuth",
+    "tailwindCss",
+    "docker-compose",
+    "integration-test"
+  ],
+  "author": "kasir-barati",
   "scripts": {
     "format": "prettier -w . -u",
     "prepare": "husky install"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
