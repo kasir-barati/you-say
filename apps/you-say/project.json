@@ -1,0 +1,24 @@
+{
+  "name": "you-say",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/you-say/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "you-say:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "you-say:build:development"
+        },
+        "production": {
+          "buildTarget": "you-say:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
