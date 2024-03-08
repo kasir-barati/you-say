@@ -288,7 +288,8 @@ export default function Index() {
                 <span>
                   Install Nx Console for JetBrains
                   <span>
-                    Available for WebStorm, Intellij IDEA Ultimate and more!
+                    Available for WebStorm, Intellij IDEA Ultimate and
+                    more!
                   </span>
                 </span>
               </a>
@@ -317,8 +318,8 @@ export default function Index() {
                   </h2>
                 </div>
                 <p>
-                  You can activate distributed tasks executions and caching by
-                  running:
+                  You can activate distributed tasks executions and
+                  caching by running:
                 </p>
                 <pre>nx connect</pre>
                 <a
@@ -436,7 +437,9 @@ export default function Index() {
                 Run affected commands
               </summary>
               <pre>
-                <span># see what&apos;s been affected by changes</span>
+                <span>
+                  # see what&apos;s been affected by changes
+                </span>
                 nx affected:graph
                 <span># run tests for current changes</span>
                 nx affected:test

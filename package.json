@@ -2,7 +2,9 @@
   "name": "you-say",
   "version": "0.0.1",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "format": "prettier -w . -u"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
