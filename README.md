@@ -1,5 +1,5 @@
 ```cmd
-npx create-nx-workspace@latest you-say --preset=nest
+npx create-nx-workspace@latest you-say --preset=nest --pm pnpm
 nx add @nx/next
 nx g @nx/next:app apps/frontend
 ```

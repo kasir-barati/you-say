@@ -3,6 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/frontend",
   "projectType": "application",
-  "targets": {},
+  "targets": {
+    "build:docker": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/frontend/Dockerfile . -t frontend"
+    }
+  },
   "tags": []
 }

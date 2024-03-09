@@ -10,6 +10,9 @@
         "parallel": false,
         "commands": [
           {
+            "command": "rm -rf ./dist/apps/backend"
+          },
+          {
             "command": "npx tsc --incremental --project ./apps/backend/tsconfig.app.json"
           },
           {
@@ -25,6 +28,10 @@
         "parallel": false,
         "command": "node dist/apps/backend/src/main.js"
       }
+    },
+    "build:docker": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/backend/Dockerfile . -t backend"
     }
   },
   "tags": []
