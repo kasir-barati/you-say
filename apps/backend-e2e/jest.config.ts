@@ -1,3 +1,5 @@
+import type { Config } from 'jest';
+
 /* eslint-disable */
 export default {
   displayName: 'backend-e2e',
@@ -16,4 +18,4 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/backend-e2e',
-};
+} satisfies Config;

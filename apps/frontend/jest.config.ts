@@ -1,3 +1,5 @@
+import type { Config } from 'jest';
+
 /* eslint-disable */
 export default {
   displayName: 'frontend',
@@ -8,4 +10,4 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/frontend',
-};
+} satisfies Config;
