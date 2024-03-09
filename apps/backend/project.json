@@ -4,19 +4,23 @@
   "sourceRoot": "apps/backend/src",
   "projectType": "application",
   "targets": {
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
+    "build": {
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "backend:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "backend:build:development"
-        },
-        "production": {
-          "buildTarget": "backend:build:production"
-        }
+        "parallel": false,
+        "commands": [
+          {
+            "command": "npx tsc --incremental --project ./apps/backend/tsconfig.app.json"
+          }
+        ]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "parallel": false,
+        "command": "node dist/apps/backend/src/main.js"
       }
     }
   },
