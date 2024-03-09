@@ -21,7 +21,7 @@
         ]
       }
     },
-    "serve": {
+    "start": {
       "executor": "nx:run-commands",
       "dependsOn": ["build"],
       "options": {
@@ -31,7 +31,40 @@
     },
     "build:docker": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/Dockerfile . -t backend"
+      "command": "docker build -f apps/backend/Dockerfile . -t you-say-api-image"
+    },
+    "cleanup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "docker-compose down -v"
+          },
+          {
+            "command": "docker system prune -f"
+          },
+          {
+            "command": "rm -rf ./dist/apps/backend"
+          }
+        ]
+      }
+    },
+    "start:compose": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "nx cleanup backend"
+          },
+          {
+            "command": "nx build:docker backend"
+          },
+          {
+            "command": "docker-compose up -d"
+          }
+        ]
+      }
     }
   },
   "tags": []

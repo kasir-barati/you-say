@@ -14,7 +14,9 @@ RUN addgroup --system backend && \
     adduser --system -G backend backend
 
 COPY ../../package*.json .
-RUN npm ci
+# README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
+RUN npm ci --only=production --ignore-scripts
+COPY apps/backend/healthcheck.js .
 COPY ../../dist/apps/backend .
 RUN chown -R backend:backend .
 
