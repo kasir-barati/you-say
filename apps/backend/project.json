@@ -11,6 +11,9 @@
         "commands": [
           {
             "command": "npx tsc --incremental --project ./apps/backend/tsconfig.app.json"
+          },
+          {
+            "command": "cp -R ./apps/backend/src/assets ./dist/apps/backend/src/assets"
           }
         ]
       }
