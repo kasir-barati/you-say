@@ -4,12 +4,29 @@
   "implicitDependencies": ["backend"],
   "projectType": "application",
   "targets": {
-    "e2e": {
-      "executor": "@nx/jest:jest",
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "command": "jest --passWithNoTests --config apps/backend-e2e/jest.config.ts"
+      }
+    },
+    "start:docker": {
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/backend-e2e/jest.config.ts",
-        "passWithNoTests": true
+        "parallel": false,
+        "commands": [
+          {
+            "command": "nx start:compose backend"
+          },
+          {
+            "command": "nx openapi:generate backend"
+          },
+          {
+            "command": "nx start backend-e2e"
+          }
+        ]
       }
     }
   }

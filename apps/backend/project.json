@@ -65,6 +65,32 @@
           }
         ]
       }
+    },
+    "openapi:create": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "ts-node --project apps/backend/tsconfig.app.json --transpile-only -r tsconfig-paths/register apps/backend/src/shared/helpers/create-openapi-json.helper.ts"
+          }
+        ]
+      }
+    },
+    "openapi:generate": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["openapi:create"],
+      "options": {
+        "parallel": false,
+        "commands": [
+          {
+            "command": "rm -rf apps/backend-e2e/src/api-client"
+          },
+          {
+            "command": "openapi-generator-cli generate -i apps/backend/openApi.json -o apps/backend-e2e/src/api-client -g typescript-axios --additional-properties=useSingleRequestParameter=true"
+          }
+        ]
+      }
     }
   },
   "tags": []

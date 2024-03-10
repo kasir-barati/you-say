@@ -27,8 +27,8 @@
     "**/jest-integration.config.js": true,
     "**/next-env.d.ts": true,
     "**/node_modules": true,
-    "**/openApi.json": true,
     "**/tsconfig.release.tsbuildinfo": true,
-    "**/.nx": true
+    "**/.nx": true,
+    "**/api-client": true
   }
 }

@@ -12,7 +12,6 @@ import helmetConfig from './app/configs/helmet.config';
 
 async function bootstrap() {
   const APP_PORT = 3001;
-  const globalPrefix = 'api';
   let swaggerUrl: string | undefined;
   const app = await NestFactory.create(AppModule);
   const logger = app.get(Logger);
@@ -30,7 +29,6 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(helmet(helmetConfigs));
   app.enableCors(corsConfigs);
-  app.setGlobalPrefix(globalPrefix);
 
   if (SWAGGER_PATH) {
     // initialize Swagger using the SwaggerModule class
@@ -56,7 +54,7 @@ async function bootstrap() {
 
   await app.listen(APP_PORT);
   logger.log(
-    `🚀 Application is running on: http://localhost:${APP_PORT}/${globalPrefix}`,
+    `🚀 Application is running on: http://localhost:${APP_PORT}`,
     'NestApplication',
   );
   if (swaggerUrl) {
