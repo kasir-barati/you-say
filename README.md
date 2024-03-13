@@ -20,6 +20,19 @@ Run `nx start:compose backend` to start the development server. Happy coding!
 
 Run `nx build backend` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
 
+## Cleanup backend
+
+Run `nx cleanup backend` to:
+
+1. Remove all the containers created by the `docker-compose.yml`
+2. Execute `docker system prune`
+3. Remove the built artifacts for backend
+
+## Run e2e tests for backend
+
+Run `nx start:docker backend-e2e` to run the e2e tests from scratch.
+Run `nx start backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
+
 ## Running tasks
 
 To execute tasks with Nx use the following syntax:

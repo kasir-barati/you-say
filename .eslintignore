@@ -5,3 +5,10 @@ node_modules
 **/*.md
 Dockerfile
 api-client
+.terraform*
+terraform.tfstate*
+**/*.tf
+**/*.tfvars
+deployment/**/*.js
+**/*.ftl
+**/*.css

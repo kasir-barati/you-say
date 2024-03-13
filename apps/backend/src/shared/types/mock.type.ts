@@ -1,3 +1,5 @@
+import { SinonStub } from 'sinon';
+
 export type MockableEntity = object;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -21,6 +23,10 @@ export type StubbedObject<
 > = TObject & {
   [P in keyof TObject]: TStub;
 };
+
+export type MockedEntityWithSinonStubs<
+  TObject extends MockableEntity,
+> = StubbedObject<TObject, SinonStub>;
 
 export interface MockGenerator<TStub> {
   /**

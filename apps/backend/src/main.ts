@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -29,6 +29,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(helmet(helmetConfigs));
   app.enableCors(corsConfigs);
+  app.useGlobalPipes(new ValidationPipe());
 
   if (SWAGGER_PATH) {
     // initialize Swagger using the SwaggerModule class

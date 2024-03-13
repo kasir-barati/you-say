@@ -12,6 +12,8 @@ services:
     depends_on:
       you-say-api-db:
         condition: service_healthy
+      fusionauth:
+        condition: service_healthy
     env_file:
       - .env
     healthcheck:
@@ -35,3 +37,55 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+  fusionauth:
+    image: fusionauth-image
+    build:
+      context: .
+      dockerfile: ./deployment/fusionauth/Dockerfile
+    container_name: fusionauth-container
+    depends_on:
+      fusionauth-db:
+        condition: service_healthy
+      mailcatcher:
+        condition: service_started
+    environment:
+      DATABASE_URL: jdbc:postgresql://fusionauth-db:5432/fusionauth
+      DATABASE_USERNAME: fusionauth # I could not change it -- BUT why? IDK
+      DATABASE_PASSWORD: ${FUSIONAUTH_POSTGRESQL_PASSWORD}
+      DATABASE_ROOT_USERNAME: ${POSTGRES_USER}
+      DATABASE_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+      FUSIONAUTH_APP_URL: http://fusionauth:9011
+      FUSIONAUTH_APP_MEMORY: 512M
+      FUSIONAUTH_APP_RUNTIME_MODE: development
+      FUSIONAUTH_APP_KICKSTART_FILE: /usr/local/fusionauth/kickstart.json # Could not create apiKey with terrafrom
+    ports:
+      - 9011:9011
+    volumes:
+      - ./deployment/fusionauth/kickstart.json:/usr/local/fusionauth/kickstart.json
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://0.0.0.0:9011/api/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  fusionauth-db:
+    image: postgres:12.14
+    container_name: fusionauth-db-container
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      PGUSER: ${POSTGRES_USER} # healthcheck variable
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailcatcher:
+    image: sj26/mailcatcher:v0.8.2
+    container_name: mailcatcher-container
+    ports:
+      - 1026:1025
+      - 1081:1080

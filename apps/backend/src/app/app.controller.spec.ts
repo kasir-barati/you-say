@@ -1,22 +1,29 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import {
+  SinonMock,
+  SinonMockType,
+} from '../shared/helpers/sinon-mock.helper';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 describe('AppController', () => {
-  let app: TestingModule;
+  let controller: AppController;
+  let appService: SinonMockType<AppService>;
 
-  beforeAll(async () => {
-    app = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
-    }).compile();
+  beforeEach(() => {
+    appService = SinonMock.of<AppService>(AppService);
+    controller = new AppController(appService);
   });
 
-  describe('healthcheck', () => {
-    it("should return { message: 'health' }", () => {
-      const appController = app.get<AppController>(AppController);
-      expect(appController.healthcheck()).toEqual({
-        message: 'health',
+  describe('GET /healthcheck', () => {
+    it("should return { message: 'healthy' }", () => {
+      appService.healthcheck.returns({
+        message: 'healthy',
+      });
+
+      const result = controller.healthcheck();
+
+      expect(result).toEqual({
+        message: 'healthy',
       });
     });
   });

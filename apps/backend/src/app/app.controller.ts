@@ -7,10 +7,12 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { HealthCheckResponseDto } from './dtos/healthcheck-response.dto';
 
+@ApiTags('App')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}

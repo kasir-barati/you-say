@@ -7,6 +7,9 @@ import {
   StubbedObject,
 } from '../types/mock.type';
 
+export type SinonMockType<TObject extends MockableEntity> =
+  StubbedObject<TObject, SinonStub>;
+
 export const SinonMock: MockGenerator<SinonStub> =
   createMockImplementationWithStubFunction(stub);
 

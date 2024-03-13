@@ -6,6 +6,9 @@ import * as Sinon from 'sinon';
 import { AppController } from '../../app/app.controller';
 import { AppService } from '../../app/app.service';
 import appConfig from '../../app/configs/app.config';
+import { AuthController } from '../../modules/auth/auth.controller';
+import fusionAuthConfig from '../../modules/auth/configs/fusion-auth.config';
+import { AuthService } from '../../modules/auth/services/auth.service';
 import { createSwaggerConfiguration } from './create-swagger-configuration.helper';
 import { writeOpenApi } from './generate-openapi.helper';
 
@@ -13,13 +16,14 @@ import { writeOpenApi } from './generate-openapi.helper';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [join(process.cwd(), '.env')],
-      load: [appConfig],
+      load: [appConfig, fusionAuthConfig],
       cache: true,
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [
     { provide: AppService, useValue: Sinon.stub(AppService) },
+    { provide: AuthService, useValue: Sinon.stub(AuthService) },
   ],
 })
 class OpenApiModule {}

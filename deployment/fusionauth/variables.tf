@@ -1,0 +1,14 @@
+variable "deployment" {}
+variable "fusionauth_host" {}
+variable "fusionauth_issuer" {}
+variable "fusionauth_api_key" {}
+variable "fusionauth_tenant_id" {}
+variable "fusionauth_application_id" {}
+variable "fusionauth_admin_group_id" {}
+variable "fusionauth_email_security" {}
+variable "fusionauth_default_application_name" {}
+variable "oauth_configuration_client_secret" {}
+variable "fusionauth_email_configuration_host" {}
+variable "fusionauth_email_configuration_port" {}
+variable "fusionauth_email_configuration_username" {}
+variable "fusionauth_email_configuration_password" {}

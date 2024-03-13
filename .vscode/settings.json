@@ -29,6 +29,8 @@
     "**/node_modules": true,
     "**/tsconfig.release.tsbuildinfo": true,
     "**/.nx": true,
-    "**/api-client": true
+    "**/api-client": true,
+    "**/.terraform*": true,
+    "**/terraform.tfstate*": true
   }
 }

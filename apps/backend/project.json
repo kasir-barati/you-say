@@ -21,14 +21,6 @@
         ]
       }
     },
-    "start": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["build"],
-      "options": {
-        "parallel": false,
-        "command": "node dist/apps/backend/src/main.js"
-      }
-    },
     "build:docker": {
       "dependsOn": ["build"],
       "command": "docker build -f apps/backend/Dockerfile . -t you-say-api-image"
@@ -45,8 +37,32 @@
           },
           {
             "command": "rm -rf ./dist/apps/backend"
+          },
+          {
+            "command": "rm -rf deployment/terraform.tfstate* deployment/.terraform*"
           }
         ]
+      }
+    },
+    "init:terraform": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "command": "terraform -chdir=deployment init"
+      }
+    },
+    "plan:terraform": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "command": "terraform -chdir=deployment plan"
+      }
+    },
+    "apply:terraform": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "command": "terraform -chdir=deployment apply -auto-approve"
       }
     },
     "start:compose": {
@@ -62,6 +78,15 @@
           },
           {
             "command": "docker-compose up -d"
+          },
+          {
+            "command": "nx init:terraform backend -var-file=./dev.tfvars"
+          },
+          {
+            "command": "nx apply:terraform backend -var-file=./dev.tfvars"
+          },
+          {
+            "command": "nx apply:terraform backend -var-file=./dev.tfvars"
           }
         ]
       }

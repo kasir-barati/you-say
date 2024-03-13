@@ -5,6 +5,8 @@ dist
 tmp
 /out-tsc
 api-client
+.terraform*
+terraform.tfstate*
 
 # dependencies
 node_modules
