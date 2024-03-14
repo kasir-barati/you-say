@@ -18,7 +18,7 @@
         "parallel": false,
         "commands": [
           {
-            "command": "nx start:compose backend"
+            "command": "nx start:docker backend"
           },
           {
             "command": "nx openapi:generate backend"

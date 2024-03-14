@@ -16,7 +16,7 @@ comes with a LSP for Vim users.
 
 ## Start the application
 
-Run `nx start:compose backend` to start the development server. Happy coding!
+Run `nx start:docker backend` to start the development server. Happy coding!
 
 ## Build for production
 

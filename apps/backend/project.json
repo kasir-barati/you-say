@@ -65,7 +65,7 @@
         "command": "terraform -chdir=deployment apply -auto-approve"
       }
     },
-    "start:compose": {
+    "start:docker": {
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
