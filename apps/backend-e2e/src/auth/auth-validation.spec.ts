@@ -1,4 +1,5 @@
 import { AuthApi } from '../api-client';
+import { generateRandomString } from '../utils/generate-random-string.util';
 
 describe('Auth', () => {
   const authApi: AuthApi = new AuthApi();
@@ -11,12 +12,12 @@ describe('Auth', () => {
     {
       lastName: 'Barati',
       firstName: 'Mohammad',
-      email: `e${Date.now().toString()}@e.com`,
+      email: `${generateRandomString()}@e.com`,
     },
     {
       lastName: 'Barati',
       firstName: 'Sajad',
-      email: `e${Date.now().toString()}@e.com`,
+      email: `${generateRandomString()}@e.com`,
     },
   ])('should pass the validation layer', async (registerDto) => {
     const res = await authApi.authControllerRegister(

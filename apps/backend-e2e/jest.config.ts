@@ -16,6 +16,6 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/backend-e2e',
   detectOpenHandles: true,
-  testMatch: ['<rootDir>/src/auth/auth-business.spec.ts'],
+  // testMatch: ['<rootDir>/src/auth/auth-business.spec.ts'],
   setupFilesAfterEnv: ['<rootDir>/setup-env.ts'],
 } satisfies Config;

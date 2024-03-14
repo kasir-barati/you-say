@@ -18,7 +18,7 @@ describe('JwtStrategy', () => {
             FUSIONAUTH_API_KEY: 'long-hexadecimal-key',
             FUSIONAUTH_APPLICATION_ID: 'uuid',
             FUSIONAUTH_CLIENT_ID: 'uuid',
-            FUSIONAUTH_HOST: 'http://localhost:9011',
+            FUSIONAUTH_HOST: 'http://fusionauth:9011',
             FUSIONAUTH_ISSUER: 'https://you-say.com',
             FUSIONAUTH_TENANT_ID: 'uuid',
           } as FusionAuthClientConfig,

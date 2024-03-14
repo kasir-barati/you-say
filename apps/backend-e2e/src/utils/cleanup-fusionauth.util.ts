@@ -7,8 +7,8 @@ import { stringify } from 'querystring';
 import './env-loader.util';
 import { wait } from './wait.util';
 
-const { FUSIONAUTH_HOST, FUSIONAUTH_TENANT_ID, FUSIONAUTH_API_KEY } =
-  process.env;
+const FUSIONAUTH_HOST = 'http://localhost:9011';
+const { FUSIONAUTH_TENANT_ID, FUSIONAUTH_API_KEY } = process.env;
 const defaultUsersEmails = ['admin@you-say.com', 'admin@admin.com'];
 
 export async function cleanupFusionAuth() {

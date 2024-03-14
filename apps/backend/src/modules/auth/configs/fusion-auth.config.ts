@@ -26,11 +26,11 @@ export default registerAs(
 class EnvironmentVariables implements FusionAuthClientConfig {
   @IsOptional()
   @IsString()
-  FUSIONAUTH_HOST = 'http://localhost:9011';
+  FUSIONAUTH_HOST = 'http://fusionauth:9011';
 
   @IsOptional()
   @IsString()
-  FUSIONAUTH_ISSUER = 'https://you-say.com';
+  FUSIONAUTH_ISSUER = 'http://fusionauth:9011';
 
   // TODO: Should I remove client id and use application id only since based on what I understood from terraform basically they are the same thing
   @IsOptional()
