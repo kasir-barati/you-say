@@ -48,7 +48,7 @@ services:
       fusionauth-db:
         condition: service_healthy
       mailcatcher:
-        condition: service_started
+        condition: service_healthy
     environment:
       DATABASE_URL: jdbc:postgresql://fusionauth-db:5432/fusionauth
       DATABASE_USERNAME: fusionauth # I could not change it -- BUT why? IDK
@@ -89,3 +89,7 @@ services:
     ports:
       - 1026:1025
       - 1081:1080
+    healthcheck:
+      test: wget -q -O /dev/null http://mailcatcher:1080/
+      interval: 10s
+      retries: 80
