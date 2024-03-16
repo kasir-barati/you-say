@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { join } from 'path';
@@ -9,6 +9,7 @@ import appConfig from '../../app/configs/app.config';
 import { AuthController } from '../../modules/auth/auth.controller';
 import fusionAuthConfig from '../../modules/auth/configs/fusion-auth.config';
 import { AuthService } from '../../modules/auth/services/auth.service';
+import { StaticLoggerService } from '../../modules/logger/static-logger.service';
 import { createSwaggerConfiguration } from './create-swagger-configuration.helper';
 import { writeOpenApi } from './generate-openapi.helper';
 
@@ -47,21 +48,23 @@ async function createOpenApi() {
     openApiOutputDirectory,
   );
 
-  Logger.log(
-    `OpenAPI specification created: ${openApiFilePath}`,
-    'OpenApiModule',
-  );
+  StaticLoggerService.log({
+    message: `OpenAPI specification created: ${openApiFilePath}`,
+    context: 'OpenApiModule',
+  });
 }
 
 createOpenApi()
   .then(() => {
-    Logger.log('OpenAPI specification created', 'OpenApiModule');
+    StaticLoggerService.log({
+      message: 'OpenAPI specification created',
+      context: 'OpenApiModule',
+    });
     process.exit(0);
   })
   .catch(
-    Logger.error.bind(
-      this,
-      'OpenAPI specification failed to be created',
-      'OpenApiModule',
-    ),
+    StaticLoggerService.error.bind(this, {
+      message: 'OpenAPI specification failed to be created',
+      context: 'OpenApiModule',
+    }),
   );

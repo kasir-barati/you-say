@@ -3,7 +3,7 @@ import { validate } from 'class-validator';
 import { IsValidString } from './is-valid-string.decorator';
 
 class TestClass {
-  @IsValidString()
+  @IsValidString({ maxLength: 200 })
   test: string;
 }
 
@@ -32,7 +32,7 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      isNotEmpty: 'test is required',
+      isNotEmpty: 'test should not be empty',
     });
   });
 
@@ -58,7 +58,7 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      minLength: 'test must be at least 2 characters',
+      minLength: 'test must be longer than or equal to 2 characters',
     });
   });
 
@@ -73,7 +73,8 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      maxLength: 'test must be at most 255 characters',
+      maxLength:
+        'test must be shorter than or equal to 200 characters',
     });
   });
 
@@ -86,12 +87,12 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      isNotEmpty: 'test is required',
+      isNotEmpty: 'test should not be empty',
     });
   });
 
   it('should not validate a string shorter than the default minimum length', async () => {
-    const testClass = plainToClass(OtherTestClass, { test: '' });
+    const testClass = plainToClass(OtherTestClass, { test: 'a' });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -99,7 +100,7 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      isNotEmpty: 'test is required',
+      minLength: 'test must be longer than or equal to 2 characters',
     });
   });
 
@@ -114,7 +115,8 @@ describe('IsValidString', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].constraints).toStrictEqual({
-      maxLength: 'test must be at most 128 characters',
+      maxLength:
+        'test must be shorter than or equal to 128 characters',
     });
   });
 });

@@ -1,6 +1,6 @@
-import { Logger } from '@nestjs/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { StaticLoggerService } from '../../modules/logger/static-logger.service';
 
 export function validateEnvs<T extends object>(
   rawEnvs: Record<string, unknown>,
@@ -14,16 +14,17 @@ export function validateEnvs<T extends object>(
   });
 
   if (validatedConfigsErrors.length > 0) {
-    Logger.debug(
-      'Application could not load required environment variables',
-      {
+    StaticLoggerService.debug({
+      message:
+        'Application could not load required environment variables',
+      optionalParams: {
         errors: validatedConfigsErrors.map((error) => ({
           value: error.value,
           property: error.property,
           message: Object.values(error.constraints)[0],
         })),
       },
-    );
+    });
     throw new Error(validatedConfigsErrors.toString());
   }
 

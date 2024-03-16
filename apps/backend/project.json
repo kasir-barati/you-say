@@ -116,6 +116,21 @@
           }
         ]
       }
+    },
+    "madge": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "apps/backend",
+        "command": "madge --circular"
+      }
+    },
+    "test:unit": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/backend/jest.config.ts",
+        "passWithNoTests": true
+      }
     }
   },
   "tags": []

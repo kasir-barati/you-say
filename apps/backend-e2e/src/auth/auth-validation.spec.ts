@@ -54,7 +54,7 @@ describe('Auth', () => {
       },
       {
         validateStatus(status) {
-          return status >= 400;
+          return status >= 200;
         },
       },
     );

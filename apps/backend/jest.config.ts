@@ -1,4 +1,7 @@
 import type { Config } from 'jest';
+import { NodeEnv } from './src/shared/types/node-env';
+
+process.env.NODE_ENV = NodeEnv.test;
 
 /* eslint-disable */
 export default {

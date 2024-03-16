@@ -1,15 +1,17 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import {
   MongooseModuleOptions,
   MongooseOptionsFactory,
 } from '@nestjs/mongoose';
+import { LoggerService } from '../../modules/logger/logger.service';
 import webAppConfig from './app.config';
 
 export class MongooseModuleConfig implements MongooseOptionsFactory {
   constructor(
     @Inject(webAppConfig.KEY)
     private readonly webAppConfigs: ConfigType<typeof webAppConfig>,
+    private readonly loggerService: LoggerService,
   ) {}
 
   createMongooseOptions():
@@ -18,7 +20,7 @@ export class MongooseModuleConfig implements MongooseOptionsFactory {
     const { DATABASE_URL, MONGO_INITDB_DATABASE } =
       this.webAppConfigs;
 
-    Logger.log(
+    this.loggerService.log(
       `MongoDB connection string: ${DATABASE_URL}/${MONGO_INITDB_DATABASE}`,
       'NestApplication',
     );

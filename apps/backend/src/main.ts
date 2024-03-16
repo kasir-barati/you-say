@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,12 +9,13 @@ import { AppModule } from './app/app.module';
 import appConfig from './app/configs/app.config';
 import corsConfig from './app/configs/cors.config';
 import helmetConfig from './app/configs/helmet.config';
+import { LoggerService } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const APP_PORT = 3001;
   let swaggerUrl: string | undefined;
   const app = await NestFactory.create(AppModule);
-  const logger = app.get(Logger);
+  const loggerService = app.get(LoggerService);
   const { SWAGGER_PATH } = app.get<ConfigType<typeof appConfig>>(
     appConfig.KEY,
   );
@@ -25,11 +26,16 @@ async function bootstrap() {
     helmetConfig.KEY,
   );
 
+  app.useLogger(loggerService);
   app.use(json({ limit: '20mb' }));
   app.use(cookieParser());
   app.use(helmet(helmetConfigs));
   app.enableCors(corsConfigs);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      errorHttpStatusCode: 400,
+    }),
+  );
 
   if (SWAGGER_PATH) {
     // initialize Swagger using the SwaggerModule class
@@ -54,12 +60,12 @@ async function bootstrap() {
   }
 
   await app.listen(APP_PORT);
-  logger.log(
+  loggerService.log(
     `🚀 Application is running on: http://localhost:${APP_PORT}`,
     'NestApplication',
   );
   if (swaggerUrl) {
-    logger.log(
+    loggerService.log(
       `🚀 Swagger is running on: ${swaggerUrl}`,
       'NestApplication',
     );

@@ -3,27 +3,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
-  Logger,
-  OnModuleInit,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { NotFoundError } from 'rxjs';
+import { LoggerService } from '../../modules/logger/logger.service';
 import { BadRequestError } from '../contracts/bad-request-error.contract';
-import { ForbiddenError } from '../contracts/forbidden-error.contract';
 import { UniqueError } from '../contracts/unique-error';
 
 @Catch()
-export class HttpExceptionFilter
-  implements ExceptionFilter, OnModuleInit
-{
-  private logger: Logger;
-
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
-
-  onModuleInit() {
-    this.logger = new Logger(HttpExceptionFilter.name);
-  }
+export class HttpExceptionFilter implements ExceptionFilter {
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    private readonly loggerService: LoggerService,
+  ) {}
 
   catch(exception: Error | HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -43,33 +35,34 @@ export class HttpExceptionFilter
     exception: Error | HttpException,
     message: string | string[],
   ): number {
-    this.logger.error(
+    this.loggerService.error(
       exception instanceof HttpException
         ? exception.getResponse()
         : exception.message,
+      HttpExceptionFilter.name,
     );
-    this.logger.error(exception.stack);
+    this.loggerService.error(
+      exception.stack,
+      HttpExceptionFilter.name,
+    );
 
-    if (exception instanceof BadRequestError) {
-      this.logger.debug(message);
+    if (
+      exception instanceof BadRequestError ||
+      exception.message === 'Bad Request Exception'
+    ) {
+      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 400;
     }
-    if (exception instanceof ForbiddenError) {
-      this.logger.debug(message);
-      return 403;
-    }
     if (exception instanceof NotFoundError) {
-      this.logger.debug(message);
+      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 404;
     }
     if (exception instanceof UniqueError) {
-      this.logger.debug(message);
+      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 409;
     }
 
-    return exception instanceof HttpException
-      ? exception.getStatus()
-      : HttpStatus.INTERNAL_SERVER_ERROR;
+    return exception?.['statusCode'] ?? 500;
   }
 
   private getErrorMessage(

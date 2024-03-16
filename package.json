@@ -99,6 +99,7 @@
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
     "lint-staged": "^15.2.2",
+    "madge": "^6.1.0",
     "nx": "18.0.7",
     "prettier": "^2.6.2",
     "sass": "1.62.1",

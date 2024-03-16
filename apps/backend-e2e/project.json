@@ -4,14 +4,14 @@
   "implicitDependencies": ["backend"],
   "projectType": "application",
   "targets": {
-    "start": {
+    "test:e2e": {
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
-        "command": "jest --config apps/backend-e2e/jest.config.ts"
+        "command": "NODE_ENV=test jest --config apps/backend-e2e/jest.config.ts"
       }
     },
-    "start:docker": {
+    "test:e2e:docker": {
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
@@ -24,7 +24,7 @@
             "command": "nx openapi:generate backend"
           },
           {
-            "command": "nx start backend-e2e"
+            "command": "nx test:e2e backend-e2e"
           }
         ]
       }

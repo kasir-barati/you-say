@@ -2,6 +2,7 @@ import { ArgumentsHost, HttpException } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { AbstractHttpAdapter, HttpAdapterHost } from '@nestjs/core';
 import * as sinon from 'sinon';
+import { LoggerService } from '../../modules/logger/logger.service';
 import { BadRequestError } from '../contracts/bad-request-error.contract';
 import { ForbiddenError } from '../contracts/forbidden-error.contract';
 import { NotFoundError } from '../contracts/not-found-error.contract';
@@ -20,13 +21,15 @@ describe('HttpExceptionFilter', () => {
   let filter: HttpExceptionFilter;
   let httpAdapter: SinonMockType<AbstractHttpAdapter>;
   let httpAdapterHost: SinonMockType<HttpAdapterHost>;
+  let loggerService: SinonMockType<LoggerService>;
 
   beforeEach(() => {
     httpAdapter = SinonMock.with<AbstractHttpAdapter>({});
     httpAdapterHost = SinonMock.of<HttpAdapterHost>(HttpAdapterHost, {
       httpAdapter,
     });
-    filter = new HttpExceptionFilter(httpAdapterHost);
+    loggerService = SinonMock.of<LoggerService>(LoggerService);
+    filter = new HttpExceptionFilter(httpAdapterHost, loggerService);
   });
 
   it.each([
@@ -42,15 +45,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(new BadRequestError(message), argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        400,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          400,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -67,15 +72,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(new ForbiddenError(message), argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        403,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          403,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -92,15 +99,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(new UniqueError(message), argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        409,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          409,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -117,15 +126,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(new NotFoundError(message), argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        404,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          404,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -145,15 +156,17 @@ describe('HttpExceptionFilter', () => {
         argumentsHost,
       );
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        statusCode,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          statusCode,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -170,15 +183,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(new Error(message), argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path,
-        },
-        500,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path,
+          },
+          500,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -199,15 +214,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(error, argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message: messages,
-          timestamp: sinon.match.string,
-          path: sinon.match.string,
-        },
-        sinon.match.number,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message: messages,
+            timestamp: sinon.match.string,
+            path: sinon.match.string,
+          },
+          sinon.match.number,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -225,15 +242,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(error, argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message,
-          timestamp: sinon.match.string,
-          path: sinon.match.string,
-        },
-        sinon.match.number,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message,
+            timestamp: sinon.match.string,
+            path: sinon.match.string,
+          },
+          sinon.match.number,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -268,15 +287,17 @@ describe('HttpExceptionFilter', () => {
 
       filter.catch(error, argumentsHost);
 
-      expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-        sinon.match.any,
-        {
-          message: 'Bad Request Exception',
-          timestamp: sinon.match.string,
-          path: sinon.match.string,
-        },
-        sinon.match.number,
-      );
+      expect(
+        httpAdapter.reply.calledWith(
+          sinon.match.any,
+          {
+            message: 'Bad Request Exception',
+            timestamp: sinon.match.string,
+            path: sinon.match.string,
+          },
+          sinon.match.number,
+        ),
+      ).toBeTruthy();
     },
   );
 
@@ -292,14 +313,16 @@ describe('HttpExceptionFilter', () => {
 
     filter.catch(error, argumentsHost);
 
-    expect(httpAdapterHost.httpAdapter.reply).toHaveBeenCalledWith(
-      sinon.match.any,
-      {
-        message: 'Bad Request Exception',
-        timestamp: sinon.match.string,
-        path: sinon.match.string,
-      },
-      sinon.match.number,
-    );
+    expect(
+      httpAdapter.reply(
+        sinon.match.any,
+        {
+          message: 'Bad Request Exception',
+          timestamp: sinon.match.string,
+          path: sinon.match.string,
+        },
+        sinon.match.number,
+      ),
+    ).toBeTruthy();
   });
 });

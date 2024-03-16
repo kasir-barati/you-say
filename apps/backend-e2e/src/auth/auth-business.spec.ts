@@ -8,7 +8,7 @@ describe('Auth', () => {
     await cleanup();
   });
 
-  it.only('should create a user -- POST /register', async () => {
+  it('should create a user -- POST /register', async () => {
     const res = await authApi.authControllerRegister({
       registerDto: {
         email: `e${Date.now().toString()}@mail.js`,
@@ -48,6 +48,8 @@ describe('Auth', () => {
     expect(res2.status).toBe(400);
     expect(res2.data).toStrictEqual({
       message: `Email already exists: ${email}`,
+      path: '/auth/register',
+      timestamp: expect.any(String),
     });
   });
 });
