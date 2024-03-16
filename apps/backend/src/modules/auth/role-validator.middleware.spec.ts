@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { SinonMock } from '../../shared/helpers/sinon-mock.helper';
 import { Role } from './auth.type';
 import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
 
@@ -14,9 +15,9 @@ describe('RoleValidatorMiddlewareFactory', () => {
     (...expectedRoles) => {
       const middleware =
         roleValidatorMiddleware.create(expectedRoles);
-      const requestMock = {
+      const requestMock = <Request>{
         user: { roles: [expectedRoles[0]] },
-      } as unknown as Request;
+      };
       const responseMock = {} as Response;
       const nextMock = jest.fn();
 
@@ -31,9 +32,9 @@ describe('RoleValidatorMiddlewareFactory', () => {
       Role.PostCreator,
     ]);
     const nextMock = jest.fn();
-    const responseMock = {
-      status: jest.fn() as Response['status'],
-    } as Response;
+    const responseMock = SinonMock.with<Response>({
+      status: jest.fn(),
+    });
 
     middleware({} as Request, responseMock, nextMock);
 
@@ -49,12 +50,12 @@ describe('RoleValidatorMiddlewareFactory', () => {
         Role.PostCreator,
       ]);
       const nextMock = jest.fn();
-      const responseMock = {
-        status: jest.fn() as Response['status'],
-      } as Response;
-      const requestMock = {
-        user: { roles },
-      } as unknown as Request;
+      const responseMock = SinonMock.with<Response>({
+        status: jest.fn(),
+      });
+      const requestMock = <Request>{
+        user: { roles: roles as Role[] },
+      };
 
       middleware(requestMock, responseMock, nextMock);
 
@@ -69,12 +70,12 @@ describe('RoleValidatorMiddlewareFactory', () => {
       Role.PostCreator,
     ]);
     const nextMock = jest.fn();
-    const responseMock = {
+    const responseMock = SinonMock.with<Response>({
       status: jest.fn() as Response['status'],
-    } as Response;
-    const requestMock = {
+    });
+    const requestMock = <Request>{
       user: {},
-    } as unknown as Request;
+    };
 
     middleware(requestMock, responseMock, nextMock);
 
@@ -88,11 +89,11 @@ describe('RoleValidatorMiddlewareFactory', () => {
       Role.PostCreator,
     ]);
     const nextMock = jest.fn();
-    const responseMock = {
+    const responseMock = SinonMock.with<Response>({
       status: jest.fn(() => {
         throw new Error();
-      }) as Response['status'],
-    } as Response;
+      }),
+    });
 
     expect(() =>
       middleware({} as Request, responseMock, nextMock),

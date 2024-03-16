@@ -301,27 +301,25 @@ describe('HttpExceptionFilter', () => {
     },
   );
 
-  it('catch should not map nested response messages if none are given', () => {
+  it('catch should map error.message as message if there were not any message in the response object', () => {
     const argumentsHost = SinonMock.with<ArgumentsHost>({});
     const httpArgumentsHost = SinonMock.with<HttpArgumentsHost>({});
     argumentsHost.switchToHttp.returns(httpArgumentsHost);
     httpAdapter.getRequestUrl.returns('path');
-    const error = new Error(
-      'Bad Request Exception',
-    ) as ErrorWithResponse;
+    const error = new Error('Some error') as ErrorWithResponse;
     error.response = { message: [] };
 
     filter.catch(error, argumentsHost);
 
     expect(
-      httpAdapter.reply(
+      httpAdapter.reply.calledWith(
         sinon.match.any,
         {
-          message: 'Bad Request Exception',
+          message: 'Some error',
           timestamp: sinon.match.string,
           path: sinon.match.string,
         },
-        sinon.match.number,
+        500,
       ),
     ).toBeTruthy();
   });

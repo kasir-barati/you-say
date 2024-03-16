@@ -5,9 +5,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { NotFoundError } from 'rxjs';
 import { LoggerService } from '../../modules/logger/logger.service';
 import { BadRequestError } from '../contracts/bad-request-error.contract';
+import { ForbiddenError } from '../contracts/forbidden-error.contract';
+import { NotFoundError } from '../contracts/not-found-error.contract';
 import { UniqueError } from '../contracts/unique-error';
 
 @Catch()
@@ -46,20 +47,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
       HttpExceptionFilter.name,
     );
 
+    if (exception instanceof HttpException) {
+      this.loggerService.debug(message, HttpExceptionFilter.name);
+      return exception.getStatus();
+    }
     if (
-      exception instanceof BadRequestError ||
+      exception.name === BadRequestError.name ||
       exception.message === 'Bad Request Exception'
     ) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 400;
     }
-    if (exception instanceof NotFoundError) {
+    if (exception.name === NotFoundError.name) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 404;
     }
-    if (exception instanceof UniqueError) {
+    if (exception.name === UniqueError.name) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 409;
+    }
+    if (exception.name === ForbiddenError.name) {
+      return 403;
     }
 
     return exception?.['statusCode'] ?? 500;

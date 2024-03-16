@@ -2,14 +2,11 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { ROLES_KEY, Role } from '../auth.type';
+import { ROLES_KEY, Role, User } from '../auth.type';
 
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: {
-      sub: string;
-      roles: string[];
-    };
+    user?: User;
   }
 }
 

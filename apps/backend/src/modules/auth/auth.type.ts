@@ -16,3 +16,7 @@ export interface FusionAuthClientConfig {
 export enum FusionAuthUserGroup {
   Admin = 'Admin',
 }
+export interface User {
+  sub: string;
+  roles: Role[];
+}

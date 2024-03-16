@@ -23,7 +23,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.log({ message, context });
+      loggerService.log(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -42,7 +42,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.fatal({ message, context });
+      loggerService.fatal(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -61,7 +61,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stderr, 'write');
 
-      loggerService.error({ message, context });
+      loggerService.error(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -80,7 +80,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.warn({ message, context });
+      loggerService.warn(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -99,7 +99,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.debug({ message, context });
+      loggerService.debug(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -118,7 +118,7 @@ describe('LoggerService', () => {
       const context = Date.now().toString();
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.verbose({ message, context });
+      loggerService.verbose(message, context);
 
       // I could not find a better way to assert since if we use expect.stringContaining(`LOG [${context}] ${message}`) it fails!
       expect(writeSpy).toHaveBeenCalledWith(
@@ -146,7 +146,7 @@ describe('LoggerService', () => {
       const context = 'context should not be logged';
       const writeSpy = jest.spyOn(process.stdout, 'write');
 
-      loggerService.debug({ message, context });
+      loggerService.debug(message, context);
 
       expect(writeSpy).not.toHaveBeenCalledWith(
         expect.stringContaining(`[${context}]`),

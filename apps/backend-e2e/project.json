@@ -4,11 +4,18 @@
   "implicitDependencies": ["backend"],
   "projectType": "application",
   "targets": {
+    "test:unit": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/backend-e2e/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
     "test:e2e": {
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
-        "command": "NODE_ENV=test jest --config apps/backend-e2e/jest.config.ts"
+        "command": "NODE_ENV=test jest --config apps/backend-e2e/jest-e2e.config.ts"
       }
     },
     "test:e2e:docker": {
