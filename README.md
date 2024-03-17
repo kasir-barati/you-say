@@ -16,11 +16,23 @@ comes with a LSP for Vim users.
 
 ## Start the application
 
-Run `nx start:docker backend` to start the development server. Happy coding!
+Run `nx dev backend` to start the development server. Happy coding!
 
-## Build for production
+## Build
 
-Run `nx build backend` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
+**Note**, we usually do not have to involve ourselves with these commands since we just wanted to develop the app in our local env via utilizing docker compose and for prod we will use tools such as CI/CD. But for you to have a better understanding I wrote this part. BTW the image for both prod and dev env have the same tag and version.
+
+### Build the NestJS app with tsc
+
+Run `nx build backend` to build the application. The build artifacts are stored in the output directory (`./dist/`), ready to be deployed.
+
+### Build the docker image for backend app in dev env
+
+Run `nx build:dev:docker backend`
+
+### Build the docker image for backend app in prod env
+
+Run `nx build:docker backend`
 
 ## Cleanup backend
 
@@ -32,8 +44,8 @@ Run `nx cleanup backend` to:
 
 ## Run e2e tests for backend
 
-Run `nx start:docker backend-e2e` to run the e2e tests from scratch.
-Run `nx start backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
+Run `nx test:e2e:docker backend-e2e` to run the e2e tests from scratch.
+Run `nx test:e2e backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
 
 ## Running tasks
 

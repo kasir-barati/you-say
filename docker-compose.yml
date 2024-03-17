@@ -6,7 +6,13 @@ services:
     container_name: you-say-api-container
     build:
       context: .
-      dockerfile: ./apps/backend/Dockerfile
+      dockerfile: ./apps/backend/dev.Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+        volume:
+          nocopy: true
     ports:
       - 3001:3001
     depends_on:

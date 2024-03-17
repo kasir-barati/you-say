@@ -12,3 +12,4 @@ terraform.tfstate*
 deployment/**/*.js
 **/*.ftl
 **/*.css
+**Dockerfile

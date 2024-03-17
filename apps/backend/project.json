@@ -23,7 +23,10 @@
     },
     "build:docker": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/Dockerfile . -t you-say-api-image"
+      "command": "docker build -f apps/backend/Dockerfile --progress=plain . -t you-say-api-image"
+    },
+    "build:dev:docker": {
+      "command": "docker build -f apps/backend/dev.Dockerfile . --progress=plain -t you-say-api-image"
     },
     "cleanup": {
       "executor": "nx:run-commands",
@@ -65,7 +68,14 @@
         "command": "terraform -chdir=deployment apply -auto-approve"
       }
     },
-    "start:docker": {
+    "start:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "command": "tsc-watch --incremental --project ./apps/backend/tsconfig.app.json --onSuccess \"node ./dist/apps/backend/src/main.js\""
+      }
+    },
+    "dev": {
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
@@ -74,7 +84,7 @@
             "command": "nx cleanup backend"
           },
           {
-            "command": "nx build:docker backend"
+            "command": "nx build:dev:docker backend"
           },
           {
             "command": "docker-compose up -d"
