@@ -5,14 +5,14 @@ on:
     branches:
       - main
 
-default:
+defaults:
   run:
     working-directory: apps
 
 jobs:
   backend:
     name: Backend
-    runs-on: ubuntu-22.04-4-cores
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
       - name: Clone you-say repo in Ubuntu
@@ -23,6 +23,7 @@ jobs:
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v4
       - name: Setup NodeJS version
+        uses: actions/setup-node@v4
         with:
           node-version: 20.10.0
           cache: "npm"

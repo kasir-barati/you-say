@@ -71,6 +71,14 @@ Targets can be defined in the `package.json` or `projects.json`. Learn more [in 
 
 ## Set up CI!
 
+### GitHub actionlint
+
+Husky validates GH actions via [actionlint](https://github.com/rhysd/actionlint) before commit if they were changed or a new one was added:
+
+```cmd
+sudo pacman -Syu actionlint
+```
+
 Nx comes with local caching already built-in (check your `nx.json`). On CI you might want to go a step further.
 
 - [Set up remote caching](https://nx.dev/features/share-your-cache)

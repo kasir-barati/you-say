@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+GITHUB_ACTIONS_DIR=".github"
+
+if ! git diff --quiet "$DIRECTORY"; then
+  actionlint
+fi
+
 echo "Running lint-staged..."
 npx lint-staged --relative
