@@ -1,0 +1,38 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+default:
+  run:
+    working-directory: apps
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-22.04-4-cores
+    timeout-minutes: 15
+    steps:
+      - name: Clone you-say repo in Ubuntu
+        uses: actions/checkout@v4
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+      - name: Setup NodeJS version
+        with:
+          node-version: 20.10.0
+          cache: "npm"
+      - name: Install 3rd party libraries/packages
+        run: npm ci --ignore-scripts
+      - name: Check if codes are prettified
+        run: npx nx format:check
+      - name: Linting changed files and affected ones
+        run: npx nx affected --target=lint --parallel=3
+      - name: Build changed apps and the ones that were affected by those changes
+        run: npx nx affected --target=build --parallel=3
+      - name: Unit test changed and affected ones by those changes
+        run: npx nx affected --target=test:unit --parallel=3  --ci --coverage

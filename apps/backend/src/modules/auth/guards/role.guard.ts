@@ -2,13 +2,7 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { ROLES_KEY, Role, User } from '../auth.type';
-
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: User;
-  }
-}
+import { ROLES_KEY, Role } from '../auth.type';
 
 export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}

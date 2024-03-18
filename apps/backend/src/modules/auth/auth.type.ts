@@ -1,3 +1,9 @@
+declare module 'express' {
+  interface Request {
+    user?: User;
+  }
+}
+
 export const ROLES_KEY = 'roles';
 export enum Role {
   PostReader = 'PostReader',
