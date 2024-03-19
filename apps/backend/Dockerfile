@@ -5,12 +5,11 @@ FROM docker.io/node:20.10.0-alpine AS build_stage
 WORKDIR /build
 COPY tsconfig.base.json jest.preset.js nx.json ./
 COPY package*.json ./
-RUN npm install --global nx
 # README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
 RUN npm ci --ignore-scripts
 COPY apps/backend/healthcheck.js .
 COPY apps/backend ./apps/backend
-RUN nx build backend
+RUN npx nx build backend
 
 FROM docker.io/node:20.10.0-alpine
 RUN addgroup --system backend && \
