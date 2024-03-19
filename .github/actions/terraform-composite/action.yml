@@ -44,6 +44,7 @@ runs:
       with:
         terraform_version: "1.7.4"
     - name: Initialize and apply terraform
+      shell: bash
       run: |
         terraform -chdir=deployment init
         terraform -chdir=deployment apply -auto-approve
@@ -56,13 +57,17 @@ runs:
         TF_VAR_fusionauth_email_configuration_password: ${{ inputs.fusionauth_email_configuration_password }}
     - name: Set FusionAuth tenant id output
       id: fusionauth-tenant-id
+      shell: bash
       run: echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth client id output
       id: fusionauth-client-id
+      shell: bash
       run: echo "fusionauth_client_id=$(terraform output -raw fusionauth_client_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth application id output
       id: fusionauth-application-id
+      shell: bash
       run: echo "fusionauth_application_id=$(terraform output -raw fusionauth_application_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth admin group id output
       id: fusionauth-admin-group-id
+      shell: bash
       run: echo "fusionauth_admin_group_id=$(terraform output -raw fusionauth_admin_group_id)" >> $GITHUB_OUTPUT
