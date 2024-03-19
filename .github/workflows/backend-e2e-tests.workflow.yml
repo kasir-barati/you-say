@@ -42,7 +42,7 @@ jobs:
           # https://hub.docker.com/r/moby/buildkit/tags/
           driver-opts: image=moby/buildkit:v0.13.0
       - name: Set commit status to pending
-        uses: guibranco/github-status-action-v2@v1.1.9
+        uses: guibranco/github-status-action-v2@v1.1.8
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           state: pending
@@ -101,7 +101,7 @@ jobs:
         run: nx test:e2e backend-e2e
       - if: ${{ success() }}
         name: Set commit status to success if tests passed
-        uses: guibranco/github-status-action-v2@v1.1.9
+        uses: guibranco/github-status-action-v2@v1.1.8
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           state: success
