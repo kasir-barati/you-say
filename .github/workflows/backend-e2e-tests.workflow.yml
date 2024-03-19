@@ -84,7 +84,7 @@ jobs:
         name: Create kickstart.json, reading api key value from FUSIONAUTH_API_KEY
         run: |
           touch ./deployment/fusionauth/kickstart.json
-          echo '{"apiKeys":[{ "key":${{env.FUSIONAUTH_API_KEY}} }]}' >> ./deployment/fusionauth/kickstart.json
+          echo '{"apiKeys":[{ "key": "${{env.FUSIONAUTH_API_KEY}}" }]}' >> ./deployment/fusionauth/kickstart.json
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Creating docker network
