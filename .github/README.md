@@ -9,3 +9,11 @@ The purpose of this workflow is to automatically run whenever code is pushed to 
 The main logic flow is that whenever code is pushed, this workflow will kick off and run all these steps automatically. Important flows are the parallelization to speed up the pipeline, caching to optimize installs, and running against only affected code to make it faster.
 
 By continuously integrating these steps on every push, it helps maintain code quality and catch issues early. It also helps with the [trunk base development approach](https://trunkbaseddevelopment.com/). The developer gets rapid feedback if any tests fail or code styles diverge. Over time this workflow helps enforce code health and stability.
+
+## Backend e2e
+
+Notes:
+
+- We may want to reconsider on how and where we are running our e2e tests. Transitioning from GitHub runners to a self-hosted runner would likely prove more economical.
+- We are using a `docker-compose` for sake of ease of use.
+- We are utilizing the `success()` built-in function provided by GitHub Actions to check whether the previous step or job was successful.

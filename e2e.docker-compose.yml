@@ -1,0 +1,107 @@
+version: "3"
+
+services:
+  you-say-api:
+    image: you-say-api-image
+    container_name: you-say-api-container
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      you-say-api-db:
+        condition: service_healthy
+      fusionauth:
+        condition: service_healthy
+    environment:
+      FUSIONAUTH_HOST: ${FUSIONAUTH_HOST}
+      FUSIONAUTH_ISSUER: ${FUSIONAUTH_ISSUER}
+      FUSIONAUTH_API_KEY: ${FUSIONAUTH_API_KEY}
+      FUSIONAUTH_TENANT_ID: ${FUSIONAUTH_TENANT_ID}
+      FUSIONAUTH_APPLICATION_ID: ${FUSIONAUTH_APPLICATION_ID}
+      FUSIONAUTH_ADMIN_GROUP_ID: ${FUSIONAUTH_ADMIN_GROUP_ID}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      FUSIONAUTH_POSTGRESQL_PASSWORD: ${FUSIONAUTH_POSTGRESQL_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL}
+    healthcheck:
+      test: ["CMD-SHELL", "node", "/app/healthcheck.js"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  you-say-api-db:
+    image: mongo:4.4.14-rc0-focal
+    container_name: you-say-api-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/${MONGO_INITDB_DATABASE} --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  fusionauth:
+    image: fusionauth-image
+    build:
+      context: .
+      dockerfile: ./deployment/fusionauth/Dockerfile
+    container_name: fusionauth-container
+    depends_on:
+      fusionauth-db:
+        condition: service_healthy
+      mailcatcher:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://fusionauth-db:5432/fusionauth
+      DATABASE_USERNAME: fusionauth # I could not change it -- BUT why? IDK
+      DATABASE_PASSWORD: ${FUSIONAUTH_POSTGRESQL_PASSWORD}
+      DATABASE_ROOT_USERNAME: ${POSTGRES_USER}
+      DATABASE_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+      FUSIONAUTH_APP_URL: http://fusionauth:9011
+      FUSIONAUTH_APP_MEMORY: 512M
+      FUSIONAUTH_APP_RUNTIME_MODE: production
+      FUSIONAUTH_APP_KICKSTART_FILE: /usr/local/fusionauth/kickstart.json # Could not create apiKey with terrafrom
+    ports:
+      - 9011:9011
+    volumes:
+      - ./deployment/fusionauth/kickstart.json:/usr/local/fusionauth/kickstart.json
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://0.0.0.0:9011/api/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  fusionauth-db:
+    image: postgres:12.14
+    container_name: fusionauth-db-container
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      PGUSER: ${POSTGRES_USER} # healthcheck variable
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailcatcher:
+    image: sj26/mailcatcher:v0.8.2
+    container_name: mailcatcher-container
+    ports:
+      - 1026:1025
+      - 1081:1080
+    healthcheck:
+      test: wget -q -O /dev/null http://mailcatcher:1080/
+      interval: 10s
+      retries: 80

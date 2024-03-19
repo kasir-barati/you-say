@@ -26,6 +26,7 @@
       "command": "docker build -f apps/backend/Dockerfile --progress=plain . -t you-say-api-image"
     },
     "build:dev:docker": {
+      "dependsOn": ["build"],
       "command": "docker build -f apps/backend/dev.Dockerfile . --progress=plain -t you-say-api-image"
     },
     "cleanup": {

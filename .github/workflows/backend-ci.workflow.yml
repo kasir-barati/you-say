@@ -37,3 +37,5 @@ jobs:
         run: npx nx affected --target=build --parallel=3
       - name: Unit test changed and affected ones by those changes
         run: npx nx affected --target=test:unit --parallel=3  --ci --coverage
+      # TODO: Build backend image
+      # TODO: Push backend image to a docker registry

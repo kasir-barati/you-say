@@ -1,0 +1,109 @@
+name: Backend e2e tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      run_backend_e2e_tests:
+        description: Run e2e tests of backend app
+        required: false
+        type: boolean
+
+env:
+  FUSIONAUTH_HOST: "http://fusionauth:9011"
+  FUSIONAUTH_ISSUER: "http://fusionauth:9011"
+  FUSIONAUTH_API_KEY: "fusionauth_api_key_${{ github.run_id }}_${{ github.run_attempt }}"
+  POSTGRES_USER: "postgres-user-${{ github.run_id }}-${{ github.run_attempt }}"
+  POSTGRES_PASSWORD: "postgres-password-${{ github.run_id }}-${{ github.run_attempt }}"
+  FUSIONAUTH_POSTGRESQL_PASSWORD: "fusionauth-postgresql-password-${{ github.run_id }}-${{ github.run_attempt }}"
+  MONGO_INITDB_DATABASE: "you-say"
+  MONGO_INITDB_ROOT_USERNAME: "mongodb-root-user-${{ github.run_id }}-${{ github.run_attempt }}"
+  MONGO_INITDB_ROOT_PASSWORD: "mongodb-root-password-${{ github.run_id }}-${{ github.run_attempt }}"
+  OAUTH_CONFIGURATION_CLIENT_SECRET: "client-secret-${{ github.run_id }}-${{ github.run_attempt }}"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    if:
+      ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ||
+      github.event_name == 'workflow_dispatch' && inputs.run_backend_e2e_tests == true }}
+    steps:
+      - name: Clone you-say repo in Ubuntu
+        uses: actions/checkout@v4
+      - name: Set up QEMU to add support for more platforms with QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          # Sets the BuildKit image to use for the container.
+          # https://hub.docker.com/r/moby/buildkit/tags/
+          driver-opts: image=moby/buildkit:v0.13.0
+      - name: Set commit status to pending
+        uses: guibranco/github-status-action-v2@v1.1.9
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          state: pending
+          context: Backend e2e tests
+          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      - name: Check if the changes were made to our backend
+        uses: dorny/paths-filter@v3
+        id: backend-changes
+        with:
+          filters: |
+            backend:
+              - 'apps/backend/**'
+              - 'apps/backend-e2e/**'
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Setup NodeJS version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+          cache: "npm"
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Install 3rd party libraries/packages
+        run: npm ci --ignore-scripts
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Build backend docker image
+        run: nx build:docker backend
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Remove kickstart.json
+        run: rm -rf ./deployment/fusionauth/kickstart.json
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Create kickstart.json, using FUSIONAUTH_API_KEY
+        run: |
+          touch ./deployment/fusionauth/kickstart.json
+          echo '{"apiKeys":[{ "key":${{env.FUSIONAUTH_API_KEY}} }]}' >> ./deployment/fusionauth/kickstart.json
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Start docker services
+        run: docker compose -f e2e.docker-compose.yml up -d
+        env:
+          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Initialize, and apply terraform
+        run: |
+          nx init:terraform backend
+          nx apply:terraform backend
+          nx apply:terraform backend
+        env:
+          TF_VAR_fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
+          TF_VAR_fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
+          TF_VAR_fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
+          TF_VAR_oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
+          TF_VAR_fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Generate Open API
+        run: nx openapi:generate backend
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Execute e2e tests
+        run: nx test:e2e backend-e2e
+      - if: ${{ success() }}
+        name: Set commit status to success if tests passed
+        uses: guibranco/github-status-action-v2@v1.1.9
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          state: success
+          context: Backend e2e tests
+          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
