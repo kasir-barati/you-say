@@ -4,7 +4,14 @@
 GITHUB_ACTIONS_DIR=".github"
 
 if ! git diff --quiet "$DIRECTORY"; then
+  echo "Running actionlint against github workflows..."
   actionlint
+fi
+
+if ! git diff --quiet "apps/backend"; then
+  echo "Creating openApi.json and staging it..."
+  nx openapi:create backend
+  git add apps/backend/openApi.json
 fi
 
 echo "Running lint-staged..."
