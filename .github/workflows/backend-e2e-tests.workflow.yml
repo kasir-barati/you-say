@@ -67,7 +67,7 @@ jobs:
         run: npm ci --ignore-scripts
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Build backend docker image
-        run: nx build:docker backend
+        run: npx nx build:docker backend
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Remove kickstart.json
         run: rm -rf ./deployment/fusionauth/kickstart.json
@@ -84,9 +84,9 @@ jobs:
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Initialize, and apply terraform
         run: |
-          nx init:terraform backend
-          nx apply:terraform backend
-          nx apply:terraform backend
+          npx nx init:terraform backend
+          npx nx apply:terraform backend
+          npx nx apply:terraform backend
         env:
           TF_VAR_fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
           TF_VAR_fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
@@ -95,10 +95,10 @@ jobs:
           TF_VAR_fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Generate Open API
-        run: nx openapi:generate backend
+        run: npx nx openapi:generate backend
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Execute e2e tests
-        run: nx test:e2e backend-e2e
+        run: npx nx test:e2e backend-e2e
       - if: ${{ success() }}
         name: Set commit status to success if tests passed
         uses: guibranco/github-status-action-v2@v1.1.8
