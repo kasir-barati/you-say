@@ -6,6 +6,7 @@ export class RegisterDto {
   @ApiProperty({
     type: String,
     description: "User's Email address",
+    example: `e${Date.now()}@gmail.com`,
   })
   @IsEmail()
   email: string;

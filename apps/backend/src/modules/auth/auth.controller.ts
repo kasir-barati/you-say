@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -24,7 +24,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'This endpoint creates a new user in FusionAuth.',
   })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     type: null,
     description:
       'Returns nothing. Use http status code 201 to indicate success.',
