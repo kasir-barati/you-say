@@ -100,6 +100,9 @@ jobs:
           sleep 20
           curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status
 
+      - name: HHHHHHHHHHHHHHHHHHHHHHHHH
+        run: echo "${{ env.FUSIONAUTH_API_KEY }}""
+
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Configuring infrastructure with terraform
         id: terraform

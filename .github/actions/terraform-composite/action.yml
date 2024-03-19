@@ -46,6 +46,12 @@ runs:
     - name: Initialize and apply terraform
       shell: bash
       run: |
+        echo "HHHHHHHHHHHHHHHHHHHHHHHHH"
+        echo $TF_VAR_fusionauth_host
+        echo $TF_VAR_fusionauth_issuer
+        echo $TF_VAR_fusionauth_api_key
+        echo $TF_VAR_oauth_configuration_client_secret
+        echo $TF_VAR_fusionauth_email_configuration_password
         terraform -chdir=deployment init
         terraform -chdir=deployment apply -auto-approve
         terraform -chdir=deployment apply -auto-approve
