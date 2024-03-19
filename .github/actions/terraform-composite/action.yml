@@ -25,16 +25,16 @@ inputs:
 outputs:
   fusionauth_tenant_id:
     description: ID of the created tenant
-    value: ${{ jobs.terraform.outputs.fusionAuthTenantId }}
+    value: ${{ steps.fusionauth-tenant-id.outputs.fusionauth_tenant_id }}
   fusionauth_client_id:
     description: ID of the created client
-    value: ${{ jobs.terraform.outputs.fusionAuthClientId }}
+    value: ${{ steps.fusionauth-client-id.outputs.fusionauth_client_id }}
   fusionauth_application_id:
     description: ID of the created application
-    value: ${{ jobs.terraform.outputs.fusionAuthClientId }}
+    value: ${{ steps.fusionauth-application-id.outputs.fusionauth_application_id }}
   fusionauth_admin_group_id:
     description: ID of the admin group in FusionAuth
-    value: ${{ jobs.terraform.outputs.fusionAuthRytleUserGroupId }}
+    value: ${{ steps.fusionauth-tenant-id.outputs.fusionauth_admin_group_id }}
 
 runs:
   using: "composite"
@@ -55,10 +55,14 @@ runs:
         TF_VAR_oauth_configuration_client_secret: ${{ secrets.oauth_configuration_client_secret }}
         TF_VAR_fusionauth_email_configuration_password: ${{ secrets.fusionauth_email_configuration_password }}
     - name: Set FusionAuth tenant id output
-      run: echo "::set-output name=fusionauth_tenant_id::$(terraform output -raw fusionauth_tenant_id)"
+      id: fusionauth-tenant-id
+      run: echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth client id output
-      run: echo "::set-output name=fusionauth_client_id::$(terraform output -raw fusionauth_client_id)"
+      id: fusionauth-client-id
+      run: echo "fusionauth_client_id=$(terraform output -raw fusionauth_client_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth application id output
-      run: echo "::set-output name=fusionauth_application_id::$(terraform output -raw fusionauth_application_id)"
+      id: fusionauth-application-id
+      run: echo "fusionauth_application_id=$(terraform output -raw fusionauth_application_id)" >> $GITHUB_OUTPUT
     - name: Set FusionAuth admin group id output
-      run: echo "::set-output name=fusionauth_admin_group_id::$(terraform output -raw fusionauth_admin_group_id)"
+      id: fusionauth-admin-group-id
+      run: echo "fusionauth_admin_group_id=$(terraform output -raw fusionauth_admin_group_id)" >> $GITHUB_OUTPUT
