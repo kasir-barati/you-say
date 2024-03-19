@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.4.2, <= 1.5.7"
+  required_version = ">= 1.4.2, <= 1.7.5"
 }
 
 module "fusionauth" {
