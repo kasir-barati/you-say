@@ -51,9 +51,9 @@ runs:
       env:
         TF_VAR_fusionauth_host: ${{ inputs.fusionauth_host }}
         TF_VAR_fusionauth_issuer: ${{ inputs.fusionauth_issuer }}
-        TF_VAR_fusionauth_api_key: ${{ secrets.fusionauth_api_key }}
-        TF_VAR_oauth_configuration_client_secret: ${{ secrets.oauth_configuration_client_secret }}
-        TF_VAR_fusionauth_email_configuration_password: ${{ secrets.fusionauth_email_configuration_password }}
+        TF_VAR_fusionauth_api_key: ${{ inputs.fusionauth_api_key }}
+        TF_VAR_oauth_configuration_client_secret: ${{ inputs.oauth_configuration_client_secret }}
+        TF_VAR_fusionauth_email_configuration_password: ${{ inputs.fusionauth_email_configuration_password }}
     - name: Set FusionAuth tenant id output
       id: fusionauth-tenant-id
       run: echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)" >> $GITHUB_OUTPUT
