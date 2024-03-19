@@ -90,7 +90,7 @@ jobs:
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Configuring infrastructure with terraform
         id: terraform
-        uses: ./.github/composites/terraform.composite.yml
+        uses: ./.github/actions/terraform-composite/action.yml
         with:
           fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
           fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
