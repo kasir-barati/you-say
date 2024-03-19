@@ -33,18 +33,12 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          {
-            "command": "docker-compose down -v"
-          },
-          {
-            "command": "docker system prune -f"
-          },
-          {
-            "command": "rm -rf ./dist/apps/backend"
-          },
-          {
-            "command": "rm -rf deployment/terraform.tfstate* deployment/.terraform*"
-          }
+          "clear",
+          "docker-compose -f dev.docker-compose.yml down -v",
+          "docker-compose -f fusionauth.docker-compose.yml down -v",
+          "docker system prune -f",
+          "rm -rf ./dist/apps/backend",
+          "rm -rf deployment/terraform.tfstate* deployment/.terraform*"
         ]
       }
     },
@@ -81,24 +75,17 @@
       "options": {
         "parallel": false,
         "commands": [
-          {
-            "command": "nx cleanup backend"
-          },
-          {
-            "command": "nx build:dev:docker backend"
-          },
-          {
-            "command": "docker-compose up -d"
-          },
-          {
-            "command": "nx init:terraform backend -var-file=./dev.tfvars"
-          },
-          {
-            "command": "nx apply:terraform backend -var-file=./dev.tfvars"
-          },
-          {
-            "command": "nx apply:terraform backend -var-file=./dev.tfvars"
-          }
+          "clear",
+          "nx cleanup backend",
+          "nx build:dev:docker backend",
+          "docker network create you-say-network",
+          "docker-compose -f fusionauth.docker-compose.yml up -d",
+          "sleep 10",
+          "curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status",
+          "docker-compose -f dev.docker-compose.yml up -d",
+          "nx init:terraform backend -var-file=./dev.tfvars",
+          "nx apply:terraform backend -var-file=./dev.tfvars",
+          "nx apply:terraform backend -var-file=./dev.tfvars"
         ]
       }
     },

@@ -15,7 +15,7 @@ env:
   FUSIONAUTH_HOST: "http://fusionauth:9011"
   FUSIONAUTH_ISSUER: "http://fusionauth:9011"
   FUSIONAUTH_API_KEY: "fusionauth_api_key_${{ github.run_id }}_${{ github.run_attempt }}"
-  POSTGRES_USER: "postgres-user-${{ github.run_id }}-${{ github.run_attempt }}"
+  POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "postgres-password-${{ github.run_id }}-${{ github.run_attempt }}"
   FUSIONAUTH_POSTGRESQL_PASSWORD: "fusionauth-postgresql-password-${{ github.run_id }}-${{ github.run_attempt }}"
   MONGO_INITDB_DATABASE: "you-say"
@@ -27,8 +27,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-22.04
     timeout-minutes: 45
-    if:
-      ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ||
+    if: ${{
+      github.event_name == 'push' && github.ref == 'refs/heads/main' ||
       github.event_name == 'workflow_dispatch' && inputs.run_backend_e2e_tests == true }}
     steps:
       - name: Clone you-say repo in Ubuntu
@@ -42,7 +42,7 @@ jobs:
           # https://hub.docker.com/r/moby/buildkit/tags/
           driver-opts: image=moby/buildkit:v0.13.0
       - name: Set commit status to pending
-        uses: guibranco/github-status-action-v2@v1.1.8
+        uses: guibranco/github-status-action-v2@v1.1.13
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           state: pending
@@ -77,27 +77,35 @@ jobs:
           touch ./deployment/fusionauth/kickstart.json
           echo '{"apiKeys":[{ "key":${{env.FUSIONAUTH_API_KEY}} }]}' >> ./deployment/fusionauth/kickstart.json
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Start docker services
-        run: docker compose -f e2e.docker-compose.yml up -d
-        env:
-          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
+        name: Creating docker network
+        run: docker network create you-say-network
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Setup terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.7.4"
+        name: Starting fusionauth service
+        run: docker compose -f fusionauth.docker-compose.yml up -d
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Initialize, and apply terraform
+        name: Making sure that fusionauth is healthy
         run: |
-          npx nx init:terraform backend
-          npx nx apply:terraform backend
-          npx nx apply:terraform backend
+          sleep 20
+          curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Configuring infrastructure with terraform
+        id: terraform
+        uses: ./.github/composites/terraform.composite.yml
+        with:
+          fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
+          fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
+          fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
+          oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
+          fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
+      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+        name: Starting backend service
+        run: docker compose -f backend.docker-compose.yml up -d
         env:
-          TF_VAR_fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
-          TF_VAR_fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
-          TF_VAR_fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
-          TF_VAR_oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
-          TF_VAR_fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
+          FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
+          FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
+          FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
+          FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
+          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Generate Open API
         run: npx nx openapi:generate backend
@@ -106,7 +114,7 @@ jobs:
         run: npx nx test:e2e backend-e2e
       - if: ${{ success() }}
         name: Set commit status to success if tests passed
-        uses: guibranco/github-status-action-v2@v1.1.8
+        uses: guibranco/github-status-action-v2@v1.1.13
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           state: success

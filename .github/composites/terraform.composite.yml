@@ -1,0 +1,64 @@
+name: Composite Terraform GitHub action
+description: Initialize and apply terraform plans
+
+inputs:
+  fusionauth_host:
+    type: string
+    required: true
+    description: FusionAuth instance host url
+  fusionauth_issuer:
+    type: string
+    required: true
+    description: The URL of the JWT tokens issuer
+  fusionauth_api_key:
+    type: string
+    required: true
+    description: Super API Key used to access the FusionAuth API
+  oauth_configuration_client_secret:
+    type: string
+    required: true
+    description: The Client Secret used to authenticate with the OAuth Provider
+  fusionauth_email_configuration_password:
+    type: string
+    required: true
+    description: The email password used to authenticate with the OAuth Provider
+outputs:
+  fusionauth_tenant_id:
+    description: ID of the created tenant
+    value: ${{ jobs.terraform.outputs.fusionAuthTenantId }}
+  fusionauth_client_id:
+    description: ID of the created client
+    value: ${{ jobs.terraform.outputs.fusionAuthClientId }}
+  fusionauth_application_id:
+    description: ID of the created application
+    value: ${{ jobs.terraform.outputs.fusionAuthClientId }}
+  fusionauth_admin_group_id:
+    description: ID of the admin group in FusionAuth
+    value: ${{ jobs.terraform.outputs.fusionAuthRytleUserGroupId }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.7.4"
+    - name: Initialize and apply terraform
+      run: |
+        terraform -chdir=deployment init
+        terraform -chdir=deployment apply -auto-approve
+        terraform -chdir=deployment apply -auto-approve
+      env:
+        TF_VAR_fusionauth_host: ${{ inputs.fusionauth_host }}
+        TF_VAR_fusionauth_issuer: ${{ inputs.fusionauth_issuer }}
+        TF_VAR_fusionauth_api_key: ${{ secrets.fusionauth_api_key }}
+        TF_VAR_oauth_configuration_client_secret: ${{ secrets.oauth_configuration_client_secret }}
+        TF_VAR_fusionauth_email_configuration_password: ${{ secrets.fusionauth_email_configuration_password }}
+    - name: Set FusionAuth tenant id output
+      run: echo "::set-output name=fusionauth_tenant_id::$(terraform output -raw fusionauth_tenant_id)"
+    - name: Set FusionAuth client id output
+      run: echo "::set-output name=fusionauth_client_id::$(terraform output -raw fusionauth_client_id)"
+    - name: Set FusionAuth application id output
+      run: echo "::set-output name=fusionauth_application_id::$(terraform output -raw fusionauth_application_id)"
+    - name: Set FusionAuth admin group id output
+      run: echo "::set-output name=fusionauth_admin_group_id::$(terraform output -raw fusionauth_admin_group_id)"

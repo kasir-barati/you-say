@@ -6,26 +6,20 @@ services:
     container_name: you-say-api-container
     build:
       context: .
-      dockerfile: ./apps/backend/Dockerfile
+      dockerfile: ./apps/backend/dev.Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+        volume:
+          nocopy: true
     ports:
       - 3001:3001
     depends_on:
       you-say-api-db:
         condition: service_healthy
-    environment:
-      FUSIONAUTH_HOST: ${FUSIONAUTH_HOST}
-      FUSIONAUTH_ISSUER: ${FUSIONAUTH_ISSUER}
-      FUSIONAUTH_API_KEY: ${FUSIONAUTH_API_KEY}
-      FUSIONAUTH_TENANT_ID: ${FUSIONAUTH_TENANT_ID}
-      FUSIONAUTH_APPLICATION_ID: ${FUSIONAUTH_APPLICATION_ID}
-      FUSIONAUTH_ADMIN_GROUP_ID: ${FUSIONAUTH_ADMIN_GROUP_ID}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      FUSIONAUTH_POSTGRESQL_PASSWORD: ${FUSIONAUTH_POSTGRESQL_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      DATABASE_URL: ${DATABASE_URL}
+    env_file:
+      - .env
     networks:
       - you-say-network
     healthcheck:
