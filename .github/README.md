@@ -21,7 +21,22 @@ You also need to comply with their convention of directory structure and how you
 
 # Workflows
 
-Here we are gonna break our GH actions and what each workflow does for us.
+For local development and running e2e tests - whether it is on our local env or GH actions runner - we need `FUSIONAUTH_HOST=http://fusionauth:9011` but for the terraform we need `fusionauth_host=http://localhost:9011` because there terraform wanted to configure FusionAuth but in our code we wanted to talk to our FusionAuth instance via axios, over HTTP protocol. As such you can see that in our `backend-e2e-tests.workflow.yml` we had to pass different values to the same env variable:
+
+```yml
+# ...
+name: Configuring infrastructure with terraform
+id: terraform
+uses: ./.github/actions/terraform-composite
+with:
+  fusionauth_host: 'http://localhost:9011'
+# ...
+name: Starting backend service
+run: docker compose -f docker-compose.yml up -d
+env:
+  FUSIONAUTH_HOST: "http://fusionauth:9011"
+# ...
+```
 
 ## Backend CI
 

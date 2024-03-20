@@ -6,8 +6,6 @@ nx g @nx/next:app apps/frontend
 
 # you-say
 
-For local development and starting app in Docker we need `FUSIONAUTH_HOST=http://fusionauth:9011` but for e2e we need to change it to `FUSIONAUTH_HOST=http://localhost:9011` because of how docker containers see each other.
-
 ## Integrate with editors
 
 Enhance your Nx experience by installing [Nx Console](https://nx.dev/nx-console) for your favorite editor. Nx Console
