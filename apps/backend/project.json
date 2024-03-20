@@ -34,8 +34,8 @@
       "options": {
         "commands": [
           "clear",
-          "docker-compose -f dev.docker-compose.yml down -v",
-          "docker-compose -f fusionauth.docker-compose.yml down -v",
+          "docker compose -f dev.docker-compose.yml down -v",
+          "docker compose -f fusionauth.docker-compose.yml down -v",
           "docker system prune -f",
           "rm -rf ./dist/apps/backend",
           "rm -rf deployment/terraform.tfstate* deployment/.terraform*",
@@ -80,10 +80,10 @@
           "nx cleanup backend",
           "nx build:dev:docker backend",
           "docker network create you-say-network",
-          "docker-compose -f fusionauth.docker-compose.yml up -d",
+          "docker compose -f fusionauth.docker-compose.yml up -d",
           "sleep 10",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status",
-          "docker-compose -f dev.docker-compose.yml up -d",
+          "docker compose -f dev.docker-compose.yml up -d",
           "nx init:terraform backend -var-file=./dev.tfvars",
           "nx apply:terraform backend -var-file=./dev.tfvars",
           "nx apply:terraform backend -var-file=./dev.tfvars"

@@ -38,6 +38,8 @@ env:
 # ...
 ```
 
+**`localhost` always refers to the current container. Therefore we have to use the service name and cope with it :sad:. [REF](https://forums.docker.com/t/localhost-and-docker-compose-networking-issue/23100/2)**
+
 ## Backend CI
 
 The purpose of this workflow is to automatically run whenever code is pushed to the main branch. This allows the codebase to be continuously built, tested, and validated whenever changes are made.
