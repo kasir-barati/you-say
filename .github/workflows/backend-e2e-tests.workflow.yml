@@ -93,6 +93,8 @@ jobs:
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Starting fusionauth service
         run: docker compose -f fusionauth.docker-compose.yml up -d
+        env:
+          FUSIONAUTH_APP_RUNTIME_MODE: production
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Making sure that fusionauth is healthy
@@ -111,11 +113,6 @@ jobs:
           oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
           fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
 
-      - name: HHHHHHHHHHHHHHHHH
-        shell: bash
-        run: |
-          echo "${{ toJSON(steps.terraform.outputs) }}"
-
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Starting backend service
         run: docker compose -f docker-compose.yml up -d
@@ -128,11 +125,7 @@ jobs:
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Generate Open API
-        run: |
-          echo "HHHHHHHHHHHHHHHHH"
-          echo $MONGO_INITDB_DATABASE
-          echo $DATABASE_URL
-          npx nx openapi:generate backend
+        run: npx nx openapi:generate backend
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
