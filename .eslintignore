@@ -13,3 +13,4 @@ deployment/**/*.js
 **/*.ftl
 **/*.css
 **Dockerfile
+**/*.ico
