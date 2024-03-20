@@ -61,11 +61,12 @@ runs:
     - name: HHHHHHHHHHHHHHH
       shell: bash
       run: |
-        terraform output -raw fusionauth_tenant_id
-        echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)"
         terraform output -raw fusionauth_client_id
         terraform output -raw fusionauth_application_id
         terraform output -raw fusionauth_admin_group_id
+        echo "HHHHHHHHHHHHHH"
+        terraform output -raw fusionauth_tenant_id
+        echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)"
 
     - name: Set FusionAuth tenant id output
       id: fusionauth-tenant-id
