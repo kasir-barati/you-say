@@ -35,7 +35,7 @@ outputs:
     value: ${{ steps.fusionauth-application-id.outputs.fusionauth_application_id }}
   fusionauth_admin_group_id:
     description: ID of the admin group in FusionAuth
-    value: ${{ steps.fusionauth-tenant-id.outputs.fusionauth_admin_group_id }}
+    value: ${{ steps.fusionauth-admin-group-id.outputs.fusionauth_admin_group_id }}
 
 runs:
   using: "composite"

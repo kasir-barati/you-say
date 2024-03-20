@@ -115,7 +115,6 @@ jobs:
         shell: bash
         run: |
           echo "${{ toJSON(steps.terraform.outputs) }}"
-          echo "${{ steps.terraform.outputs.fusionauth_admin_group_id }}"
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Starting backend service
