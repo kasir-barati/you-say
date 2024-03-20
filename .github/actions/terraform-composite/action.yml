@@ -59,6 +59,7 @@ runs:
         TF_VAR_fusionauth_email_configuration_password: ${{ inputs.fusionauth_email_configuration_password }}
 
     - name: HHHHHHHHHHHHHHH
+      shell: bash
       run: |
         terraform output -raw fusionauth_tenant_id
         echo "fusionauth_tenant_id=$(terraform output -raw fusionauth_tenant_id)"
