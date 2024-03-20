@@ -16,8 +16,10 @@ axios.interceptors.response.use(
       },
       data: error.response?.data,
     };
+
     console.dir({ request }, { depth: null });
     console.dir({ response }, { depth: null });
+
     return Promise.reject(error);
   },
 );
