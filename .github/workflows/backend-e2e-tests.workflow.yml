@@ -128,7 +128,18 @@ jobs:
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Generate Open API
-        run: npx nx openapi:generate backend
+        run: |
+          echo "HHHHHHHHHHHHHHHHH"
+          echo $MONGO_INITDB_DATABASE
+          echo $DATABASE_URL
+          npx nx openapi:generate backend
+        env:
+          FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
+          FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
+          FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
+          FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
+          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
+          SWAGGER_PATH: docs
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Execute e2e tests
