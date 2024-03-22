@@ -1,9 +1,10 @@
+import { Roboto } from 'next/font/google';
 import './global.css';
 
-export const metadata = {
-  title: 'Welcome to you-say',
-  description: 'Where you can talk and read!',
-};
+const roboto = Roboto({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 export default function RootLayout({
   children,
@@ -11,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={roboto.className}>
+      <body className="">{children}</body>
     </html>
   );
 }

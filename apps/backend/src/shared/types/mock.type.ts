@@ -13,8 +13,8 @@ export type RecursivePartial<T> = Partial<{
         ...a: Array<U>
       ) => RecursivePartial<ReturnType<T[key]>> | ReturnType<T[key]> // tslint:disable-line
     : T[key] extends Array<unknown>
-    ? Array<RecursivePartial<T[key][number]>>
-    : RecursivePartial<T[key]> | T[key];
+      ? Array<RecursivePartial<T[key][number]>>
+      : RecursivePartial<T[key]> | T[key];
 }>;
 
 export type StubbedObject<

@@ -43,7 +43,6 @@ async function bootstrap() {
       .setTitle('You-Say API')
       .setDescription('The You-Say RESTful API')
       .addBearerAuth({
-        // TODO: bearer token from keycloak
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
