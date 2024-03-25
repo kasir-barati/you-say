@@ -36,7 +36,6 @@
           "clear",
           "docker compose -f dev.docker-compose.yml down -v",
           "docker compose -f fusionauth.docker-compose.yml down -v",
-          "docker system prune -f",
           "rm -rf ./dist/apps/backend",
           "rm -rf deployment/terraform.tfstate* deployment/.terraform*",
           "docker network inspect you-say-network >/dev/null 2>&1 && docker network rm you-say-network || echo 'Network you-say-network does not exist'",

@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react';
 import { Input, InputProps } from './input.component';
 
 describe('Input', () => {
-  it.each<Required<InputProps>>([
+  it.each<InputProps>([
     {
       className: 'class1',
       dataTest: 'input1',
@@ -20,10 +20,10 @@ describe('Input', () => {
   ])('should pass down all the props', async (props) => {
     const screen = await act(() => render(<Input {...props} />));
 
-    const input = screen.getByTestId(props.dataTest);
+    const input = screen.getByTestId(props.dataTest!);
 
     expect(input).toBeInTheDocument();
     expect(input.id).toBe(props.id);
-    expect(input).toHaveClass(props.className);
+    expect(input).toHaveClass(props.className!);
   });
 });

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
 import { IsValidString } from '../../../shared/decorators/is-valid-string.decorator';
 
+// TODO: Use shared register dto
 export class RegisterDto {
   @ApiProperty({
     type: String,

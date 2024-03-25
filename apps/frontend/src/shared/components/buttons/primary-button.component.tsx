@@ -5,6 +5,7 @@ export interface PrimaryButtonProps {
   onClick?(): void;
   dataTest?: string;
   className?: string;
+  type?: 'submit' | 'reset' | 'button';
 }
 
 export function PrimaryButton({
@@ -12,6 +13,7 @@ export function PrimaryButton({
   children,
   className,
   dataTest = 'primary-button',
+  type,
 }: Readonly<PropsWithChildren<PrimaryButtonProps>>) {
   return (
     <button
@@ -21,6 +23,7 @@ export function PrimaryButton({
         className,
       )}
       onClick={onClick}
+      type={type}
     >
       {children}
     </button>

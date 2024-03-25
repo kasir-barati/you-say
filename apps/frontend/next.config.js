@@ -2,6 +2,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
+const { join } = require('path');
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -14,6 +15,9 @@ const nextConfig = {
   },
   output: 'export',
   distDir: '../../dist/apps/frontend',
+  experimental: {
+    outputFileTracingRoot: join(__dirname, '../../'),
+  },
   cleanDistDir: true,
 };
 

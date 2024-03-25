@@ -1,3 +1,14 @@
+# CLI
+
+```cli
+nx g @nx/next:page my-new-page --directory=dir-where-to-place-the-page
+nx g @nx/next:component my-new-component --directory=dir-where-to-place-the-component
+```
+
+# Expanding `process.env` types
+
+We needed to create a new type declaration file called `env.d.ts` to declare our environmental variables, [read more](https://nextjs.org/docs/pages/building-your-application/configuring/typescript#custom-type-declarations).
+
 # Testing strategy for frontend application
 
 1. Test props in Jest

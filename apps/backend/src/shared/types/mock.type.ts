@@ -1,3 +1,5 @@
+// TODO: Remove this and use the shared one
+
 import { SinonStub } from 'sinon';
 
 export type MockableEntity = object;

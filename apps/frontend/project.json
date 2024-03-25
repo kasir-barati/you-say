@@ -5,7 +5,6 @@
   "projectType": "application",
   "targets": {
     "build:docker": {
-      "dependsOn": ["build"],
       "command": "docker build -f apps/frontend/Dockerfile . -t frontend"
     }
   },

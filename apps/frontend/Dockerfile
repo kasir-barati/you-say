@@ -3,15 +3,21 @@
 # Build the docker image with `nx build:docker frontend`.
 #
 # Run the container with `docker run -p 3000:3000 -t frontend`.
-FROM docker.io/nginx:1.25.4-alpine3.18
+FROM docker.io/node:20.10.0-alpine AS build_stage
+WORKDIR /build
+COPY tsconfig.base.json jest.preset.js nx.json ./
+COPY package*.json ./
+# README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
+RUN npm ci --ignore-scripts
+COPY shared ./
+COPY apps/frontend ./apps/frontend
+RUN npx nx build frontend
 
+FROM docker.io/nginx:1.25.4-alpine3.18
 ENV HOST=0.0.0.0
 ENV PORT=3000
-
 WORKDIR /app
-
 RUN addgroup --system frontend && \
     adduser --system -G frontend frontend
-
-COPY ../../dist/apps/frontend .
+COPY --chown=frontend:frontend --from=build_stage /build/dist
 RUN chown -R frontend:frontend .

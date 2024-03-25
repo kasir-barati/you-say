@@ -5,6 +5,7 @@ declare module 'express' {
 }
 
 export const ROLES_KEY = 'roles';
+// TODO: remove this and use shared one
 export enum Role {
   PostReader = 'PostReader',
   PostCreator = 'PostCreator',
@@ -22,6 +23,7 @@ export interface FusionAuthClientConfig {
 export enum FusionAuthUserGroup {
   Admin = 'Admin',
 }
+// TODO: remove this and use shared one
 export interface User {
   sub: string;
   roles: Role[];

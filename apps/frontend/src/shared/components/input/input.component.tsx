@@ -1,16 +1,17 @@
 import classNames from 'classnames';
-import { HTMLInputTypeAttribute } from 'react';
+import { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 
-export interface InputProps {
-  id?: string;
-  type: HTMLInputTypeAttribute;
+export type InputProps = {
   dataTest?: string;
-  className?: string;
-  placeholder?: string;
-}
+} & DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>;
 
 export function Input({
   type,
+  name,
+  onChange,
   className,
   placeholder,
   id = 'input-id',
@@ -26,6 +27,8 @@ export function Input({
         className,
       )}
       placeholder={placeholder}
+      onChange={onChange}
+      name={name}
     />
   );
 }

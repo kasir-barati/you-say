@@ -11,6 +11,8 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.tsx",
+    "env.d.ts",
+    "../../shared/**/*.ts",
     "src/**/*.spec.tsx",
     "src/**/*.test.js",
     "src/**/*.spec.js",

@@ -36,6 +36,12 @@
       "rules": {}
     },
     {
+      "files": ["*.d.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["off"]
+      }
+    },
+    {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
       "rules": {}
@@ -46,7 +52,8 @@
         "jest": true
       },
       "rules": {
-        "@typescript-eslint/no-empty-function": ["off"]
+        "@typescript-eslint/no-empty-function": ["off"],
+        "@typescript-eslint/no-non-null-assertion": ["off"]
       }
     }
   ]

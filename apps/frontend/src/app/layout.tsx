@@ -1,4 +1,8 @@
+'use client';
+
 import { Roboto } from 'next/font/google';
+import { Application } from '../shared/components/application/application.component';
+import { getStore } from '../shared/store';
 import './global.css';
 
 const roboto = Roboto({
@@ -11,9 +15,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const store = getStore();
+
   return (
     <html lang="en" className={roboto.className}>
-      <body className="">{children}</body>
+      <body className="">
+        <Application store={store}>{children}</Application>
+      </body>
     </html>
   );
 }

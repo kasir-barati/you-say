@@ -7,8 +7,18 @@ import {
 
 describe('PrimaryButton', () => {
   it.each<Required<PrimaryButtonProps>>([
-    { className: 'abc', dataTest: 'test1', onClick: jest.fn() },
-    { className: 'ghe', dataTest: 'test2', onClick: jest.fn() },
+    {
+      className: 'abc',
+      dataTest: 'test1',
+      onClick: jest.fn(),
+      type: 'button',
+    },
+    {
+      className: 'ghe',
+      dataTest: 'test2',
+      onClick: jest.fn(),
+      type: 'reset',
+    },
   ])('should pass args to the PrimaryButton', async (props) => {
     const screen = await act(() =>
       render(<PrimaryButton {...props} />),

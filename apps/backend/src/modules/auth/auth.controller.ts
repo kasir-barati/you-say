@@ -25,7 +25,7 @@ export class AuthController {
     summary: 'This endpoint creates a new user in FusionAuth.',
   })
   @ApiCreatedResponse({
-    type: null,
+    type: null, // TODO: use shared dto for response type
     description:
       'Returns nothing. Use http status code 201 to indicate success.',
   })
@@ -38,6 +38,7 @@ export class AuthController {
     description: 'Internal server error',
   })
   @ApiBadRequestResponse({})
+  // TODO: use shared dto for response type
   async register(@Body() registerDto: RegisterDto): Promise<void> {
     await this.authService.register({
       ...registerDto,

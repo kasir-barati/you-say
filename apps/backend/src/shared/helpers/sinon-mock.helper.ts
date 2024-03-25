@@ -1,3 +1,5 @@
+// TODO: Remove this and use the shared one
+
 import { SinonStub, stub } from 'sinon';
 import {
   MockGenerator,
