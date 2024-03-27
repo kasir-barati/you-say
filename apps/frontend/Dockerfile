@@ -3,21 +3,36 @@
 # Build the docker image with `nx build:docker frontend`.
 #
 # Run the container with `docker run -p 3000:3000 -t frontend`.
-FROM docker.io/node:20.10.0-alpine AS build_stage
+FROM docker.io/node:20.10.0-alpine AS dependencies_stage
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+
+FROM dependencies_stage AS build_stage
+ENV BUILD_STANDALONE true
 WORKDIR /build
 COPY tsconfig.base.json jest.preset.js nx.json ./
 COPY package*.json ./
 # README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
 RUN npm ci --ignore-scripts
-COPY shared ./
+COPY shared ./shared
 COPY apps/frontend ./apps/frontend
 RUN npx nx build frontend
 
-FROM docker.io/nginx:1.25.4-alpine3.18
-ENV HOST=0.0.0.0
-ENV PORT=3000
+FROM dependencies_stage
+ENV HOST 0.0.0.0
+ENV PORT 3000
 WORKDIR /app
 RUN addgroup --system frontend && \
     adduser --system -G frontend frontend
-COPY --chown=frontend:frontend --from=build_stage /build/dist
-RUN chown -R frontend:frontend .
+RUN mkdir .next
+RUN chown frontend:frontend .next
+COPY --chown=frontend:frontend ./apps/frontend/public ./public
+# apps/frontend is because this repo is a monorepo and NextJS puts the server.js there
+COPY --chown=frontend:frontend --from=build_stage /build/apps/frontend/.next/standalone/apps/frontend ./
+COPY --chown=frontend:frontend --from=build_stage /build/apps/frontend/.next/standalone/node_modules ./node_modules
+COPY --chown=frontend:frontend --from=build_stage /build/apps/frontend/.next/static .next/static
+USER frontend
+
+EXPOSE 3000
+
+CMD HOSTNAME="0.0.0.0" node server.js

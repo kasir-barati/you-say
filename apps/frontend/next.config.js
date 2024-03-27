@@ -13,11 +13,13 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  output: 'export',
-  distDir: '../../dist/apps/frontend',
   experimental: {
     outputFileTracingRoot: join(__dirname, '../../'),
   },
+  output:
+    process.env.BUILD_STANDALONE === 'true'
+      ? 'standalone'
+      : undefined,
   cleanDistDir: true,
 };
 

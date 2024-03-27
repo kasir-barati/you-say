@@ -1,2 +1,12 @@
-node_modules
-dist
+# Ignored files/directories named as follow at any level
+**/Dockerfile
+**/.dockerignore
+**/npm-debug.log
+**/README.md
+
+# Ignored directories named as follow at any level
+**/node_modules/
+**/.git/
+**/dist/
+**/.next/
+**/coverage/

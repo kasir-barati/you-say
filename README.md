@@ -21,9 +21,11 @@ comes with a LSP for Vim users.
 
 Run `nx dev backend` to start the development server. Happy coding!
 
-## Build
+# Nx scripts
 
 **Note**, we usually do not have to involve ourselves with these commands since we just wanted to develop the app in our local env via utilizing docker compose and for prod we will use tools such as CI/CD. But for you to have a better understanding I wrote this part. BTW the image for both prod and dev env have the same tag and version.
+
+## Backend
 
 ### Build the NestJS app with tsc
 
@@ -37,7 +39,7 @@ Run `nx build:dev:docker backend`
 
 Run `nx build:docker backend`
 
-## Cleanup backend
+### Cleanup backend
 
 Run `nx cleanup backend` to:
 
@@ -45,10 +47,21 @@ Run `nx cleanup backend` to:
 2. Execute `docker system prune`
 3. Remove the built artifacts for backend
 
-## Run e2e tests for backend
+### Run e2e tests for backend
 
 Run `nx test:e2e:docker backend-e2e` to run the e2e tests from scratch.
 Run `nx test:e2e backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
+
+## Frontend
+
+### Building NextJS app
+
+Run `nx build:docker frontend` to build it in production mode
+Run `nx build:docker frontend --configuration=dev` to build it in development mode:
+
+- It won't utilizes caching mechanism during building docker image
+
+**Note**: Do not use these two configuration options in your `next.config.js`, since by doing that it is gonna make it harder for us to build our app: `output: 'export'` and `distDir: '../../dist/apps/frontend'`. Better to follow the their [official docs](https://nextjs.org/docs/app/building-your-application/deploying#docker-image).
 
 ## Running tasks
 

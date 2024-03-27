@@ -1,8 +1,16 @@
 # CLI
 
+## Add new page/component
+
 ```cli
 nx g @nx/next:page my-new-page --directory=dir-where-to-place-the-page
 nx g @nx/next:component my-new-component --directory=dir-where-to-place-the-component
+```
+
+# Add a new NextJS app
+
+```cli
+nx g @nx/next:application appName --directory apps/appName
 ```
 
 # Expanding `process.env` types
