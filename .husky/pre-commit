@@ -1,9 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-clear
-
-if ! git diff --quiet "$DIRECTORY"; then
+if ! git diff --quiet ".github"; then
   echo "Running actionlint against github workflows..."
   actionlint
 fi

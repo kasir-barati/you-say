@@ -22,6 +22,8 @@
   "files.exclude": {
     "**/.next": true,
     "**/build": true,
+    "**/coverage": true,
+    "**/tmp": true,
     "**/dist": true,
     "**/jest-integration.config.d.ts": true,
     "**/jest-integration.config.js": true,
