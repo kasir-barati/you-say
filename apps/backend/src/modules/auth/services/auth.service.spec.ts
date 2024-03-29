@@ -1,6 +1,5 @@
 import FusionAuthClient from '@fusionauth/typescript-client';
-import { SinonMock } from '../../../shared/helpers/sinon-mock.helper';
-import { MockedEntityWithSinonStubs } from '../../../shared/types/mock.type';
+import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
 import {
   FusionAuthClientConfig,
   FusionAuthUserGroup,

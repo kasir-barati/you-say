@@ -1,5 +1,7 @@
 import type { Config } from 'jest';
-import { NodeEnv } from './src/shared/types/node-env';
+// I was not able to use @shared even though VSCode suggests it. So I had to use relative path
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { NodeEnv } from '../../packages/shared/src';
 
 process.env.NODE_ENV = NodeEnv.test;
 

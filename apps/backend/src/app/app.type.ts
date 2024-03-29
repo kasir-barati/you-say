@@ -1,4 +1,4 @@
-import { NodeEnv } from '../shared/types/node-env';
+import { NodeEnv } from '@shared';
 
 export interface AppConfig {
   NODE_ENV: NodeEnv;

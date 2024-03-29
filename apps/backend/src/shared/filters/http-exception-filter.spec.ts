@@ -1,16 +1,13 @@
 import { ArgumentsHost, HttpException } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { AbstractHttpAdapter, HttpAdapterHost } from '@nestjs/core';
+import { SinonMock, SinonMockType } from '@shared';
 import * as sinon from 'sinon';
 import { LoggerService } from '../../modules/logger/logger.service';
 import { BadRequestError } from '../contracts/bad-request-error.contract';
 import { ForbiddenError } from '../contracts/forbidden-error.contract';
 import { NotFoundError } from '../contracts/not-found-error.contract';
 import { UniqueError } from '../contracts/unique-error';
-import {
-  SinonMock,
-  SinonMockType,
-} from '../helpers/sinon-mock.helper';
 import { HttpExceptionFilter } from './http-exception.filter';
 
 type ErrorWithResponse = Error & {

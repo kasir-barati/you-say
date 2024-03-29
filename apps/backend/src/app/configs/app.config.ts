@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
+import { NodeEnv } from '@shared';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { validateEnvs } from '../../shared/helpers/validate-envs.helper';
-import { NodeEnv } from '../../shared/types/node-env';
 import { AppConfig } from '../app.type';
 
 declare global {

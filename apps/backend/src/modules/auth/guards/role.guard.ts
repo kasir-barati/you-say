@@ -1,8 +1,9 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Role } from '@shared';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { ROLES_KEY, Role } from '../auth.type';
+import { ROLES_KEY } from '../auth.type';
 
 export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}

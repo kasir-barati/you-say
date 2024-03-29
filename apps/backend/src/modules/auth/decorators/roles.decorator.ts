@@ -3,7 +3,7 @@ import {
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { Role } from '../auth.type';
+import { Role } from '@shared';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RoleGuard } from '../guards/role.guard';
 

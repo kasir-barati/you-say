@@ -1,1 +1,1 @@
-export type RegisterResponse = void;
+export type RegisterResponse = null;

@@ -27,7 +27,7 @@
     },
     "build:dev:docker": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/dev.Dockerfile . --progress=plain -t you-say-api-image"
+      "command": "docker build -f apps/backend/dev.Dockerfile . --progress=plain -t you-say-api-image:dev"
     },
     "cleanup": {
       "executor": "nx:run-commands",
@@ -37,6 +37,7 @@
           "docker compose -f dev.docker-compose.yml down -v",
           "docker compose -f fusionauth.docker-compose.yml down -v",
           "rm -rf ./dist/apps/backend",
+          "rm -rf ./dist/packages",
           "rm -rf deployment/terraform.tfstate* deployment/.terraform*",
           "docker network inspect you-say-network >/dev/null 2>&1 && docker network rm you-say-network || echo 'Network you-say-network does not exist'",
           "docker system prune -f"
@@ -81,7 +82,6 @@
           "nx build:dev:docker backend",
           "docker network create you-say-network",
           "docker compose -f fusionauth.docker-compose.yml up -d",
-          "sleep 10",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status",
           "docker compose -f dev.docker-compose.yml up -d",
           "nx init:terraform backend -var-file=./dev.tfvars",

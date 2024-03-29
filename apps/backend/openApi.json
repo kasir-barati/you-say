@@ -49,7 +49,7 @@
             "description": "Returns nothing. Use http status code 201 to indicate success."
           },
           "400": {
-            "description": "Bad request; email already exists.",
+            "description": "Bad request; email already exists, or name is invalid, etc.",
             "content": {
               "application/json": {
                 "schema": {
@@ -104,7 +104,7 @@
           "email": {
             "type": "string",
             "description": "User's Email address",
-            "example": "e1710927133565@gmail.com"
+            "example": "e1711679555114@gmail.com"
           },
           "firstName": {
             "type": "string",

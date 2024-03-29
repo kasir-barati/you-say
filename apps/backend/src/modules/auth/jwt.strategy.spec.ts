@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Role } from '@shared';
 import { Request } from 'express';
-import { FusionAuthClientConfig, Role } from './auth.type';
+import { FusionAuthClientConfig } from './auth.type';
 import fusionAuthConfig from './configs/fusion-auth.config';
 import { JwtStrategy, jwtFromRequest } from './jwt.strategy';
 

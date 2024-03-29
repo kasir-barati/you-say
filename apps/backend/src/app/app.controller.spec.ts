@@ -1,7 +1,4 @@
-import {
-  SinonMock,
-  SinonMockType,
-} from '../shared/helpers/sinon-mock.helper';
+import { SinonMock, SinonMockType } from '@shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 

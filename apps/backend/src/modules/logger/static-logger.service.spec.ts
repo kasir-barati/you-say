@@ -1,4 +1,4 @@
-import { NodeEnv } from '../../shared/types/node-env';
+import { NodeEnv } from '@shared';
 import { StaticLoggerService } from './static-logger.service';
 
 describe('StaticLoggerService', () => {

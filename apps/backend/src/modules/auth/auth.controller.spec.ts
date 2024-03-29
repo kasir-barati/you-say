@@ -1,7 +1,4 @@
-import {
-  SinonMock,
-  SinonMockType,
-} from '../../shared/helpers/sinon-mock.helper';
+import { SinonMock, SinonMockType } from '@shared';
 import { AuthController } from './auth.controller';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './services/auth.service';

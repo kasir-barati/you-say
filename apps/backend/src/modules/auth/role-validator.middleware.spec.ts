@@ -1,6 +1,5 @@
+import { Role, SinonMock } from '@shared';
 import { Request, Response } from 'express';
-import { SinonMock } from '../../shared/helpers/sinon-mock.helper';
-import { Role } from './auth.type';
 import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
 
 describe('RoleValidatorMiddlewareFactory', () => {

@@ -1,16 +1,10 @@
 declare module 'express' {
   interface Request {
-    user?: User;
+    user?: import('@shared').User;
   }
 }
 
 export const ROLES_KEY = 'roles';
-// TODO: remove this and use shared one
-export enum Role {
-  PostReader = 'PostReader',
-  PostCreator = 'PostCreator',
-  FileUploader = 'FileUploader',
-}
 export interface FusionAuthClientConfig {
   FUSIONAUTH_API_KEY: string;
   FUSIONAUTH_HOST: string;
@@ -22,9 +16,4 @@ export interface FusionAuthClientConfig {
 }
 export enum FusionAuthUserGroup {
   Admin = 'Admin',
-}
-// TODO: remove this and use shared one
-export interface User {
-  sub: string;
-  roles: Role[];
 }

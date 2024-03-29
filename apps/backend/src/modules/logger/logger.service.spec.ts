@@ -1,9 +1,5 @@
+import { NodeEnv, SinonMock, SinonMockType } from '@shared';
 import { AppConfig } from '../../app/app.type';
-import {
-  SinonMock,
-  SinonMockType,
-} from '../../shared/helpers/sinon-mock.helper';
-import { NodeEnv } from '../../shared/types/node-env';
 import { LoggerService } from './logger.service';
 
 describe('LoggerService', () => {

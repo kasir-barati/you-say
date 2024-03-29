@@ -2,7 +2,7 @@ version: "3"
 
 services:
   you-say-api:
-    image: you-say-api-image
+    image: you-say-api-image:dev
     container_name: you-say-api-container
     build:
       context: .
@@ -23,7 +23,7 @@ services:
     networks:
       - you-say-network
     healthcheck:
-      test: ["CMD-SHELL", "node", "/app/healthcheck.js"]
+      test: ["CMD-SHELL", "node", "/app/apps/backend/healthcheck.js"]
       interval: 5s
       timeout: 5s
       retries: 5

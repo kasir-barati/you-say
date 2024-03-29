@@ -2,10 +2,10 @@ import {
   SearchResponse,
   UserDeleteRequest,
 } from '@fusionauth/typescript-client';
+import { wait } from '@shared';
 import axios from 'axios';
 import { stringify } from 'querystring';
 import './env-loader.util';
-import { wait } from './wait.util';
 
 const FUSIONAUTH_HOST = 'http://localhost:9011';
 const { FUSIONAUTH_TENANT_ID, FUSIONAUTH_API_KEY } = process.env;

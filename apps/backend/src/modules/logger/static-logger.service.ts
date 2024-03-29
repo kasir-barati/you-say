@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NodeEnv } from '../../shared/types/node-env';
+import { NodeEnv } from '@shared';
 import { StaticLoggerArgs } from './logger.type';
 
 @Injectable()

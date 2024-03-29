@@ -1,7 +1,7 @@
 import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { NodeEnv } from '@shared';
 import appConfig from '../../app/configs/app.config';
-import { NodeEnv } from '../../shared/types/node-env';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {

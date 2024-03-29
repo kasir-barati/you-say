@@ -1,5 +1,5 @@
+import { generateRandomString } from '@shared';
 import { AuthApi } from '../api-client';
-import { generateRandomString } from '../utils/generate-random-string.util';
 
 describe('Auth', () => {
   const authApi: AuthApi = new AuthApi();

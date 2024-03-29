@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
+import { Role } from '@shared';
 import { Request } from 'express';
 import { getParamDecoratorFactory } from '../../../shared/helpers/get-param-decorator-factory.helper';
-import { Role } from '../auth.type';
 import { GetUser } from './get-user.decorator';
 
 describe('GetUser', () => {

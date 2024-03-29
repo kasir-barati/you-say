@@ -12,6 +12,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ErrorResponse } from '../../shared/types/error-response.type';
+import { RegisterResponseDto } from './dtos/register-response.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './services/auth.service';
 
@@ -25,20 +26,19 @@ export class AuthController {
     summary: 'This endpoint creates a new user in FusionAuth.',
   })
   @ApiCreatedResponse({
-    type: null, // TODO: use shared dto for response type
+    type: RegisterResponseDto,
     description:
       'Returns nothing. Use http status code 201 to indicate success.',
   })
   @ApiBadRequestResponse({
     type: ErrorResponse,
-    description: 'Bad request; email already exists.',
+    description:
+      'Bad request; email already exists, or name is invalid, etc.',
   })
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorException,
     description: 'Internal server error',
   })
-  @ApiBadRequestResponse({})
-  // TODO: use shared dto for response type
   async register(@Body() registerDto: RegisterDto): Promise<void> {
     await this.authService.register({
       ...registerDto,

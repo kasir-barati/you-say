@@ -1,9 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { MockedEntityWithSinonStubs, Role, SinonMock } from '@shared';
 import { Request } from 'express';
-import { SinonMock } from '../../../shared/helpers/sinon-mock.helper';
-import { MockedEntityWithSinonStubs } from '../../../shared/types/mock.type';
-import { Role } from '../auth.type';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {

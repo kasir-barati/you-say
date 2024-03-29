@@ -1,17 +1,24 @@
 {
   "name": "shared",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "shared/src",
+  "sourceRoot": "packages/shared/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/shared",
-        "main": "shared/src/index.ts",
-        "tsConfig": "shared/tsconfig.lib.json",
-        "assets": ["shared/*.md"]
+        "outputPath": "dist/packages/shared",
+        "main": "packages/shared/src/index.ts",
+        "tsConfig": "packages/shared/tsconfig.lib.json",
+        "assets": ["packages/shared/*.md"]
+      }
+    },
+    "test:unit": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/jest.config.ts",
+        "passWithNoTests": true
       }
     }
   },

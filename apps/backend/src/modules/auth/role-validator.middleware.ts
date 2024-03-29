@@ -1,5 +1,5 @@
+import { Role } from '@shared';
 import { NextFunction, Request, Response } from 'express';
-import { Role } from './auth.type';
 
 export class RoleValidatorMiddlewareFactory {
   create(
