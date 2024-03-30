@@ -4,30 +4,9 @@
   "sourceRoot": "apps/backend/src",
   "projectType": "application",
   "targets": {
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "parallel": false,
-        "commands": [
-          {
-            "command": "rm -rf ./dist/apps/backend"
-          },
-          {
-            "command": "npx tsc --incremental --project ./apps/backend/tsconfig.app.json"
-          },
-          {
-            "command": "cp -R ./apps/backend/src/assets ./dist/apps/backend/src/assets"
-          }
-        ]
-      }
-    },
     "build:docker": {
       "dependsOn": ["build"],
       "command": "docker build -f apps/backend/Dockerfile --progress=plain . -t you-say-api-image"
-    },
-    "build:dev:docker": {
-      "dependsOn": ["build"],
-      "command": "docker build -f apps/backend/dev.Dockerfile . --progress=plain -t you-say-api-image:dev"
     },
     "cleanup": {
       "executor": "nx:run-commands",
@@ -66,10 +45,18 @@
       }
     },
     "start:dev": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
       "options": {
-        "parallel": false,
-        "command": "tsc-watch --incremental --project ./apps/backend/tsconfig.app.json --onSuccess \"node ./dist/apps/backend/src/main.js\""
+        "buildTarget": "backend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "backend:build:development"
+        },
+        "production": {
+          "buildTarget": "backend:build:production"
+        }
       }
     },
     "dev": {
@@ -79,10 +66,11 @@
         "commands": [
           "clear",
           "nx cleanup backend",
-          "nx build:dev:docker backend",
           "docker network create you-say-network",
           "docker compose -f fusionauth.docker-compose.yml up -d",
+          "sleep 10",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status",
+          "docker compose -f dev.docker-compose.yml build --no-cache",
           "docker compose -f dev.docker-compose.yml up -d",
           "nx init:terraform backend -var-file=./dev.tfvars",
           "nx apply:terraform backend -var-file=./dev.tfvars",

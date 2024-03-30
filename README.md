@@ -31,13 +31,10 @@ Run `nx dev backend` to start the development server. Happy coding!
 
 Run `nx build backend` to build the application. The build artifacts are stored in the output directory (`./dist/`), ready to be deployed.
 
-### Build the docker image for backend app in dev env
-
-Run `nx build:dev:docker backend`
-
 ### Build the docker image for backend app in prod env
 
 Run `nx build:docker backend`
+Run `nx build:docker backend --no-cache` if you wanna ignore docker caches
 
 ### Cleanup backend
 
