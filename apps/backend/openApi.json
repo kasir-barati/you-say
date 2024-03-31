@@ -104,7 +104,7 @@
           "email": {
             "type": "string",
             "description": "User's Email address",
-            "example": "e1711852462417@gmail.com"
+            "example": "e1711873185449@gmail.com"
           },
           "firstName": {
             "type": "string",

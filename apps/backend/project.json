@@ -100,6 +100,9 @@
           },
           {
             "command": "openapi-generator-cli generate -i apps/backend/openApi.json -o apps/backend-e2e/src/api-client -g typescript-axios --additional-properties=useSingleRequestParameter=true"
+          },
+          {
+            "command": "npx prettier --write apps/backend/openApi.json"
           }
         ]
       }

@@ -8,7 +8,7 @@ fi
 
 if ! git diff --quiet "apps/backend"; then
   echo "Creating openApi.json and staging it..."
-  nx openapi:create backend
+  nx openapi:generate backend
   git add apps/backend/openApi.json
 fi
 
