@@ -13,7 +13,7 @@
       "options": {
         "commands": [
           "clear",
-          "docker compose -f dev.docker-compose.yml down -v",
+          "docker compose down -v",
           "docker compose -f fusionauth.docker-compose.yml down -v",
           "rm -rf ./dist/apps/backend",
           "rm -rf ./dist/packages",
@@ -70,8 +70,8 @@
           "docker compose -f fusionauth.docker-compose.yml up -d",
           "sleep 10",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status",
-          "docker compose -f dev.docker-compose.yml build --no-cache",
-          "docker compose -f dev.docker-compose.yml up -d",
+          "docker compose build",
+          "docker compose up -d",
           "nx init:terraform backend -var-file=./dev.tfvars",
           "nx apply:terraform backend -var-file=./dev.tfvars",
           "nx apply:terraform backend -var-file=./dev.tfvars"

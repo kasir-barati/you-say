@@ -16,7 +16,16 @@ axios.interceptors.response.use(
       },
       data: error.response?.data,
     };
+    const errorData = {
+      code: error.code,
+      config: {
+        url: error?.config?.url,
+        method: error?.config?.method,
+        data: error?.config?.data,
+      },
+    };
 
+    console.dir(errorData, { depth: null });
     console.dir({ request }, { depth: null });
     console.dir({ response }, { depth: null });
 

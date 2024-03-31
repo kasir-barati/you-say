@@ -7,7 +7,7 @@ export class RegisterDto implements RegisterRequestBody {
   @ApiProperty({
     type: String,
     description: "User's Email address",
-    example: `e${Date.now()}@gmail.com`,
+    example: 'some.random.email@gmail.com',
   })
   @IsEmail()
   email: string;
