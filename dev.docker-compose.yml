@@ -1,32 +1,32 @@
 version: "3"
 
 services:
-  # you-say-api:
-  #   image: you-say-api-image:dev
-  #   container_name: you-say-api-container
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/backend/dev.Dockerfile
-  #   volumes:
-  #     - type: bind
-  #       source: .
-  #       target: /app
-  #       volume:
-  #         nocopy: true
-  #   ports:
-  #     - 3001:3001
-  #   depends_on:
-  #     you-say-api-db:
-  #       condition: service_healthy
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - you-say-network
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "node", "/app/apps/backend/healthcheck.js"]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 5
+  you-say-api:
+    image: you-say-api-image:dev
+    container_name: you-say-api-container
+    build:
+      context: .
+      dockerfile: ./apps/backend/dev.Dockerfile
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+        volume:
+          nocopy: true
+    ports:
+      - 3001:3001
+    depends_on:
+      you-say-api-db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - you-say-network
+    healthcheck:
+      test: ["CMD-SHELL", "node", "/app/apps/backend/healthcheck.js"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   you-say-api-db:
     image: mongo:4.4.14-rc0-focal
