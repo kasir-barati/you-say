@@ -11,6 +11,10 @@
 Run `nx g @nx/js:lib packages/backend/libName`
 Or run `nx g @nx/js:lib packages/frontend/libName`
 
+> [!NOTE]
+>
+> If your package is not a publishable package, then to prevent your linter from failing because of this error: [`The "packageName" project uses the following packages, but they are missing from "dependencies":`](https://github.com/nrwl/nx/issues/19307), make sure to turn off the `@nx/dependency-checks` in the respective `.eslintrc.json` file.
+
 # Build
 
 It seems like that we do not need to execute `nx build packageName` for each application that uses this lib for some reason. Maybe it is handled behind the scene by Nx CLI while building the app, so all we need is to copy it in the `Dockerfile` before executing `RUN npx nx build appName`?
