@@ -1,0 +1,19 @@
+{
+  "name": "@backend/common",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/common/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/backend/common",
+        "main": "packages/backend/common/src/index.ts",
+        "tsConfig": "packages/backend/common/tsconfig.lib.json",
+        "assets": ["packages/backend/common/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

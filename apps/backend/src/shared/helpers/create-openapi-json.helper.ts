@@ -1,3 +1,9 @@
+import { AuthController, AuthService } from '@backend/auth';
+import {
+  createSwaggerConfiguration,
+  writeOpenApi,
+} from '@backend/common';
+import { StaticLoggerService } from '@backend/logger';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -6,18 +12,12 @@ import * as Sinon from 'sinon';
 import { AppController } from '../../app/app.controller';
 import { AppService } from '../../app/app.service';
 import appConfig from '../../app/configs/app.config';
-import { AuthController } from '../../modules/auth/auth.controller';
-import fusionAuthConfig from '../../modules/auth/configs/fusion-auth.config';
-import { AuthService } from '../../modules/auth/services/auth.service';
-import { StaticLoggerService } from '../../modules/logger/static-logger.service';
-import { createSwaggerConfiguration } from './create-swagger-configuration.helper';
-import { writeOpenApi } from './generate-openapi.helper';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [join(process.cwd(), '.env')],
-      load: [appConfig, fusionAuthConfig],
+      load: [appConfig],
       cache: true,
     }),
   ],

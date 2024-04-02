@@ -1,0 +1,19 @@
+{
+  "name": "@backend/logger",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/logger/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/backend/logger",
+        "main": "packages/backend/logger/src/index.ts",
+        "tsConfig": "packages/backend/logger/tsconfig.lib.json",
+        "assets": ["packages/backend/logger/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

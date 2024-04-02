@@ -1,3 +1,4 @@
+import { LoggerService } from '@backend/logger';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -9,7 +10,6 @@ import { AppModule } from './app/app.module';
 import appConfig from './app/configs/app.config';
 import corsConfig from './app/configs/cors.config';
 import helmetConfig from './app/configs/helmet.config';
-import { LoggerService } from './modules/logger/logger.service';
 
 async function bootstrap() {
   const APP_PORT = 3001;

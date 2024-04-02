@@ -5,4 +5,11 @@ export interface AppConfig {
   SWAGGER_PATH: string;
   DATABASE_URL: string;
   MONGO_INITDB_DATABASE: string;
+  FUSIONAUTH_API_KEY: string;
+  FUSIONAUTH_HOST: string;
+  FUSIONAUTH_TENANT_ID: string;
+  FUSIONAUTH_APPLICATION_ID: string;
+  FUSIONAUTH_ADMIN_GROUP_ID: string;
+  FUSIONAUTH_ISSUER: string;
+  FUSIONAUTH_CLIENT_ID: string;
 }

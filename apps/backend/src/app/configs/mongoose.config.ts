@@ -1,10 +1,10 @@
+import { LoggerService } from '@backend/logger';
 import { Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import {
   MongooseModuleOptions,
   MongooseOptionsFactory,
 } from '@nestjs/mongoose';
-import { LoggerService } from '../../modules/logger/logger.service';
 import webAppConfig from './app.config';
 
 export class MongooseModuleConfig implements MongooseOptionsFactory {
