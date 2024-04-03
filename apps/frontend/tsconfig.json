@@ -23,18 +23,9 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../apps/frontend/.next/types/**/*.ts",
-    "../../dist/apps/frontend/.next/types/**/*.ts",
     "env.d.ts",
-    "../../shared/**/*.ts",
     "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "../../dist/apps/frontend/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "jest.config.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+  "exclude": ["node_modules", "jest.config.ts"]
 }

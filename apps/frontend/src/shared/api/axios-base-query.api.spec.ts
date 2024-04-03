@@ -1,5 +1,4 @@
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query';
-// TODO: Fix VSCode's error: Cannot find module '@shared' or its corresponding type declarations.ts(2307)
 import {
   SinonMock,
   SinonMockType,

@@ -1,12 +1,11 @@
-import axios from 'axios';
-import { createBaseQuery } from './create-base-query.api';
-// TODO: Fix VSCode's error: Cannot find module '@shared' or its corresponding type declarations.ts(2307)
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query';
 import {
   SinonMock,
   SinonMockType,
   generateRandomString,
 } from '@shared';
+import axios from 'axios';
+import { createBaseQuery } from './create-base-query.api';
 
 jest.mock('axios');
 const mockedAxios = jest.mocked(axios);
