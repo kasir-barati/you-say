@@ -1,6 +1,9 @@
 import FusionAuthClient from '@fusionauth/typescript-client';
 import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
-import { AuthModuleOptions, FusionAuthUserGroup } from '../auth.type';
+import {
+  AuthModuleOptions,
+  FusionAuthUserGroup,
+} from '../types/auth.type';
 import { AuthService } from './auth.service';
 import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 

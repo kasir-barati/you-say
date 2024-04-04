@@ -113,7 +113,7 @@
         "command": "madge --circular"
       }
     },
-    "test:unit": {
+    "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/backend/jest.config.ts",

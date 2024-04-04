@@ -14,7 +14,7 @@
         "assets": ["packages/shared/*.md"]
       }
     },
-    "test:unit": {
+    "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "packages/shared/jest.config.ts",

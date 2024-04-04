@@ -6,12 +6,6 @@ nx g @nx/next:app apps/frontend
 
 # you-say
 
-## Integrate with editors
-
-Enhance your Nx experience by installing [Nx Console](https://nx.dev/nx-console) for your favorite editor. Nx Console
-provides an interactive UI to view your projects, run tasks, generate code, and more! Available for VSCode, IntelliJ and
-comes with a LSP for Vim users.
-
 ## Important notes about `Nx`
 
 1. Make sure to install the `@nx/whatever` version that matches the version of `nx` in your repository. If the version numbers get out of sync, you can encounter some difficult to debug errors. You can [fix Nx version mismatches with this recipe](https://nx.dev/recipes/tips-n-tricks/keep-nx-versions-in-sync).
@@ -36,7 +30,10 @@ Run `nx dev backend` to start the development server. Happy coding!
 
 # Nx scripts
 
-**Note**, we usually do not have to involve ourselves with these commands since we just wanted to develop the app in our local env via utilizing docker compose and for prod we will use tools such as CI/CD. But for you to have a better understanding I wrote this part. BTW the image for both prod and dev env have the same tag and version.
+**Notes:**
+
+- Unit tests are executed by running `nx appOrPkgName test`
+- We usually do not have to involve ourselves with these commands since we just wanted to develop the app in our local env via utilizing docker compose and for prod we will use tools such as CI/CD. But for you to have a better understanding I wrote this part. BTW the image for both prod and dev env have the same tag and version.
 
 ## Backend
 

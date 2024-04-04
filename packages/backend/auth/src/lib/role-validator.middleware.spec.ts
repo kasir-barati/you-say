@@ -14,9 +14,9 @@ describe('RoleValidatorMiddlewareFactory', () => {
     (...expectedRoles) => {
       const middleware =
         roleValidatorMiddleware.create(expectedRoles);
-      const requestMock = <Request>{
+      const requestMock = {
         user: { roles: [expectedRoles[0]] },
-      };
+      } as unknown as Request;
       const responseMock = {} as Response;
       const nextMock = jest.fn();
 
@@ -52,9 +52,9 @@ describe('RoleValidatorMiddlewareFactory', () => {
       const responseMock = SinonMock.with<Response>({
         status: jest.fn(),
       });
-      const requestMock = <Request>{
+      const requestMock = {
         user: { roles: roles as Role[] },
-      };
+      } as unknown as Request;
 
       middleware(requestMock, responseMock, nextMock);
 
@@ -72,9 +72,9 @@ describe('RoleValidatorMiddlewareFactory', () => {
     const responseMock = SinonMock.with<Response>({
       status: jest.fn() as Response['status'],
     });
-    const requestMock = <Request>{
+    const requestMock = {
       user: {},
-    };
+    } as unknown as Request;
 
     middleware(requestMock, responseMock, nextMock);
 

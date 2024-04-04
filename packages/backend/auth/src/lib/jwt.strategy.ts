@@ -8,7 +8,7 @@ import {
   WithSecretOrKeyProvider,
 } from 'passport-jwt';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
-import { AuthModuleOptions } from './auth.type';
+import { AuthModuleOptions } from './types/auth.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

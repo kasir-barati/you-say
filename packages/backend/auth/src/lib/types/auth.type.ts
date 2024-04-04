@@ -4,13 +4,6 @@ import {
   OptionalFactoryDependency,
   Type,
 } from '@nestjs/common';
-import { User } from '@shared';
-
-declare module 'express' {
-  interface Request {
-    user?: User;
-  }
-}
 
 export interface AuthModuleOptions {
   fusionAuthHost: string;

@@ -4,7 +4,7 @@ import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
 } from './auth.constants';
-import { AuthModuleOptions } from './auth.type';
+import { AuthModuleOptions } from './types/auth.type';
 
 export const fusionAuthClientFactory: FactoryProvider<FusionAuthClient> =
   {

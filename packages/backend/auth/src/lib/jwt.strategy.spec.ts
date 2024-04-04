@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '@shared';
 import { Request } from 'express';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
-import { AuthModuleOptions } from './auth.type';
 import { JwtStrategy, jwtFromRequest } from './jwt.strategy';
+import { AuthModuleOptions } from './types/auth.type';
 
 describe('JwtStrategy', () => {
   let strategy: JwtStrategy;

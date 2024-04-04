@@ -4,7 +4,7 @@
   "implicitDependencies": ["backend"],
   "projectType": "application",
   "targets": {
-    "test:unit": {
+    "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/backend-e2e/jest.config.ts",

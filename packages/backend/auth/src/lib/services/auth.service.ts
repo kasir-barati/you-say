@@ -6,7 +6,10 @@ import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
 } from '../auth.constants';
-import { AuthModuleOptions, FusionAuthUserGroup } from '../auth.type';
+import {
+  AuthModuleOptions,
+  FusionAuthUserGroup,
+} from '../types/auth.type';
 import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 
 @Injectable()
