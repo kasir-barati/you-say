@@ -89,7 +89,7 @@ jobs:
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         # https://stackoverflow.com/a/77972789/8784518
         name: Install cypress binary
-        rum: npx cypress install
+        run: npx cypress install
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         name: Execute e2e tests
