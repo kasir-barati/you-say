@@ -28,6 +28,7 @@ comes with a LSP for Vim users.
    npm install -g npm-check-updates
    ncu
    ```
+   if do not need `migrations.json` (scenarios such as applying same migration in other branches) remove it.
 
 ## Start the application
 
