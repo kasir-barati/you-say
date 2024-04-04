@@ -8,29 +8,31 @@ inputs:
     description: Super API Key used to access the FusionAuth API
 
 runs:
-  - name: Install 3rd party libraries/packages
-    run: npm ci --ignore-scripts
+  using: "composite"
+  steps:
+    - name: Install 3rd party libraries/packages
+      run: npm ci --ignore-scripts
 
-  - name: Build backend docker image
-    run: npx nx build:docker backend
+    - name: Build backend docker image
+      run: npx nx build:docker backend
 
-  - name: Remove kickstart.json
-    run: rm -rf ./deployment/fusionauth/kickstart.json
+    - name: Remove kickstart.json
+      run: rm -rf ./deployment/fusionauth/kickstart.json
 
-  - name: Create kickstart.json, reading api key value from FUSIONAUTH_API_KEY
-    run: |
-      touch ./deployment/fusionauth/kickstart.json
-      echo '{"apiKeys":[{ "key": "${{ inputs.fusionauth_api_key }}" }]}' >> ./deployment/fusionauth/kickstart.json
+    - name: Create kickstart.json, reading api key value from FUSIONAUTH_API_KEY
+      run: |
+        touch ./deployment/fusionauth/kickstart.json
+        echo '{"apiKeys":[{ "key": "${{ inputs.fusionauth_api_key }}" }]}' >> ./deployment/fusionauth/kickstart.json
 
-  - name: Creating docker network
-    run: docker network create you-say-network
+    - name: Creating docker network
+      run: docker network create you-say-network
 
-  - name: Starting fusionauth service
-    run: docker compose -f fusionauth.docker-compose.yml up -d
-    env:
-      FUSIONAUTH_APP_RUNTIME_MODE: production
+    - name: Starting fusionauth service
+      run: docker compose -f fusionauth.docker-compose.yml up -d
+      env:
+        FUSIONAUTH_APP_RUNTIME_MODE: production
 
-  - name: Making sure that fusionauth is healthy
-    run: |
-      sleep 20
-      curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status
+    - name: Making sure that fusionauth is healthy
+      run: |
+        sleep 20
+        curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status
