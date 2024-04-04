@@ -32,6 +32,9 @@ jobs:
       github.event.workflow_run.conclusion == 'success' ||
       github.event_name == 'workflow_dispatch' && inputs.run_frontend_e2e_tests == true }}
     steps:
+      - name: Clone you-say repo in Ubuntu
+        uses: actions/checkout@v4
+
       - name: Clone repo, and setup docker
         uses: ./.github/actions/setup-docker-composite
 
