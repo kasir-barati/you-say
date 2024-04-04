@@ -17,6 +17,17 @@ comes with a LSP for Vim users.
 1. Make sure to install the `@nx/whatever` version that matches the version of `nx` in your repository. If the version numbers get out of sync, you can encounter some difficult to debug errors. You can [fix Nx version mismatches with this recipe](https://nx.dev/recipes/tips-n-tricks/keep-nx-versions-in-sync).
 2. Nx plugins lift the burden of things like scaffolding a new app (e.g. NestJS, NextJS), testing, building, etc
 3. You can use `nx graph` and `nx show projects` to see what is going on in your monorepo.
+4. Upgrade dependencies: `nx migrate latest`.
+   Please note that this command is not gonna upgrade your devDeps and deps to the latest version. It is only upgrading nx and its belongings. So we can use other approaches to upgrade our dependencies:
+   ```cmd
+   npm outdated
+   npm update
+   ```
+   But most of the times `npm update` will not do the trick. So in those cases we need to rely on tools such as [npm-check-updates](https://www.npmjs.com/package/npm-check-updates)
+   ```cmd
+   npm install -g npm-check-updates
+   ncu
+   ```
 
 ## Start the application
 
