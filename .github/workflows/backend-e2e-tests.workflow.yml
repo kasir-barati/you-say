@@ -59,6 +59,7 @@ jobs:
             backend:
               - 'apps/backend/**'
               - 'apps/backend-e2e/**'
+              - 'packages/backend/auth/**'
 
       - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
         name: Setup NodeJS version
