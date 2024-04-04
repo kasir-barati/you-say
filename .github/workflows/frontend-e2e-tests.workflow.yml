@@ -60,6 +60,8 @@ jobs:
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         name: Build and start backend application + FusionAuth
         uses: ./.github/actions/backend-app-composite
+        with:
+          fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         name: Configuring infrastructure with terraform

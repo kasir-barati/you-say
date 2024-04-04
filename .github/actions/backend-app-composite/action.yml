@@ -1,5 +1,11 @@
 name: Composite backend application GitHub action
-description: install and build backend application, fix FusionAuth kickstart.json, and starts FusionAuth Client
+description: Install and build backend application, fix FusionAuth kickstart.json, and starts FusionAuth Client
+
+inputs:
+  fusionauth_api_key:
+    type: string
+    required: true
+    description: Super API Key used to access the FusionAuth API
 
 runs:
   - name: Install 3rd party libraries/packages
@@ -14,7 +20,7 @@ runs:
   - name: Create kickstart.json, reading api key value from FUSIONAUTH_API_KEY
     run: |
       touch ./deployment/fusionauth/kickstart.json
-      echo '{"apiKeys":[{ "key": "${{env.FUSIONAUTH_API_KEY}}" }]}' >> ./deployment/fusionauth/kickstart.json
+      echo '{"apiKeys":[{ "key": "${{ inputs.fusionauth_api_key }}" }]}' >> ./deployment/fusionauth/kickstart.json
 
   - name: Creating docker network
     run: docker network create you-say-network
