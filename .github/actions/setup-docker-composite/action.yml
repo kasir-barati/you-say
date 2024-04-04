@@ -1,12 +1,9 @@
 name: Composite setup e2e GitHub action
-description: Clone repo, and setup docker
+description: Setup docker
 
 runs:
   using: "composite"
   steps:
-    - name: Clone you-say repo in Ubuntu
-      uses: actions/checkout@v4
-
     - name: Set up QEMU to add support for more platforms with QEMU
       uses: docker/setup-qemu-action@v3
 
