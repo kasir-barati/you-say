@@ -2,7 +2,7 @@ name: Frontend e2e tests
 
 on:
   workflow_run:
-    workflows: ["backend-e2e-tests"]
+    workflows: ["Backend e2e tests"]
     branches: [main]
     types:
       - completed
