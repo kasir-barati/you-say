@@ -2,4 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "Running affected tests..."
-npx nx affected -t test
+npx nx affected -t test --base=origin/main
