@@ -35,7 +35,7 @@ jobs:
       - name: Clone you-say repo in Ubuntu
         uses: actions/checkout@v4
 
-      - name: Clone repo, and setup docker
+      - name: Setup docker
         uses: ./.github/actions/setup-docker-composite
 
       - name: Set commit status to pending

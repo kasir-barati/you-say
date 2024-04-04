@@ -1,11 +1,11 @@
 name: Backend e2e tests
 
-# TODO: run it after ci workflow completed successfully, use the new composites
-
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: [main]
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       run_backend_e2e_tests:
@@ -25,7 +25,7 @@ env:
   OAUTH_CONFIGURATION_CLIENT_SECRET: "client-secret-${{ github.run_id }}-${{ github.run_attempt }}"
 
 jobs:
-  build-and-test:
+  build-and-test-backend-e2e:
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     if: ${{
@@ -35,15 +35,8 @@ jobs:
       - name: Clone you-say repo in Ubuntu
         uses: actions/checkout@v4
 
-      - name: Set up QEMU to add support for more platforms with QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          # Sets the BuildKit image to use for the container.
-          # https://hub.docker.com/r/moby/buildkit/tags/
-          driver-opts: image=moby/buildkit:v0.13.0
+      - name: Setup docker
+        uses: ./.github/actions/setup-docker-composite
 
       - name: Set commit status to pending
         uses: guibranco/github-status-action-v2@v1.1.13
@@ -55,56 +48,21 @@ jobs:
 
       - name: Check if the changes were made to our backend
         uses: dorny/paths-filter@v3
-        id: backend-changes
+        id: changed-paths
         with:
           filters: |
-            backend:
+            is-backend:
               - 'apps/backend/**'
               - 'apps/backend-e2e/**'
               - 'packages/backend/auth/**'
 
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Setup NodeJS version
-        uses: actions/setup-node@v4
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
+        name: Build and start backend application + FusionAuth
+        uses: ./.github/actions/backend-app-composite
         with:
-          node-version: 20.10.0
-          cache: "npm"
+          fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
 
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Install 3rd party libraries/packages
-        run: npm ci --ignore-scripts
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Build backend docker image
-        run: npx nx build:docker backend
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Remove kickstart.json
-        run: rm -rf ./deployment/fusionauth/kickstart.json
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Create kickstart.json, reading api key value from FUSIONAUTH_API_KEY
-        run: |
-          touch ./deployment/fusionauth/kickstart.json
-          echo '{"apiKeys":[{ "key": "${{env.FUSIONAUTH_API_KEY}}" }]}' >> ./deployment/fusionauth/kickstart.json
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Creating docker network
-        run: docker network create you-say-network
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Starting fusionauth service
-        run: docker compose -f fusionauth.docker-compose.yml up -d
-        env:
-          FUSIONAUTH_APP_RUNTIME_MODE: production
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
-        name: Making sure that fusionauth is healthy
-        run: |
-          sleep 20
-          curl --connect-timeout 5 --retry 5 --retry-delay 5 -f http://0.0.0.0:9011/api/status
-
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Configuring infrastructure with terraform
         id: terraform
         uses: ./.github/actions/terraform-composite
@@ -115,7 +73,7 @@ jobs:
           oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
           fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
 
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Starting backend service
         run: docker compose -f docker-compose.yml up -d
         env:
@@ -127,7 +85,7 @@ jobs:
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
 
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Generate Open API
         run: npx nx openapi:generate backend
         env:
@@ -140,7 +98,7 @@ jobs:
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
           SWAGGER_PATH: docs
 
-      - if: ${{ steps.backend-changes.outputs.backend == 'true' }}
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Execute e2e tests
         run: npx nx test:e2e backend-e2e
 
