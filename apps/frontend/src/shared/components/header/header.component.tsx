@@ -56,6 +56,7 @@ export function Header() {
       <p className="mt-2 text-center">
         Don&apos;t have an account?&nbsp;
         <button
+          data-test="do-not-have-an-account-button"
           className="text-rose-600"
           onClick={signUpTogglerClickHandler}
         >
@@ -117,7 +118,11 @@ export function Header() {
               />
             </ModalBody>
           </Modal>
-          <button aria-label="Sign in" onClick={signInClickHandler}>
+          <button
+            data-test="sign-in-button-in-header"
+            aria-label="Sign in"
+            onClick={signInClickHandler}
+          >
             Sign in
           </button>
           <Modal

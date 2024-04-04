@@ -1,5 +1,7 @@
 name: Backend e2e tests
 
+# TODO: run it after ci workflow completed successfully, use the new composites
+
 on:
   push:
     branches:

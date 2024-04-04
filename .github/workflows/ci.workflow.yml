@@ -1,5 +1,7 @@
 name: Continuous Integration
 
+# TODO: use new composites
+
 on:
   push:
     branches:

@@ -2,7 +2,21 @@
   "name": "frontend-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/frontend-e2e/src",
-  "targets": {},
+  "targets": {
+    "test:e2e:docker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          { "command": "nx dev backend", "forwardAllArgs": false },
+          {
+            "command": "nx e2e frontend-e2e",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    }
+  },
   "tags": [],
   "implicitDependencies": ["frontend"]
 }

@@ -18,34 +18,20 @@ export function SubscriptionForm({
     >
       <div className="flex flex-col gap-1">
         <Label
-          htmlFor="sign-up-first-name-input"
-          dataTest="sign-up-first-name-label"
-        >
-          Name
-        </Label>
-        <Input
-          id="sign-up-first-name-input"
-          type="text"
-          dataTest="sign-up-first-name-input"
-          placeholder="Michael Junior"
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <Label
-          htmlFor="sign-up-email-input"
-          dataTest="sign-up-email-label"
+          htmlFor="subscription-email-input"
+          dataTest="subscription-email-label"
         >
           Email
         </Label>
         <Input
-          id="sign-up-email-input"
+          id="subscription-email-input"
           type="email"
-          dataTest="sign-up-email-input"
+          dataTest="subscription-email-input"
           placeholder="michael.junior@example.com"
         />
       </div>
       <PrimaryButton
-        data-test="continue-sign-in-button"
+        data-test="subscribe-button"
         className="mt-5"
         type="submit"
       >

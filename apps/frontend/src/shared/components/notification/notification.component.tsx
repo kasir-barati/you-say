@@ -32,7 +32,7 @@ export function Notification({
       onClick={clickHandler}
     >
       <NotificationIcon type={type} />
-      <p>{message}</p>
+      <p data-test="notification-message">{message}</p>
     </div>
   );
 }

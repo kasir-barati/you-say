@@ -6,6 +6,27 @@ nx g @nx/next:app apps/frontend
 
 # you-say
 
+## Testing strategy
+
+Some general rule of thumb:
+
+- Test once, following DRY principle; meaning to not cover same UI, behavior in more than one place.
+
+We are gonna cover most cases in integration tests written for our backend app, to be clear I am gonna list them here:
+
+1. DTO validations
+2. RBAC and permissions check
+3. Backend error and success responses
+
+And then we will make sure that our frontend is working as expected, since I do not have a form validator as of now and I am relying totally on native HTML validators I am not going to test it thoroughly. Besides that we have testing strategy for the frontend application:
+
+1. Test props in Jest
+2. Test UI and functionalities via storybook
+3. We will try to test **Critical Business Paths (will be referred to as CBP too)** and not everything; e.g. we will not check if user is trying to register to see the error thrown by backend that there is a registered user with the entered email address. But rather we will just try to register and see if we can do it.
+   > [!IMPORTANT]
+   >
+   > Right now we are returning error message from our backend app, but when we migrate from throwing error messages to error code in our backend we need to change this policy too!
+
 ## Important notes about `Nx`
 
 1. Make sure to install the `@nx/whatever` version that matches the version of `nx` in your repository. If the version numbers get out of sync, you can encounter some difficult to debug errors. You can [fix Nx version mismatches with this recipe](https://nx.dev/recipes/tips-n-tricks/keep-nx-versions-in-sync).
@@ -56,7 +77,7 @@ Run `nx cleanup backend` to:
 
 ### Run e2e tests for backend
 
-Run `nx test:e2e:docker backend-e2e` to run the e2e tests from scratch.
+Run `nx test:e2e:docker backend-e2e` to start backend application, and then execute e2e tests against it.
 Run `nx test:e2e backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
 
 ## Frontend
@@ -69,6 +90,11 @@ Run `nx build:docker frontend --configuration=dev` to build it in development mo
 - It won't utilizes caching mechanism during building docker image
 
 **Note**: Do not use these two configuration options in your `next.config.js`, since by doing that it is gonna make it harder for us to build our app: `output: 'export'` and `distDir: '../../dist/apps/frontend'`. Better to follow the their [official docs](https://nextjs.org/docs/app/building-your-application/deploying#docker-image).
+
+### Run e2e tests for frontend
+
+Run `nx test:e2e:docker frontend-e2e` to start backend application and then running cypress e2e tests against our frontend app
+Run `nx e2e frontend-e2e` if you do not need backend application; our backend might be already up and running and we just have changed something in our cypress test or frontend application implementation.
 
 ## Running tasks
 

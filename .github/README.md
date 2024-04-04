@@ -55,3 +55,13 @@ Notes:
 - We may want to reconsider on how and where we are running our e2e tests. Transitioning from GitHub runners to a self-hosted runner would likely prove more economical.
 - We are using a `docker-compose` for sake of ease of use.
 - We are utilizing the `success()` built-in function provided by GitHub Actions to check whether the previous step or job was successful.
+
+## Frontend e2e
+
+Notes:
+
+- We are gonna run them only if all the tests and CI pipeline passes; this includes e2e "Backend e2e tests" workflow and "Continuous Integration" workflow.
+
+## CD
+
+When we want to automate deployment of our applications we need to make sure that the commit status is `success`

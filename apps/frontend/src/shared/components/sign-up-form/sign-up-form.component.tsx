@@ -102,7 +102,7 @@ export function SignUpForm({
       <PrimaryButton
         type="submit"
         className="mt-5"
-        data-test="continue-sign-in-button"
+        dataTest="sign-up-button"
       >
         Sign up
       </PrimaryButton>
