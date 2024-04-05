@@ -6,7 +6,7 @@ WORKDIR /build
 COPY tsconfig.base.json jest.preset.js nx.json ./
 COPY package*.json ./
 # README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
-RUN npm ci --ignore-scripts
+RUN npm ci --include="dev" --ignore-scripts
 COPY apps/backend/healthcheck.js .
 COPY apps/backend ./apps/backend
 COPY packages ./packages

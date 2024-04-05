@@ -18,7 +18,7 @@ runs:
 
     - name: Install 3rd party libraries/packages
       shell: bash
-      run: npm ci --ignore-scripts
+      run: npm ci --include="dev" --ignore-scripts
 
     - name: Build backend docker image
       shell: bash

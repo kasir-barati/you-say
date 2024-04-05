@@ -30,7 +30,7 @@ jobs:
           node-version: 20.10.0
           cache: "npm"
       - name: Install 3rd party libraries/packages
-        run: npm ci --ignore-scripts
+        run: npm ci --include="dev" --ignore-scripts
       - name: Check if codes are prettified
         run: npx nx format:check
       - name: Linting changed files and affected ones
