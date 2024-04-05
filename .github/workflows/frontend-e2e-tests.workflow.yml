@@ -106,5 +106,5 @@ jobs:
         with:
           authToken: ${{ secrets.GITHUB_TOKEN }}
           state: success
-          context: Backend e2e tests
+          context: Frontend e2e tests
           target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
