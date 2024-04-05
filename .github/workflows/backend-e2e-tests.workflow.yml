@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     if: ${{
-      github.event_name == 'push' && github.ref == 'refs/heads/main' ||
+      github.event.workflow_run.conclusion == 'success' ||
       github.event_name == 'workflow_dispatch' && inputs.run_backend_e2e_tests == true }}
     steps:
       - name: Clone you-say repo in Ubuntu
