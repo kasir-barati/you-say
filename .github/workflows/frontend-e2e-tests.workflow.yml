@@ -23,6 +23,7 @@ env:
   MONGO_INITDB_ROOT_USERNAME: "mongodb-root-user-${{ github.run_id }}-${{ github.run_attempt }}"
   MONGO_INITDB_ROOT_PASSWORD: "mongodb-root-password-${{ github.run_id }}-${{ github.run_attempt }}"
   OAUTH_CONFIGURATION_CLIENT_SECRET: "client-secret-${{ github.run_id }}-${{ github.run_attempt }}"
+  NODE_ENV: "production"
 
 jobs:
   build-and-test-frontend-e2e:
@@ -94,6 +95,10 @@ jobs:
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         name: Execute e2e tests
         run: npx nx e2e frontend-e2e
+        env:
+          NEXT_PUBLIC_BACKEND_BASE_URL: "http://localhost:3001"
+          NEXT_PUBLIC_NODE_ENV: "production"
+          BUILD_STANDALONE: "true"
 
       - if: ${{ success() }}
         name: Set commit status to success if tests passed
