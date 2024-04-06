@@ -1,21 +1,20 @@
 import { SHARED_SELECTORS } from './shared-selectors';
 
 const SELECTORS = {
-  appHeader: 'header[data-test=header]',
-  singInButtonInHeader: 'button[data-test=sign-in-button-in-header]',
-  doNotHaveAnAccountButton:
-    'button[data-test=do-not-have-an-account-button]',
-  singUpFirstNameInput: 'input[data-test=sign-up-first-name-input]',
-  signUpLastNameInput: 'input[data-test=sign-up-last-name-input]',
-  signUpEmailInput: 'input[data-test=sign-up-email-input]',
-  signUpButton: 'button[data-test=sign-up-button]',
+  appHeader: 'header',
+  singInButtonInHeader: 'sign-in-button-in-header',
+  doNotHaveAnAccountButton: 'do-not-have-an-account-button',
+  singUpFirstNameInput: 'sign-up-first-name-input',
+  signUpLastNameInput: 'sign-up-last-name-input',
+  signUpEmailInput: 'sign-up-email-input',
+  signUpButton: 'sign-up-button',
   notFoundTitle: '404-title',
   notFoundMessage: '404-message',
   notFoundLink: '404-link',
 };
 
 export function verifyLogoNameInHeader() {
-  cy.get(SELECTORS.appHeader)
+  cy.getByTestId(SELECTORS.appHeader)
     .should('exist')
     .should('contain', 'you-say');
 }
@@ -30,28 +29,27 @@ export function verifyNonExistentPage() {
     .should('have.attr', 'href', '/');
 }
 export function clickOnSignInButtonInHeader() {
-  cy.get(SELECTORS.appHeader)
-    .get(SELECTORS.singInButtonInHeader)
+  cy.getByTestId(SELECTORS.appHeader)
+    .getByTestId(SELECTORS.singInButtonInHeader)
     .click();
 }
 export function clickOnDoNotHaveAnAccountButton() {
-  cy.get(SELECTORS.doNotHaveAnAccountButton).click();
+  cy.getByTestId(SELECTORS.doNotHaveAnAccountButton).click();
 }
 export function fillFirstNameInput(value: string) {
-  cy.get(SELECTORS.singUpFirstNameInput).type(value);
+  cy.getByTestId(SELECTORS.singUpFirstNameInput).type(value);
 }
 export function fillLastNameInput(value: string) {
-  cy.get(SELECTORS.signUpLastNameInput).type(value);
+  cy.getByTestId(SELECTORS.signUpLastNameInput).type(value);
 }
 export function fillEmailInput(value: string) {
-  cy.get(SELECTORS.signUpEmailInput).type(value);
+  cy.getByTestId(SELECTORS.signUpEmailInput).type(value);
 }
 export function clickOnSignUpButton() {
-  cy.get(SELECTORS.signUpButton).click();
+  cy.getByTestId(SELECTORS.signUpButton).click();
 }
 export function verifySuccessfulSignUpNotificationMessage() {
-  cy.get(SHARED_SELECTORS.notificationMessageParagraph).should(
-    'have.text',
-    "You're now one of our users!",
-  );
+  cy.getByTestId(
+    SHARED_SELECTORS.notificationMessageParagraph,
+  ).should('have.text', "You're now one of our users!");
 }
