@@ -15,7 +15,7 @@ nx g @nx/next:application appName --directory apps/appName
 
 # Expanding `process.env` types
 
-We needed to create a new type declaration file called `env.d.ts` to declare our environmental variables, [read more](https://nextjs.org/docs/pages/building-your-application/configuring/typescript#custom-type-declarations).
+We have had created a new type declaration file called `env.d.ts` to declare our environmental variables, [read more](https://nextjs.org/docs/pages/building-your-application/configuring/typescript#custom-type-declarations). So in case you need to add a new env please add there
 
 # Mocking
 

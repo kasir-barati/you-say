@@ -9,12 +9,25 @@ const SELECTORS = {
   signUpLastNameInput: 'input[data-test=sign-up-last-name-input]',
   signUpEmailInput: 'input[data-test=sign-up-email-input]',
   signUpButton: 'button[data-test=sign-up-button]',
+  notFoundTitle: '404-title',
+  notFoundMessage: '404-message',
+  notFoundLink: '404-link',
 };
 
 export function verifyLogoNameInHeader() {
   cy.get(SELECTORS.appHeader)
     .should('exist')
     .should('contain', 'you-say');
+}
+export function verifyNonExistentPage() {
+  cy.getByTestId(SELECTORS.notFoundTitle).should('contain', '404');
+  cy.getByTestId(SELECTORS.notFoundMessage).should(
+    'contain',
+    'Page not found',
+  );
+  cy.getByTestId(SELECTORS.notFoundLink)
+    .should('contain', 'Go to the front page →')
+    .should('have.attr', 'href', '/');
 }
 export function clickOnSignInButtonInHeader() {
   cy.get(SELECTORS.appHeader)

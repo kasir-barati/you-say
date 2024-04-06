@@ -93,8 +93,12 @@ Run `nx build:docker frontend --configuration=dev` to build it in development mo
 
 ### Run e2e tests for frontend
 
-Run `nx test:e2e:docker frontend-e2e` to start backend application and then running cypress e2e tests against our frontend app
-Run `nx e2e frontend-e2e` if you do not need backend application; our backend might be already up and running and we just have changed something in our cypress test or frontend application implementation.
+- Run `nx test:e2e:docker frontend-e2e` to start backend application and then running cypress e2e tests against our frontend app
+- Run `nx e2e frontend-e2e` if you do not need backend application; our backend might be already up and running and we just have changed something in our cypress test or frontend application implementation.
+- Run `nx open-cypress frontend-e2e` to see the Cypress browser if you need it.
+  > [!NOTE]
+  >
+  > If you wanna execute this command you need to start backend application and its friends manually: `nx dev backend`
 
 ## Running tasks
 
