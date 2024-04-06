@@ -1,11 +1,32 @@
 # CLI
 
-## Add new page/component
+## Add
+
+### New page/component
 
 ```cli
 nx g @nx/next:page my-new-page --directory=dir-where-to-place-the-page
 nx g @nx/next:component my-new-component --directory=dir-where-to-place-the-component
 ```
+
+### Storybook
+
+To comply with the Nx we needed to use `nx` CLI to add and configure Storybook. You can read more about it [here](https://nx.dev/nx-api/storybook). BTW this script is gonna install old versions of storybook so you need to migrate from what it is to the latest; things like `@storybook/test` is introduces which relief us from having `@storybook/jest` and `@storybook/testing-library`, [learn more here](https://storybook.js.org/blog/storybook-test/).
+
+```cmd
+nx add @nx/storybook
+nx g @nx/storybook:configuration frontend
+```
+
+#### FIXME
+
+We are having an issue with the storybook and what they do; as of 06.04.2024 storybook generates a `package.json` for us and we need to remove it. [It is planned to be fixed by storybook team](https://github.com/storybookjs/storybook/issues/26263). Currently I am gitignoring it, waiting for a permanent solution from storybook team.
+
+#### Available scripts:
+
+1. `nx storybook frontend`
+2. `nx test-storybook frontend`
+3. `nx build-storybook frontend`
 
 # Add a new NextJS app
 

@@ -7,6 +7,10 @@
 **/api-client
 **/.terraform*
 **/terraform.tfstate*
+**/storybook-static
+
+# https://github.com/storybookjs/storybook/issues/26263
+apps/frontend/package.json
 
 # dependencies
 **/node_modules/

@@ -17,7 +17,7 @@ export default function NotFound() {
       </p>
       <Link
         data-test="404-link"
-        className="text-sm text-[#5ba4e5]"
+        className="text-sm text-blue-400"
         href="/"
       >
         Go to the front page &rarr;
