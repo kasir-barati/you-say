@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '@shared';
-import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { ROLES_KEY } from '../types/auth.type';
+import { RequestWithUser } from '../types/request-with-user.type';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -26,7 +26,9 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    const request: Request = context.switchToHttp().getRequest();
+    const request: RequestWithUser = context
+      .switchToHttp()
+      .getRequest();
     const user = request.user;
 
     if (!user || !user?.roles || !Array.isArray(user?.roles)) {

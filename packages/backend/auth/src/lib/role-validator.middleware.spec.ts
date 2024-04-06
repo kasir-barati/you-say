@@ -1,6 +1,7 @@
 import { Role, SinonMock } from '@shared';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
+import { RequestWithUser } from './types/request-with-user.type';
 
 describe('RoleValidatorMiddlewareFactory', () => {
   let roleValidatorMiddleware: RoleValidatorMiddlewareFactory;
@@ -16,7 +17,7 @@ describe('RoleValidatorMiddlewareFactory', () => {
         roleValidatorMiddleware.create(expectedRoles);
       const requestMock = {
         user: { roles: [expectedRoles[0]] },
-      } as unknown as Request;
+      } as RequestWithUser;
       const responseMock = {} as Response;
       const nextMock = jest.fn();
 
@@ -35,7 +36,7 @@ describe('RoleValidatorMiddlewareFactory', () => {
       status: jest.fn(),
     });
 
-    middleware({} as Request, responseMock, nextMock);
+    middleware({} as RequestWithUser, responseMock, nextMock);
 
     expect(responseMock.status).toHaveBeenCalledTimes(1);
     expect(responseMock.status).toHaveBeenCalledWith(401);
@@ -54,7 +55,7 @@ describe('RoleValidatorMiddlewareFactory', () => {
       });
       const requestMock = {
         user: { roles: roles as Role[] },
-      } as unknown as Request;
+      } as RequestWithUser;
 
       middleware(requestMock, responseMock, nextMock);
 
@@ -74,7 +75,7 @@ describe('RoleValidatorMiddlewareFactory', () => {
     });
     const requestMock = {
       user: {},
-    } as unknown as Request;
+    } as RequestWithUser;
 
     middleware(requestMock, responseMock, nextMock);
 
@@ -95,7 +96,7 @@ describe('RoleValidatorMiddlewareFactory', () => {
     });
 
     expect(() =>
-      middleware({} as Request, responseMock, nextMock),
+      middleware({} as RequestWithUser, responseMock, nextMock),
     ).toThrow(Error);
     expect(nextMock).not.toHaveBeenCalled();
   });

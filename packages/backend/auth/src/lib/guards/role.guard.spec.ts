@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { MockedEntityWithSinonStubs, Role, SinonMock } from '@shared';
-import { Request } from 'express';
+import { RequestWithUser } from '../types/request-with-user.type';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {
@@ -17,7 +17,10 @@ describe('RoleGuard', () => {
     expect(roleGuard).toBeDefined();
   });
 
-  it.each<{ requestUser: Request['user']; expectedRoles: Role[] }>([
+  it.each<{
+    requestUser: RequestWithUser['user'];
+    expectedRoles: Role[];
+  }>([
     {
       requestUser: { sub: 'uuid', roles: [Role.PostReader] },
       expectedRoles: [Role.PostReader],
@@ -51,7 +54,10 @@ describe('RoleGuard', () => {
     },
   );
 
-  it.each<{ requestUser: Request['user']; expectedRoles: Role[] }>([
+  it.each<{
+    requestUser: RequestWithUser['user'];
+    expectedRoles: Role[];
+  }>([
     {
       requestUser: { sub: 'uuid', roles: [Role.PostCreator] },
       expectedRoles: [Role.PostReader],
@@ -109,7 +115,7 @@ describe('RoleGuard', () => {
     expect(result).toBeTruthy();
   });
 
-  it.each<Request['user'] | object>([
+  it.each<RequestWithUser['user'] | object>([
     {},
     { roles: [] },
     { roles: 'something else, not array' },

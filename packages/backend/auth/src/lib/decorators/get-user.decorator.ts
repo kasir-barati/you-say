@@ -3,11 +3,11 @@ import {
   ExecutionContext,
 } from '@nestjs/common';
 import { User } from '@shared';
-import { Request } from 'express';
+import { RequestWithUser } from '../types/request-with-user.type';
 
 export const GetUser = createParamDecorator(
   (key: string, ctx: ExecutionContext): User | unknown => {
-    const req: Request = ctx.switchToHttp().getRequest();
+    const req: RequestWithUser = ctx.switchToHttp().getRequest();
     const user = req.user;
 
     if (!user) {

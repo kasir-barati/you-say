@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from '@shared';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { RequestWithUser } from './types/request-with-user.type';
 
 @Injectable()
 export class RoleValidatorMiddlewareFactory {
   create(
     expectedRoles: Role[],
-  ): (req: Request, res: Response, next: NextFunction) => void {
+  ): (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ) => void {
     return (req, res, next) => {
       if (
         !req.user ||

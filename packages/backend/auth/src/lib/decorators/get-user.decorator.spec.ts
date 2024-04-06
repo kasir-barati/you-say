@@ -1,14 +1,14 @@
 import { getParamDecoratorFactory } from '@backend/common';
 import { ExecutionContext } from '@nestjs/common';
 import { Role } from '@shared';
-import { Request } from 'express';
+import { RequestWithUser } from '../types/request-with-user.type';
 import { GetUser } from './get-user.decorator';
 
 describe('GetUser', () => {
   it("should return the decoded user's JWT payload if key is not specified", () => {
-    const requestMock = <Request>{
+    const requestMock = {
       user: { roles: [Role.PostCreator] },
-    };
+    } as RequestWithUser;
     const executionContext = <ExecutionContext>{
       switchToHttp: () => ({
         getRequest: () => requestMock,
@@ -27,9 +27,9 @@ describe('GetUser', () => {
   ])(
     "should return the roles extracted from JWT's payload if we particularly asked for 'roles' key",
     (...roles) => {
-      const requestMock = <Request>{
+      const requestMock = {
         user: { roles },
-      };
+      } as RequestWithUser;
       const executionContext = <ExecutionContext>{
         switchToHttp: () => ({
           getRequest: () => requestMock,
@@ -44,9 +44,9 @@ describe('GetUser', () => {
   );
 
   it('should throw "User does not have the specified key!" if the specified key does not exist in the decoded JWT payload.', () => {
-    const requestMock = <Request>{
+    const requestMock = {
       user: {},
-    };
+    } as RequestWithUser;
     const executionContext = <ExecutionContext>{
       switchToHttp: () => ({
         getRequest: () => requestMock,
