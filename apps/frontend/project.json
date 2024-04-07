@@ -21,6 +21,14 @@
           ]
         }
       }
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook",
+      "options": {
+        "port": 6006,
+        "configDir": "apps/frontend/.storybook",
+        "open": false
+      }
     }
   },
   "tags": []

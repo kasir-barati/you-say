@@ -23,22 +23,38 @@ jobs:
         with:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
+
+      - name: Set commit status to pending
+        uses: guibranco/github-status-action-v2@v1.1.13
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          state: pending
+          context: Set the commit status
+          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v4
+
       - name: Setup NodeJS version
         uses: actions/setup-node@v4
         with:
           node-version: 20.10.0
           cache: "npm"
+
       - name: Install 3rd party libraries/packages
         run: npm ci --include="dev" --ignore-scripts
+
       - name: Check if codes are prettified
         run: npx nx format:check
+
       - name: Linting changed files and affected ones
         run: npx nx affected --target=lint --parallel=3
+
       - name: Build changed apps and the ones that were affected by those changes
         run: npx nx affected --target=build --parallel=3
+
       - name: Unit test changed and affected ones by those changes
         run: npx nx affected --target=test:unit --parallel=3  --ci --coverage
+
       # TODO: Build backend image
       # TODO: Push backend image to a docker registry

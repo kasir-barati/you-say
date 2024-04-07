@@ -33,6 +33,7 @@
     "**/.nx": true,
     "**/api-client": true,
     "**/.terraform*": true,
-    "**/terraform.tfstate*": true
+    "**/terraform.tfstate*": true,
+    "**/storybook-static": true
   }
 }

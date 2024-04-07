@@ -36,17 +36,6 @@ jobs:
       - name: Clone you-say repo in Ubuntu
         uses: actions/checkout@v4
 
-      - name: Setup docker
-        uses: ./.github/actions/setup-docker-composite
-
-      - name: Set commit status to pending
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          state: pending
-          context: Backend e2e tests
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
       - name: Check if the changes were made to our backend
         uses: dorny/paths-filter@v3
         id: changed-paths
@@ -56,6 +45,10 @@ jobs:
               - 'apps/backend/**'
               - 'apps/backend-e2e/**'
               - 'packages/backend/auth/**'
+
+      - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
+        name: Setup docker
+        uses: ./.github/actions/setup-docker-composite
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Build and start backend application + FusionAuth
@@ -102,12 +95,3 @@ jobs:
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Execute e2e tests
         run: npx nx test:e2e backend-e2e
-
-      - if: ${{ success() }}
-        name: Set commit status to success if tests passed
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          state: success
-          context: Backend e2e tests
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

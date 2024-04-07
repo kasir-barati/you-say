@@ -1,5 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 
 export default {
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
@@ -18,6 +18,7 @@ export default {
       ),
     },
   },
+  staticDirs: [join(__dirname, '..', 'public')],
   core: {
     disableProjectJson: true,
     enableCrashReports: true,

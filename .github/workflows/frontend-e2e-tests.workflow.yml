@@ -2,7 +2,7 @@ name: Frontend e2e tests
 
 on:
   workflow_run:
-    workflows: ["Backend e2e tests"]
+    workflows: ["Continuous Integration"]
     branches: [main]
     types:
       - completed
@@ -36,17 +36,6 @@ jobs:
       - name: Clone you-say repo in Ubuntu
         uses: actions/checkout@v4
 
-      - name: Setup docker
-        uses: ./.github/actions/setup-docker-composite
-
-      - name: Set commit status to pending
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          state: pending
-          context: Frontend e2e tests
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
       - name: Check if the changes were made to our backend or frontend application
         uses: dorny/paths-filter@v3
         id: changed-paths
@@ -57,6 +46,10 @@ jobs:
               - 'apps/frontend/**'
               - 'apps/frontend-e2e/**'
               - 'packages/backend/auth/**'
+
+      - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
+        name: Setup docker
+        uses: ./.github/actions/setup-docker-composite
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         name: Build and start backend application + FusionAuth
@@ -99,12 +92,3 @@ jobs:
           NEXT_PUBLIC_BACKEND_BASE_URL: "http://localhost:3001"
           NEXT_PUBLIC_NODE_ENV: "production"
           BUILD_STANDALONE: "true"
-
-      - if: ${{ success() }}
-        name: Set commit status to success if tests passed
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          authToken: ${{ secrets.GITHUB_TOKEN }}
-          state: success
-          context: Frontend e2e tests
-          target_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

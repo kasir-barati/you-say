@@ -18,6 +18,10 @@ nx add @nx/storybook
 nx g @nx/storybook:configuration frontend
 ```
 
+Here are some general good to know infos:
+
+1. To skip a test in Storybook we can simply say `tags: ["skip"]` in the `Story` object, [learn more about it here](https://github.com/storybookjs/test-runner?tab=readme-ov-file#filtering-tests-experimental).
+
 #### FIXME
 
 We are having an issue with the storybook and what they do; as of 06.04.2024 storybook generates a `package.json` for us and we need to remove it. [It is planned to be fixed by storybook team](https://github.com/storybookjs/storybook/issues/26263). Currently I am gitignoring it, waiting for a permanent solution from storybook team.
