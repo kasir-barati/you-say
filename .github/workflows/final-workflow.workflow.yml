@@ -19,7 +19,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+            const { data: workflows } = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
