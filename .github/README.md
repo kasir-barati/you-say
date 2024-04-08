@@ -32,6 +32,7 @@ Notes:
   - [octokit/rest.js DOC](https://octokit.github.io/rest.js/v20): In this doc remember to click on "See also: GitHub Developer Guide documentation." link for in-depth documentation.
   - Search the method on [sourcegraph](https://sourcegraph.com/search) and try to filter the results to cater your specific use case. It is possible that someone out there already had implemented what you are trying to accomplish.
 - [`context.sha` is the same as `GITHUB_SHA`](https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts#L42), meaning that we are getting workflows that were triggered for the latest commit we made.
+
   > [!CAUTION]
   >
   > So please be careful with this, since if you're making commits using this tool it might leads to unexpected commit statuses. Just be mindful of how you are utilizing this GitHub action.

@@ -1,4 +1,4 @@
-name: Final workflow
+name: Finalize Commit Status
 
 on:
   workflow_run:
@@ -28,7 +28,7 @@ jobs:
             const isSuccessful = workflows.workflow_runs.every(run => {
               const { name, conclusion } = run;
 
-              if (name === 'Final workflow') {
+              if (name === 'Finalize Commit Status') {
                 return true
               }
 
