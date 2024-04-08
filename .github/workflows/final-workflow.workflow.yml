@@ -23,6 +23,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
+            console.log(workflows);
+            console.log(workflows.workflow_runs);
             const isSuccessful = workflows.workflow_runs.every(run => run.conclusion === 'success');
             return isSuccessful ? 'success' : 'failure';
 

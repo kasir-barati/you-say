@@ -35,10 +35,13 @@ jobs:
         run: npm ci --include="dev" --ignore-scripts
 
       - name: Install playwright
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Start Storybook
-        run: npx nx storybook frontend
+        run: npx nx build-storybook frontend
 
       - name: Run Storybook tests
-        run: npx nx test-storybook frontend
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server apps/frontend/storybook-static --port 6006 --silent" \
+            "npx wait-on http://127.0.0.1:6006 && npx nx test-storybook frontend --url http://127.0.0.1:6006"
