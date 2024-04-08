@@ -19,6 +19,23 @@ You also need to comply with their convention of directory structure and how you
    - [Stackoverflow Q&A](https://stackoverflow.com/q/74350826/8784518)
    - [GitHub actions doc](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-using-an-action-in-the-same-repository-as-the-workflow)
 
+# Actions
+
+Here You'll find some general docs about actions we used in this project and some cautionary and or important notes.
+
+## GitHub script action
+
+Notes:
+
+- If you are banging your head against a brick wall on how on earth you might know what you should pass to it better to first check these docs:
+  - [github-script DOC](https://github.com/actions/github-script)
+  - [octokit/rest.js DOC](https://octokit.github.io/rest.js/v20): In this doc remember to click on "See also: GitHub Developer Guide documentation." link for in-depth documentation.
+  - Search the method on [sourcegraph](https://sourcegraph.com/search) and try to filter the results to cater your specific use case. It is possible that someone out there already had implemented what you are trying to accomplish.
+- [`context.sha` is the same as `GITHUB_SHA`](https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts#L42), meaning that we are getting workflows that were triggered for the latest commit we made.
+  > [!CAUTION]
+  >
+  > So please be careful with this, since if you're making commits using this tool it might leads to unexpected commit statuses. Just be mindful of how you are utilizing this GitHub action.
+
 # Workflows
 
 For local development and running e2e tests - whether it is on our local env or GH actions runner - we need `FUSIONAUTH_HOST=http://fusionauth:9011` but for the terraform we need `fusionauth_host=http://localhost:9011` because there terraform wanted to configure FusionAuth but in our code we wanted to talk to our FusionAuth instance via axios, over HTTP protocol. As such you can see that in our `backend-e2e-tests.workflow.yml` we had to pass different values to the same env variable:
@@ -80,3 +97,8 @@ Notes:
 ## CD
 
 When we want to automate deployment of our applications we need to make sure that the commit status is `success`
+
+# Possible enhancements:
+
+1. [Rerun tests automatically if retry is meaningful](https://sourcegraph.com/github.com/flix/flix@f9db49d57ae326ab90115a14eda2e185f542a857/-/blob/.github/workflows/rerun-on-demand.yaml)
+2.

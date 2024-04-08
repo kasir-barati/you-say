@@ -24,14 +24,17 @@ jobs:
               repo: context.repo.repo,
               head_sha: context.sha
             });
-            workflows.workflow_runs.forEach((run, index) => 
-              console.log(index, run.name, run.display_title, run.conclusion)
-            );
 
-            const isThereUnfinishedWorkflows = workflows.workflow_runs.every(run => !run.conclusion);
-            console.log(isThereUnfinishedWorkflows);
+            const isSuccessful = workflows.workflow_runs.every(run => {
+              const { name, conclusion } = run;
 
-            const isSuccessful = workflows.workflow_runs.every(run => run.conclusion === 'success');
+              if (name === 'Final workflow') {
+                return true
+              }
+
+              return conclusion === 'success';
+            });
+
             return isSuccessful ? 'success' : 'failure';
 
       - name: Set commit status to success if all the workflows completed successfully.
