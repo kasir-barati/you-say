@@ -24,7 +24,9 @@ jobs:
               repo: context.repo.repo,
               head_sha: context.sha
             });
-            console.log(workflows.workflow_runs);
+            workflows.workflow_runs.forEach((run, index) => 
+              console.log(index, run.name, run.display_title, run.conclusion)
+            );
 
             const isThereUnfinishedWorkflows = workflows.workflow_runs.every(run => !run.conclusion);
             console.log(isThereUnfinishedWorkflows);
