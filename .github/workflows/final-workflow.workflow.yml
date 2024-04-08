@@ -22,9 +22,13 @@ jobs:
             const { data: workflows } = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              head_sha: context.sha
             });
-            console.log(workflows);
             console.log(workflows.workflow_runs);
+
+            const isThereUnfinishedWorkflows = workflows.workflow_runs.every(run => !run.conclusion);
+            console.log(isThereUnfinishedWorkflows);
+
             const isSuccessful = workflows.workflow_runs.every(run => run.conclusion === 'success');
             return isSuccessful ? 'success' : 'failure';
 
