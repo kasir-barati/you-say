@@ -64,23 +64,24 @@ variable "oauth_configuration_client_secret" {
 
 variable "fusionauth_email_configuration_host" {
   type        = string
-  default     = "http://localhost"
+  default     = "mailcatcher"
   description = "The Email Server Host used to send emails from FusionAuth"
 }
 
 variable "fusionauth_email_configuration_port" {
   type    = number
-  default = 1026
+  default = 1025
 }
 
 variable "fusionauth_email_configuration_username" {
   type        = string
-  default     = "you-say-email-conf-user"
+  default     = null
   description = "The email username used to authenticate with the OAuth Provider"
 }
 
 variable "fusionauth_email_configuration_password" {
   type        = string
+  default     = null
   sensitive   = true
   description = "The email password used to authenticate with the OAuth Provider"
 }

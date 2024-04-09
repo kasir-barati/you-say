@@ -50,7 +50,7 @@ services:
     image: sj26/mailcatcher:v0.8.2
     container_name: mailcatcher-container
     ports:
-      - 1026:1025
+      # - 1026:1025 since FusionAuth is talking directly to the container it can see the port, no need to export it!
       - 1081:1080
     healthcheck:
       test: wget -q -O /dev/null http://mailcatcher:1080/
