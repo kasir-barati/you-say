@@ -13,11 +13,13 @@ export class AuthModuleConfig implements AuthOptionsFactory {
     | AuthModuleOptions
     | Promise<AuthModuleOptions> {
     const options: AuthModuleOptions = {
+      appBaseUrl: this.appConfigs.APP_BASE_URL,
       fusionAuthHost: this.appConfigs.FUSIONAUTH_HOST,
       fusionAuthApiKey: this.appConfigs.FUSIONAUTH_API_KEY,
       fusionAuthIssuer: this.appConfigs.FUSIONAUTH_ISSUER,
       fusionAuthClientId: this.appConfigs.FUSIONAUTH_CLIENT_ID,
       fusionAuthTenantId: this.appConfigs.FUSIONAUTH_TENANT_ID,
+      fusionAuthOauthScopes: this.appConfigs.FUSIONAUTH_OAUTH_SCOPES,
       fusionAuthAdminGroupId:
         this.appConfigs.FUSIONAUTH_ADMIN_GROUP_ID,
       fusionAuthApplicationId:

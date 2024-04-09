@@ -34,10 +34,6 @@ runs:
         touch ./deployment/fusionauth/kickstart.json
         echo '{"apiKeys":[{ "key": "${{ inputs.fusionauth_api_key }}" }]}' >> ./deployment/fusionauth/kickstart.json
 
-    - name: Creating docker network
-      shell: bash
-      run: docker network create you-say-network
-
     - name: Starting fusionauth service
       shell: bash
       run: docker compose -f fusionauth.docker-compose.yml up -d

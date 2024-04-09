@@ -1,4 +1,5 @@
 import { SinonMock, SinonMockType } from '@shared';
+import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './services/auth.service';
@@ -36,6 +37,30 @@ describe('AuthController', () => {
           groups: [],
         }),
       ).toBeTruthy();
+    });
+  });
+
+  describe('GET /login', () => {
+    it('should generate login URL', () => {
+      // TODO: replace empty string with a real example
+      authService.login.returns('');
+
+      const loginRedirectUrl = controller.login({} as Response);
+
+      expect(loginRedirectUrl).toStrictEqual({
+        statusCode: 302,
+        url: '',
+      });
+      expect(authService.login.callCount).toEqual(1);
+      expect(authService.login.calledWith({})).toBeTruthy();
+    });
+
+    it('should propagate error occurred in the authService.login', () => {
+      authService.login.throws(new Error());
+
+      expect(() => controller.login({} as Response)).toThrow(
+        new Error(),
+      );
     });
   });
 });

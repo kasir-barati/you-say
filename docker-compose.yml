@@ -7,6 +7,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/backend/Dockerfile
+    network_mode: host
     ports:
       - 3001:3001
     depends_on:
@@ -26,8 +27,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       DATABASE_URL: ${DATABASE_URL}
-    networks:
-      - you-say-network
     healthcheck:
       test: ["CMD-SHELL", "node", "/app/healthcheck.js"]
       interval: 5s
@@ -43,8 +42,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-    networks:
-      - you-say-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/${MONGO_INITDB_DATABASE} --quiet
       interval: 5s
@@ -52,6 +49,3 @@ services:
       retries: 3
       start_period: 5s
 
-networks:
-  you-say-network:
-    external: true

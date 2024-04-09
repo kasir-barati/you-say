@@ -26,8 +26,6 @@ services:
       - 9011:9011
     volumes:
       - ./deployment/fusionauth/kickstart.json:/usr/local/fusionauth/kickstart.json
-    networks:
-      - you-say-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://0.0.0.0:9011/api/status"]
       interval: 5s
@@ -42,8 +40,6 @@ services:
       PGUSER: ${POSTGRES_USER} # healthcheck variable
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    networks:
-      - you-say-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 5s
@@ -56,13 +52,7 @@ services:
     ports:
       - 1026:1025
       - 1081:1080
-    networks:
-      - you-say-network
     healthcheck:
       test: wget -q -O /dev/null http://mailcatcher:1080/
       interval: 10s
       retries: 80
-
-networks:
-  you-say-network:
-    external: true

@@ -12,13 +12,12 @@ import corsConfig from './app/configs/cors.config';
 import helmetConfig from './app/configs/helmet.config';
 
 async function bootstrap() {
-  const APP_PORT = 3001;
   let swaggerUrl: string | undefined;
   const app = await NestFactory.create(AppModule);
   const loggerService = app.get(LoggerService);
-  const { SWAGGER_PATH } = app.get<ConfigType<typeof appConfig>>(
-    appConfig.KEY,
-  );
+  const { SWAGGER_PATH, APP_PORT, APP_BASE_URL } = app.get<
+    ConfigType<typeof appConfig>
+  >(appConfig.KEY);
   const corsConfigs = app.get<ConfigType<typeof corsConfig>>(
     corsConfig.KEY,
   );
@@ -55,12 +54,12 @@ async function bootstrap() {
     );
 
     SwaggerModule.setup(SWAGGER_PATH, app, swaggerDocument);
-    swaggerUrl = `http://localhost:${APP_PORT}/${SWAGGER_PATH}`;
+    swaggerUrl = `${APP_BASE_URL}/${SWAGGER_PATH}`;
   }
 
   await app.listen(APP_PORT);
   loggerService.log(
-    `🚀 Application is running on: http://localhost:${APP_PORT}`,
+    `🚀 Application is running on: ${APP_BASE_URL}`,
     'NestApplication',
   );
   if (swaggerUrl) {

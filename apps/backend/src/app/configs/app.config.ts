@@ -22,6 +22,16 @@ export default registerAs('appConfigs', (): AppConfig => {
 });
 
 class EnvironmentVariables implements AppConfig {
+  APP_PORT = 3001;
+
+  @IsOptional()
+  @IsString()
+  APP_HOST = 'localhost';
+
+  @IsOptional()
+  @IsString()
+  APP_BASE_URL = 'http://localhost:3001';
+
   @IsOptional()
   @IsEnum(NodeEnv)
   NODE_ENV: NodeEnv = NodeEnv.development;
@@ -65,4 +75,8 @@ class EnvironmentVariables implements AppConfig {
   @IsOptional()
   @IsString()
   FUSIONAUTH_TENANT_ID = '40b82d21-2343-40e3-bae0-20b63210bd96';
+
+  @IsOptional()
+  @IsString()
+  FUSIONAUTH_OAUTH_SCOPES = 'profile offline_access openid';
 }

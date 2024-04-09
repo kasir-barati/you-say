@@ -14,6 +14,7 @@ on:
         type: boolean
 
 env:
+  FUSIONAUTH_HOST: "http://localhost:9011"
   FUSIONAUTH_ISSUER: "http://localhost:9011"
   FUSIONAUTH_API_KEY: "fusionauth_api_key_${{ github.run_id }}_${{ github.run_attempt }}"
   POSTGRES_USER: "postgres"
@@ -61,8 +62,8 @@ jobs:
         id: terraform
         uses: ./.github/actions/terraform-composite
         with:
-          fusionauth_host: "http://localhost:9011"
-          fusionauth_issuer: "http://fusionauth:9011"
+          fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
+          fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
           fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
           oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
           fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
@@ -71,8 +72,6 @@ jobs:
         name: Starting backend service
         run: docker compose -f docker-compose.yml up -d
         env:
-          FUSIONAUTH_HOST: "http://fusionauth:9011"
-          FUSIONAUTH_ISSUER: "http://fusionauth:9011"
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
@@ -83,8 +82,6 @@ jobs:
         name: Generate Open API
         run: npx nx openapi:generate backend
         env:
-          FUSIONAUTH_HOST: "http://fusionauth:9011"
-          FUSIONAUTH_ISSUER: "http://fusionauth:9011"
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}

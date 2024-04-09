@@ -1,6 +1,9 @@
 import { NodeEnv } from '@shared';
 
 export interface AppConfig {
+  APP_PORT: number;
+  APP_HOST: string;
+  APP_BASE_URL: string;
   NODE_ENV: NodeEnv;
   SWAGGER_PATH: string;
   DATABASE_URL: string;
@@ -12,4 +15,5 @@ export interface AppConfig {
   FUSIONAUTH_ADMIN_GROUP_ID: string;
   FUSIONAUTH_ISSUER: string;
   FUSIONAUTH_CLIENT_ID: string;
+  FUSIONAUTH_OAUTH_SCOPES: string;
 }

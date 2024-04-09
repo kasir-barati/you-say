@@ -65,7 +65,6 @@
         "commands": [
           "clear",
           "nx cleanup backend",
-          "docker network inspect you-say-network &>/dev/null || docker network create you-say-network",
           "docker compose -f fusionauth.docker-compose.yml up -d",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 --retry-all-errors -f http://0.0.0.0:9011/api/status",
           "docker compose build",

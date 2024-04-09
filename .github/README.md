@@ -39,25 +39,6 @@ Notes:
 
 # Workflows
 
-For local development and running e2e tests - whether it is on our local env or GH actions runner - we need `FUSIONAUTH_HOST=http://fusionauth:9011` but for the terraform we need `fusionauth_host=http://localhost:9011` because there terraform wanted to configure FusionAuth but in our code we wanted to talk to our FusionAuth instance via axios, over HTTP protocol. As such you can see that in our `backend-e2e-tests.workflow.yml` we had to pass different values to the same env variable:
-
-```yml
-# ...
-- name: Configuring infrastructure with terraform
-  id: terraform
-  uses: ./.github/actions/terraform-composite
-  with:
-    fusionauth_host: 'http://localhost:9011'
-# ...
-- name: Starting backend service
-  run: docker compose -f docker-compose.yml up -d
-  env:
-    FUSIONAUTH_HOST: 'http://fusionauth:9011'
-# ...
-```
-
-**`localhost` always refers to the current container. Therefore we have to use the service name and cope with it :sad:. [REF](https://forums.docker.com/t/localhost-and-docker-compose-networking-issue/23100/2)**
-
 > [!CAUTION]
 >
 > Our `final-workflow.workflow.yml` is gonna be executed more that one time since according to the GitHub [official doc](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run) if we pass an array of workflows it is gonna run it whenever one of them met the `types` condition stated in the workflow. Which is really annoying but considering everything I guess it is not gonna take a toll on our bills and cheques :grinning:.

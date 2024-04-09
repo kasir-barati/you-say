@@ -71,6 +71,29 @@
         },
         "tags": ["auth"]
       }
+    },
+    "/auth/login": {
+      "get": {
+        "operationId": "AuthController_login",
+        "summary": "This endpoint creates login URL with all necessary configurations.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User will be redirected to the generated login URL."
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"]
+      }
     }
   },
   "info": {

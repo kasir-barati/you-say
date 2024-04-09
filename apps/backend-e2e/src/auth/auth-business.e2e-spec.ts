@@ -52,4 +52,13 @@ describe('Auth', () => {
       timestamp: expect.any(String),
     });
   });
+
+  it('should generate a FusionAuth login URL -- GET /login', async () => {
+    const response = await authApi.authControllerLogin();
+    const loginRedirectUrl = response.request.res.responseUrl;
+
+    expect(response.status).toBe(200);
+    // README: a more exhaustive test to check generate URL had been written here: packages/backend/auth/src/lib/services/auth.service.spec.ts
+    expect(loginRedirectUrl).toEqual(expect.any(String));
+  });
 });

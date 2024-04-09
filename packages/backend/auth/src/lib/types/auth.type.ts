@@ -6,11 +6,13 @@ import {
 } from '@nestjs/common';
 
 export interface AuthModuleOptions {
+  appBaseUrl: string;
   fusionAuthHost: string;
   fusionAuthApiKey: string;
   fusionAuthIssuer: string;
   fusionAuthClientId: string;
   fusionAuthTenantId: string;
+  fusionAuthOauthScopes: string;
   fusionAuthAdminGroupId: string;
   fusionAuthApplicationId: string;
 }
