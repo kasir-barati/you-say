@@ -19,7 +19,8 @@ data "httpclient_request" "get-default-application" {
 }
 
 locals {
-  api_url                           = var.deployment == "prod" ? "https://you-say.com" : "http://localhost:3001"
+  api_url                           = var.deployment == "production" ? "https://api.you-say.com" : "http://localhost:3001"
+  frontend_app_url                  = var.deployment == "production" ? "https://you-say.com" : "http://localhost:3000"
   fusionauth_default_tenant_id      = jsondecode(data.httpclient_request.get-default-tenant.response_body).tenants[0].id
   fusionauth_default_tenant_name    = jsondecode(data.httpclient_request.get-default-tenant.response_body).tenants[0].name
   fusionauth_default_application_id = jsondecode(data.httpclient_request.get-default-application.response_body).applications[0].id

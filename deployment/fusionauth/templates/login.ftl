@@ -74,21 +74,53 @@
         [/#if]
 
         <fieldset>
-          [@helpers.input type="text" name="loginId" id="loginId" autocomplete="username" autocapitalize="none" autocomplete="on" autocorrect="off" spellcheck="false" autofocus=(!loginId?has_content) placeholder=theme.message('loginId') leftAddon="user" disabled=(showPasswordField && hasDomainBasedIdentityProviders)/]
+          [@helpers.input 
+            class="p-2 text-sm" 
+            type="text" 
+            name="loginId" 
+            id="loginId" 
+            autocomplete="username" 
+            autocapitalize="none" 
+            autocomplete="on" 
+            autocorrect="off" 
+            spellcheck="false" 
+            autofocus=(!loginId?has_content) 
+            placeholder=theme.message('loginId') 
+            leftAddon="user" 
+            disabled=(showPasswordField && hasDomainBasedIdentityProviders)
+          /]
           [#if showPasswordField]
-            [@helpers.input type="password" name="password" id="password" autocomplete="current-password" autofocus=loginId?has_content placeholder=theme.message('password') leftAddon="lock"/]
+            [@helpers.input 
+              class="p-2 text-sm" 
+              type="password" 
+              name="password" 
+              id="password" 
+              autocomplete="current-password" 
+              autofocus=loginId?has_content 
+              placeholder=theme.message('password') 
+              leftAddon="lock"
+            /]
             [@helpers.captchaBadge showCaptcha=showCaptcha captchaMethod=tenant.captchaConfiguration.captchaMethod siteKey=tenant.captchaConfiguration.siteKey/]
           [/#if]
         </fieldset>
 
-          [@helpers.input id="rememberDevice" type="checkbox" name="rememberDevice" label=theme.message('remember-device') value="true" uncheckedValue="false"]
+          [@helpers.input 
+            class="text-sm"
+            id="rememberDevice" 
+            type="checkbox" 
+            name="rememberDevice" 
+            label=theme.message('remember-device') 
+            value="true" uncheckedValue="false"
+          ]
             <i class="fa fa-info-circle" data-tooltip="${theme.message('{tooltip}remember-device')}"></i>[#t/]
           [/@helpers.input]
 
           <div class="form-row">
             [#if showPasswordField]
               [@helpers.button icon="key" text=theme.message('submit')/]
-              [@helpers.link url="${request.contextPath}/password/forgot"]${theme.message('forgot-your-password')}[/@helpers.link]
+              [@helpers.link 
+                url="${request.contextPath}/password/forgot"]${theme.message('forgot-your-password')}
+              [/@helpers.link]
             [#else]
               [@helpers.button icon="arrow-right" text=theme.message('next')/]
             [/#if]

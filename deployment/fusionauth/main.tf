@@ -101,6 +101,7 @@ resource "fusionauth_application" "you-say-application" {
     client_secret                      = var.oauth_configuration_client_secret
     enabled_grants                     = ["authorization_code", "refresh_token", "password"]
     authorized_redirect_urls = [
+      "${local.frontend_app_url}",
       "${local.api_url}/auth/login",
       "${local.api_url}/auth/oauth-callback",
     ]
@@ -182,7 +183,7 @@ resource "fusionauth_theme" "custom-theme" {
   index             = file("${path.module}/templates/index.ftl")
   oauth2_authorize  = file("${path.module}/templates/login.ftl")
   helpers           = file("${path.module}/templates/helpers.ftl")
-  default_messages  = file("${path.module}/templates/messages.ftl")
+  default_messages  = "${file("${path.module}/templates/messages.ftl")}\nfrontend-app-url=${local.frontend_app_url}"
   password_complete = file("${path.module}/templates/change-password-complete.ftl")
 }
 

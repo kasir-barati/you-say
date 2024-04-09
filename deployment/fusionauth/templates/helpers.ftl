@@ -129,22 +129,46 @@
 <body class="app-sidebar-closed">
 <main>
   [#-- TODO find a way to use img tag with src --]
+  <?xml version="1.0" standalone="no"?>
+  <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
   <svg 
+    version="1.0" 
     xmlns="http://www.w3.org/2000/svg"
-    width="128"
-    height="128"
-    xml:space="preserve"
+    width="128" 
+    height="128" 
+    viewBox="0 0 192.000000 192.000000"
+    preserveAspectRatio="xMidYMid meet"
     class="my-logo"
   >
-    <path 
-      fill="#282D33" 
-      d="M80.139 103.801H47.715V55.703H30.227V23.282h67.4v32.421H80.139v48.098zm-28.424-4h24.424V51.703h17.488V27.282h-59.4v24.421h17.488v48.098zM0 23.279h5.362v4H0zM9.901 23.279h5.363v4H9.901zM19.799 23.279h5.364v4h-5.364zM102.838 23.279h5.363v4h-5.363zM112.736 23.279h5.363v4h-5.363zM122.637 23.279H128v4h-5.363zM76.139 3.551h4v5.363h-4zM76.139 13.452h4v5.364h-4z"
-    />
-    <g><path fill="#282D33" d="M47.715 3.551h4v5.363h-4zM47.715 13.452h4v5.364h-4z"/></g>
-    <g><path fill="#282D33" d="M76.139 109.186h4v5.365h-4zM76.139 119.086h4v5.363h-4z"/></g>
-    <g><path fill="#282D33" d="M47.715 109.186h4v5.365h-4zM47.715 119.086h4v5.363h-4z"/></g>
-    <g><path fill="#282D33" d="M0 51.703h5.362v4H0zM9.901 51.703h5.363v4H9.901zM19.799 51.703h5.364v4h-5.364z"/></g>
-    <g><path fill="#282D33" d="M102.838 51.703h5.363v4h-5.363zM112.736 51.703h5.363v4h-5.363zM122.637 51.703H128v4h-5.363z"/></g>
+    <g 
+      transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)"
+      fill="#000000" 
+      stroke="none" 
+    >
+      <path d="M127 1905 c-50 -17 -85 -50 -108 -100 -18 -38 -19 -83 -19 -835 0
+      -517 4 -808 10 -832 14 -50 55 -97 105 -119 38 -18 85 -19 845 -19 760 0 807
+      1 845 19 50 22 91 69 105 119 6 24 10 315 10 832 0 750 -1 797 -19 835 -22 50
+      -69 91 -119 105 -24 6 -313 10 -827 10 -643 -1 -797 -3 -828 -15z m793 -320
+      c45 -23 90 -109 90 -171 0 -50 -36 -206 -100 -432 -17 -63 -30 -115 -28 -117
+      2 -2 38 27 80 65 58 54 80 81 92 116 30 89 89 139 134 115 10 -5 29 -40 42
+      -77 31 -89 77 -139 143 -159 63 -19 97 -19 97 -2 0 20 -46 80 -140 182 -95
+      103 -110 132 -110 213 0 150 118 252 293 252 165 0 250 -110 188 -245 -19 -43
+      -85 -109 -120 -120 -20 -6 -18 -10 28 -63 27 -31 54 -70 60 -85 25 -66 2 -177
+      -45 -219 -49 -43 -136 -71 -233 -76 -121 -6 -197 10 -260 53 l-50 33 -28 -30
+      c-40 -43 -129 -110 -194 -146 -51 -29 -57 -36 -73 -89 -40 -127 -93 -198 -176
+      -237 -35 -16 -65 -21 -136 -21 -81 0 -96 3 -149 30 -77 39 -117 94 -123 168
+      -4 49 -2 57 27 90 40 44 103 69 264 103 160 33 163 34 171 81 4 21 10 49 13
+      63 6 23 2 21 -40 -16 -58 -51 -115 -68 -207 -62 -96 7 -158 39 -188 98 -31 62
+      -30 138 4 210 19 42 30 92 45 220 29 243 25 229 65 246 20 8 57 16 84 17 66 3
+      88 -19 102 -104 10 -60 8 -74 -31 -230 -46 -188 -52 -253 -22 -269 37 -19 97
+      -12 130 15 29 25 81 119 81 147 0 20 86 322 111 389 12 35 29 61 42 67 30 14
+      34 14 67 -3z" />
+      <path d="M1448 1423 c-17 -3 -28 -11 -28 -21 0 -23 37 -96 59 -116 18 -16 20
+      -16 44 16 36 47 44 84 22 108 -17 19 -38 22 -97 13z"/>
+      <path d="M468 561 c-54 -9 -103 -22 -109 -28 -26 -26 40 -83 96 -83 50 0 96
+      37 134 108 14 27 16 27 -121 3z"/>
+    </g>
   </svg>
   [#nested/]
 </main>
@@ -161,7 +185,14 @@
           [#elseif request.requestURI?starts_with("/account")]
             <li><a href="${request.contextPath}/account/logout?client_id=${client_id!''}" title="Logout"><i class="fa fa-sign-out"></i></a></li>
           [#else]
-            <li class="help"><a target="_blank" href="https://fusionauth.io/docs/"><i class="fa fa-question-circle-o"></i> ${theme.message("help")}</a></li>
+            <li>
+              <a 
+                target="_blank" 
+                href="https://fusionauth.io/docs/"
+              >
+                <i class="fa fa-question-circle-o"></i> ${theme.message("help")}
+                </a>
+            </li>
           [/#if]
         </ul>
       </nav>
@@ -204,7 +235,7 @@
   [/#if]
 [/#macro]
 
-[#macro main title="Login" rowClass="row center-xs" colClass="col-xs col-sm-8 col-md-6 col-lg-5 col-xl-4"]
+[#macro main title="Login" rowClass="row center-xs" colClass="col-xs col-sm-8 col-xl-6"]
 <main class="page-body container">
   [@printErrorAlerts rowClass colClass/]
   [@printInfoAlerts rowClass colClass/]
@@ -212,7 +243,23 @@
     <div class="${colClass}">
       <div class="panel" data-in-progress>
         [#if title?has_content]
-          <h2>${title}</h2>
+          <h2 class="flex items-center">
+            ${title}
+            &nbsp;
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="40" 
+              height="40" 
+              version="1.1"
+              viewBox="0 0 595 945" 
+            >
+              <path id="shackle" d="m507.5 507.5v-260a210 210 0 1 0 -420 0v260" stroke="#EC0000" stroke-width="75" fill="none"/>
+              <g id="body">
+                <circle id="circle9" stroke-width="75" stroke="#EC0000" cy="647.5" cx="297.5" r="260" fill="none"/>
+                <circle id="circle11" cy="647.5" cx="297.5" r="90" fill="#EC0000"/>
+              </g>
+            </svg>
+          </h2>
         [/#if]
         <main>
           [#nested/]
@@ -228,7 +275,7 @@
 </main>
 [/#macro]
 
-[#macro accountMain rowClass="row center-xs" colClass="col-xs col-sm-8 col-md-6 col-lg-5 col-xl-4" actionURL="" actionText="Go back" actionDirection="back"]
+[#macro accountMain rowClass="row center-xs" colClass="col-xs col-sm-8 col-xl-6" actionURL="" actionText="Go back" actionDirection="back"]
 <main class="page-body container">
   [@printErrorAlerts rowClass colClass/]
   [@printInfoAlerts rowClass colClass/]
@@ -243,7 +290,7 @@
 
 [#macro localSelector]
 <label class="select">
-  <select id="locale-select" name="locale" class="select custom-select">
+  <select id="locale-select" name="locale" class="select custom-select my-select rounded">
     <option value="en" [#if locale == 'en']selected[/#if]>English</option>
       [#list theme.additionalLocales() as l]
         <option value="${l}" [#if locale == l]selected[/#if]>${l.getDisplayLanguage(locale)}</option>
@@ -767,7 +814,7 @@
   [/#if]
 [/#macro]
 
-[#macro alert message type icon includeDismissButton=true rowClass="row center-xs" colClass="col-xs col-sm-8 col-md-6 col-lg-5 col-xl-4"]
+[#macro alert message type icon includeDismissButton=true rowClass="row center-xs" colClass="col-xs col-sm-8 col-xl-6"]
 <div class="${rowClass}">
   <div class="${colClass}">
     <div class="alert ${type}">
@@ -1001,13 +1048,22 @@
 [/#macro]
 
 [#macro button text icon="arrow-right" disabled=false name="" value=""]
-<button class="button${disabled?then(' disabled', '')} custom-button"[#if disabled] disabled="disabled"[/#if][#if name !=""]name="${name}"[/#if][#if value !=""]value="${value}"[/#if]><i class="fa fa-${icon}"></i> ${text}</button>
+  <button 
+    class="${disabled?then(' disabled', '')} custom-button rounded bg-rose-600 px-6 py-2"
+    [#if disabled] disabled="disabled"[/#if]
+    [#if name !=""]name="${name}"[/#if]
+    [#if value !=""]value="${value}"[/#if]
+  >
+    <i class="fa fa-${icon}"></i> ${text}
+  </button>
 [/#macro]
 
 [#macro link url extraParameters=""]
-<a class="text-green" href="${url}?tenantId=${(tenantId)!''}&client_id=${(client_id?url)!''}&nonce=${(nonce?url)!''}&pendingIdPLinkId=${(pendingIdPLinkId)!''}&redirect_uri=${(redirect_uri?url)!''}&response_mode=${(response_mode?url)!''}&response_type=${(response_type?url)!''}&scope=${(scope?url)!''}&state=${(state?url)!''}&timezone=${(timezone?url)!''}&metaData.device.name=${(metaData.device.name?url)!''}&metaData.device.type=${(metaData.device.type?url)!''}${(extraParameters!'')?no_esc}&code_challenge=${(code_challenge?url)!''}&code_challenge_method=${(code_challenge_method?url)!''}&user_code=${(user_code?url)!''}">
-[#nested/]
-</a>
+  <a 
+    href="${url}?tenantId=${(tenantId)!''}&client_id=${(client_id?url)!''}&nonce=${(nonce?url)!''}&pendingIdPLinkId=${(pendingIdPLinkId)!''}&redirect_uri=${(redirect_uri?url)!''}&response_mode=${(response_mode?url)!''}&response_type=${(response_type?url)!''}&scope=${(scope?url)!''}&state=${(state?url)!''}&timezone=${(timezone?url)!''}&metaData.device.name=${(metaData.device.name?url)!''}&metaData.device.type=${(metaData.device.type?url)!''}${(extraParameters!'')?no_esc}&code_challenge=${(code_challenge?url)!''}&code_challenge_method=${(code_challenge_method?url)!''}&user_code=${(user_code?url)!''}"
+  >
+    [#nested/]
+  </a>
 [/#macro]
 
 [#macro logoutLink redirectURI extraParameters=""]
