@@ -26,7 +26,11 @@ Same goes for frontend with a slight difference: in frontend when we say e2e tes
 We make sure that our frontend is working as expected, since I do not have a form validator as of now and I am relying totally on native HTML validators I am not going to test it thoroughly. Besides that, our testing strategy for frontend applications are:
 
 1. Test props in Jest -- I'd like to consider this as Smoke Testing.
-2. Test UI and functionalities via storybook -- I'll take it that this'll be Sanity Testing.
+2. Test UI and functionalities via storybook
+   - I'll take it that this'll be Sanity Testing.
+   - > [!CAUTION]
+     >
+     > I've realized that writing tests that some elements have a specific class would be overkill, thus I am suggesting to test how a component/page looks only when it holds an imperative importance to the business or as a mechanism which'll be triggered when we face some sort of issue (_Regression Test_).
 3. We will try to test **CBP** and not everything; e.g. we will not check if user is trying to register to see the error thrown by backend that there is a registered user with the entered email address. But rather we will just try to register and see if we can do it.
    > [!IMPORTANT]
    >
@@ -52,7 +56,7 @@ Here we will briefly touch what we mean by each buzzword we used or will use, I 
 5. **E2E tests**: I consciously decided to use _e2e tests_ and _Integration Tests_ interchangeably.
 6. **Security Tests**: Tests that assess authentication and authorization layers, we are also checking our RESTful API interfaces and if we can call them by passing invalid data or miss some part of them that are necessary.
 7. **System Tests**: Here is where actually business lives, from registering a user to logics for whatever it might be. But make no mistake, we are not gonna test everything here. We will only tests **CBP** here and try to spread the burden to unit test layer. If each unit works as expected there are little that might go wrong.
-8. **Regression Tests**: in _System Tests_ we said "there are little that might go wrong" when we have well tested units but if something might go wrong it will. So that's where _Regression Tests_ comes into picture. We will thoroughly test bugs and functionality enhancements in regression tests.
+8. **Regression Tests**: in _System Tests_ we said "there are little that might go wrong" when we have well tested units but if something might go wrong, it will. So that's where _Regression Tests_ comes into picture. We will thoroughly test bugs, UI/UX issues, and functionality enhancements in regression tests.
 
 > [!CAUTION]
 >

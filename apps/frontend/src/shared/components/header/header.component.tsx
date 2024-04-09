@@ -8,7 +8,6 @@ import { ModalBody } from '../modal/modal-body.component';
 import { ModalHeader } from '../modal/modal-header.component';
 import { Modal } from '../modal/modal.component';
 import { Search } from '../search/search.component';
-import { SignInForm } from '../sign-in-form/sign-in-form.component';
 import { SignUpForm } from '../sign-up-form/sign-up-form.component';
 import { SubscriptionForm } from '../subscription-form/subscription-form.component';
 
@@ -52,8 +51,14 @@ export function Header() {
   const singInModalHeaderTitle = isSignInForm ? 'Sign in' : <Logo />;
   const signInModalBody = isSignInForm ? (
     <ModalBody>
-      <SignInForm closeModalHandler={closeSignInModalHandler} />
-      <p className="mt-2 text-center">
+      <Link
+        data-test="sign-in-button"
+        className="rounded-lg bg-rose-600 px-10 py-3 text-white"
+        href={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login`}
+      >
+        Continue sign in
+      </Link>
+      <p className="mt-5 text-center">
         Don&apos;t have an account?&nbsp;
         <button
           data-test="do-not-have-an-account-button"
