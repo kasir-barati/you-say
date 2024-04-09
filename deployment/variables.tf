@@ -25,19 +25,19 @@ variable "fusionauth_api_key" {
 
 variable "fusionauth_tenant_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "FusionAuth tenant id for local dev env"
 }
 
 variable "fusionauth_application_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "FusionAuth application id for local dev env"
 }
 
 variable "fusionauth_admin_group_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "FusionAuth admin group id for local dev env"
 }
 

@@ -7,7 +7,7 @@ resource "fusionauth_tenant" "you-say-tenant" {
   name      = "you-say-tenant"
   issuer    = var.fusionauth_issuer
   theme_id  = fusionauth_theme.custom-theme.id
-  tenant_id = var.fusionauth_tenant_id == "" ? null : var.fusionauth_tenant_id
+  tenant_id = var.fusionauth_tenant_id
 
   login_configuration {
     require_authentication = true
@@ -90,7 +90,7 @@ resource "fusionauth_tenant" "you-say-tenant" {
 resource "fusionauth_application" "you-say-application" {
   name           = "you-say-application"
   tenant_id      = fusionauth_tenant.you-say-tenant.id
-  application_id = var.fusionauth_application_id == "" ? null : var.fusionauth_application_id # diff
+  application_id = var.fusionauth_application_id
 
   oauth_configuration {
     generate_refresh_tokens            = true
@@ -139,7 +139,7 @@ resource "fusionauth_application_role" "FileUploader-role" {
 resource "fusionauth_group" "admin-group" {
   name      = "admin-group"
   tenant_id = fusionauth_tenant.you-say-tenant.id
-  group_id  = var.fusionauth_admin_group_id == "" ? null : var.fusionauth_admin_group_id
+  group_id  = var.fusionauth_admin_group_id
   role_ids = [
     fusionauth_application_role.PostReader-role.id,
     fusionauth_application_role.PostCreator-role.id,
