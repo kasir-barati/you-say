@@ -14,6 +14,7 @@ on:
         type: boolean
 
 env:
+  FUSIONAUTH_HOST: "http://localhost:9011"
   FUSIONAUTH_ISSUER: "http://localhost:9011"
   FUSIONAUTH_API_KEY: "fusionauth_api_key_${{ github.run_id }}_${{ github.run_attempt }}"
   POSTGRES_USER: "postgres"
@@ -72,13 +73,11 @@ jobs:
         name: Starting backend service
         run: docker compose up -d
         env:
-          FUSIONAUTH_HOST: "http://fusionauth:9011"
-          FUSIONAUTH_ISSUER: "http://fusionauth:9011"
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
-          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@you-say-api-db:27017"
+          DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         # https://stackoverflow.com/a/77972789/8784518
