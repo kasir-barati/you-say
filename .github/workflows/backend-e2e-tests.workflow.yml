@@ -47,6 +47,7 @@ jobs:
               - 'apps/backend/**'
               - 'apps/backend-e2e/**'
               - 'packages/backend/auth/**'
+              - '.github/workflows/backend-e2e-tests.workflow.yml'
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Setup docker
