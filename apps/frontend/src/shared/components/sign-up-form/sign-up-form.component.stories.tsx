@@ -34,5 +34,11 @@ export const Default: Story = {
     await waitFor(() =>
       expect(args.closeModalHandler).toHaveBeenCalledTimes(1),
     );
+    // TODO: test successful scenario too; https://github.com/ReactLibraries/storybook-addon-module-mock/issues/16#issue-2237267440
+    await waitFor(() =>
+      expect(
+        canvas.getByText('Something did not work out, try again!'),
+      ).toBeInTheDocument(),
+    );
   },
 };
