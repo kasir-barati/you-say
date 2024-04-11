@@ -6,6 +6,7 @@ export default {
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    'storybook-addon-module-mock',
   ],
   framework: {
     name: '@storybook/nextjs',
