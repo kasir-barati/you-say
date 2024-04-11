@@ -23,13 +23,11 @@ export function ModalHeader({
       <h1>{title}</h1>
       {closeButton && (
         <button
+          data-test={closeButtonDataTest}
           onClick={onClick}
           className="absolute right-6 top-6 rounded-lg text-gray-300 transition-colors hover:text-gray-600"
         >
-          <XMarkIcon
-            className="h-6 w-6"
-            data-test={closeButtonDataTest}
-          />
+          <XMarkIcon className="h-6 w-6" />
         </button>
       )}
     </div>

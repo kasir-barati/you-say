@@ -9,12 +9,12 @@ export default {
 } satisfies Meta<typeof Header>;
 
 export const Default: Story = {
-  play({ canvasElement, step }) {
+  async play({ canvasElement, step }) {
     const canvas = within(canvasElement);
 
     // TODO: write UI/UX tests for sign-up modal
 
-    step('Validate sign-in modal', async () => {
+    await step('Validate sign-in modal', async () => {
       const signInButtonInHeader = canvas.getByTestId(
         'sign-in-button-in-header',
       );

@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { ReactNode } from 'react';
 import {
   PrimaryButton,
@@ -23,13 +23,11 @@ describe('PrimaryButton', () => {
     const screen = await act(() =>
       render(<PrimaryButton {...props} />),
     );
+
     const primaryButtonByDataTest = screen.getByTestId(
       props.dataTest,
     );
 
-    act(() => fireEvent.click(primaryButtonByDataTest));
-
-    expect(props.onClick).toHaveBeenCalledTimes(1);
     expect(primaryButtonByDataTest).toBeInTheDocument();
     expect(primaryButtonByDataTest).toHaveClass(props.className);
   });

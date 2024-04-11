@@ -19,7 +19,7 @@ export function PrimaryButton({
     <button
       data-test={dataTest}
       className={classNames(
-        'rounded-lg bg-rose-600 py-3 text-white',
+        'rounded-lg bg-rose-600 px-8 py-2 text-white',
         className,
       )}
       onClick={onClick}

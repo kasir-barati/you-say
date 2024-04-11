@@ -9,5 +9,8 @@ export default {
     nextjs: {
       appDirectory: true,
     },
+    backgrounds: {
+      default: 'light',
+    },
   },
 } satisfies Preview;

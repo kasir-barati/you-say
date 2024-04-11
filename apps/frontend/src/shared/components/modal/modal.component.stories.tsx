@@ -18,15 +18,14 @@ export default {
 } satisfies Meta<typeof Modal>;
 
 export const CloseModal: Story = {
-  play({ canvasElement, step }) {
+  async play({ canvasElement, step }) {
     const canvas = within(canvasElement);
     const modal = canvas.getByTestId('modal');
 
-    step('validate it is not visible', () => {
+    await step('validate it is not visible', () => {
       expect(modal).not.toBeVisible();
     });
-
-    step(
+    await step(
       'validate it calls onClose when clicked on modal',
       async ({ args }) => {
         await fireEvent.click(modal);

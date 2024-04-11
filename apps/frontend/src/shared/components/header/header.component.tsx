@@ -116,7 +116,7 @@ export function Header() {
             dataTest="search-modal"
             onClose={closeSearchModalHandler}
           >
-            <ModalBody dataTest="search-modal-body">
+            <ModalBody className="-m-3" dataTest="search-modal-body">
               <Search
                 dataTest="search-modal-input"
                 placeholder="Search posts, tags, and authors"

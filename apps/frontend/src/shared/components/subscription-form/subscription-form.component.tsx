@@ -31,7 +31,7 @@ export function SubscriptionForm({
         />
       </div>
       <PrimaryButton
-        data-test="subscribe-button"
+        dataTest="subscribe-button"
         className="mt-5"
         type="submit"
       >

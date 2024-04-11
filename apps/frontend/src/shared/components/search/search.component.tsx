@@ -41,13 +41,14 @@ export function Search({
     <XMarkIcon
       onClick={searchBoxCleanerHandler}
       className={classNames(iconClassNames, 'cursor-pointer')}
+      data-test="search-cleaner-button"
     />
   ) : (
     <MagnifyingGlassIcon className={iconClassNames} />
   );
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row rounded bg-white p-3">
       {icon}
       <input
         onChange={searchBoxChangeHandler}
