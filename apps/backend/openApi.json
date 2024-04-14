@@ -76,10 +76,50 @@
       "get": {
         "operationId": "AuthController_login",
         "summary": "This endpoint creates login URL with all necessary configurations.",
+        "description": "Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies.",
         "parameters": [],
         "responses": {
           "200": {
             "description": "User will be redirected to the generated login URL."
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/auth/oauth-callback": {
+      "get": {
+        "operationId": "AuthController_oauthCallback",
+        "summary": "Callback endpoint for FusionAuth after user entered their credentials and logged in.",
+        "description": "this is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url.",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "query",
+            "description": "This is the authorization code that the OAuth server created after the user was logged in. We'll exchange this code for tokens.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "state",
+            "required": true,
+            "in": "query",
+            "description": "This is the same value of the state parameter we passed to the OAuth server. This is echoed back to the application so that the application can verify that the code came from the correct location.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User will be redirected to the frontend application with the JWT tokens attached to it as cookies."
           },
           "500": {
             "description": "Internal server error",
