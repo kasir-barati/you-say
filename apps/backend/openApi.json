@@ -121,6 +121,26 @@
           "200": {
             "description": "User will be redirected to the frontend application with the JWT tokens attached to it as cookies."
           },
+          "400": {
+            "description": "Bad request; oauthState must be a string, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request; something is not right about the request, it might be because of unmatched states in the cookies and query param.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
