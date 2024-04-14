@@ -55,6 +55,8 @@ export class AuthController {
   @ApiOperation({
     summary:
       'This endpoint creates login URL with all necessary configurations.',
+    description:
+      'Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies.',
   })
   @ApiOkResponse({
     description:
