@@ -42,14 +42,15 @@ describe('AuthController', () => {
 
   describe('GET /login', () => {
     it('should generate login URL', () => {
-      // TODO: replace empty string with a real example
-      authService.login.returns('');
+      const loginUrl =
+        'http://localhost:9011/oauth2/authorize?client_id=3c219e58-ed0e-4b18-ad48-f4f92793ae32&response_type=code&redirect_uri=%2Fadmin%2Flogin&scope=offline_access&code_challenge=WrODM4U9PJqIWr4Pw9Reu8v7Jda1Fbh_YE94JJoJ02M&code_challenge_method=S256&state=pBC42ZzFqSn49sL30td6dXUgxAkeaN7s0g1RgOgaDkA';
+      authService.login.returns(loginUrl);
 
       const loginRedirectUrl = controller.login({} as Response);
 
       expect(loginRedirectUrl).toStrictEqual({
         statusCode: 302,
-        url: '',
+        url: loginUrl,
       });
       expect(authService.login.callCount).toEqual(1);
       expect(authService.login.calledWith({})).toBeTruthy();
