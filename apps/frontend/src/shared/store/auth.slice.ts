@@ -4,23 +4,27 @@ import { User } from '@shared';
 
 export interface AuthState {
   user: User | null;
+  isLoggedIn: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
+  isLoggedIn: false,
 };
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    userSignedIn(state, { payload: user }: PayloadAction<User>) {
+    setUser(state, { payload: user }: PayloadAction<User>) {
       state.user = user;
+      state.isLoggedIn = true;
     },
     userSignedOut(state) {
       state.user = null;
+      state.isLoggedIn = false;
     },
   },
 });
 
-export const { userSignedIn, userSignedOut } = authSlice.actions;
+export const { setUser, userSignedOut } = authSlice.actions;
 export const authReducer = authSlice.reducer;

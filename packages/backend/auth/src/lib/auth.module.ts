@@ -11,11 +11,13 @@ import { PassportModule } from '@nestjs/passport';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
 import { AuthController } from './auth.controller';
 import { fusionAuthClientFactory } from './factory-providers/fusionauth-client.factory-provider';
+import { fusionAuthOauthCallbackUrlFactory } from './factory-providers/fusionauth-oauth-callback-url.factory-provider';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
 import { AuthService } from './services/auth.service';
+import { FusionAuthClientHelper } from './services/fusionauth-client-helper.service';
 import { FusionAuthErrorSerializer } from './services/fusionauth-error-serializer.service';
 import {
   AuthModuleAsyncOptions,
@@ -32,9 +34,11 @@ import {
     JwtStrategy,
     AuthService,
     JwtAuthGuard,
+    FusionAuthClientHelper,
     FusionAuthErrorSerializer,
     RoleValidatorMiddlewareFactory,
     fusionAuthClientFactory,
+    fusionAuthOauthCallbackUrlFactory,
   ],
   exports: [
     RoleGuard,

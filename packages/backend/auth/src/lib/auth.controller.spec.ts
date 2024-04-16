@@ -1,6 +1,8 @@
 import { SinonMock, SinonMockType } from '@shared';
 import { Response } from 'express';
 import { AuthController } from './auth.controller';
+import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
+import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './services/auth.service';
 
@@ -62,6 +64,44 @@ describe('AuthController', () => {
       expect(() => controller.login({} as Response)).toThrow(
         new Error(),
       );
+    });
+  });
+
+  describe('GET /oauth-callback', () => {
+    it('should redirect user to the frontend app', async () => {
+      const frontendUrl = 'http://localhost:3000';
+      authService.oauthCallback.resolves(frontendUrl);
+
+      const result = await controller.oauthCallback(
+        { cookie: {} } as Response,
+        { oauthState: '' } as OauthCallbackCookie,
+        { code: '' } as OauthCallbackQuery,
+      );
+
+      expect(result).toStrictEqual({
+        statusCode: 302,
+        url: frontendUrl,
+      });
+      expect(authService.oauthCallback.callCount).toEqual(1);
+      expect(
+        authService.oauthCallback.calledWith({
+          response: { cookie: {} },
+          cookies: { oauthState: '' },
+          queries: { code: '' },
+        }),
+      ).toBeTruthy();
+    });
+
+    it('should propagate errors occurred in the authService.oauthCallback', () => {
+      authService.oauthCallback.rejects(new Error());
+
+      const result = controller.oauthCallback(
+        {} as Response,
+        {} as OauthCallbackCookie,
+        {} as OauthCallbackQuery,
+      );
+
+      expect(result).rejects.toThrow(Error);
     });
   });
 });

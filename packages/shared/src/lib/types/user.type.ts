@@ -1,6 +1,3 @@
-import { Role } from './role.type';
+import { DecodedIdToken } from './decoded-id-token.type';
 
-export interface User {
-  sub: string;
-  roles: Role[];
-}
+export type User = Pick<DecodedIdToken, 'roles' | 'sub'>;

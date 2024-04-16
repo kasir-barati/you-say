@@ -117,7 +117,7 @@
 
           <div class="form-row">
             [#if showPasswordField]
-              [@helpers.button icon="key" text=theme.message('submit')/]
+              [@helpers.button icon="key" id="submit" text=theme.message('submit')/]
               [@helpers.link 
                 url="${request.contextPath}/password/forgot"]${theme.message('forgot-your-password')}
               [/@helpers.link]

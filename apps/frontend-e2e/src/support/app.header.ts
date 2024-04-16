@@ -4,6 +4,7 @@ const SELECTORS = {
   appHeader: 'header',
   singInButtonInHeader: 'sign-in-button-in-header',
   doNotHaveAnAccountButton: 'do-not-have-an-account-button',
+  signInButton: 'sign-in-button',
   singUpFirstNameInput: 'sign-up-first-name-input',
   signUpLastNameInput: 'sign-up-last-name-input',
   signUpEmailInput: 'sign-up-email-input',
@@ -52,4 +53,13 @@ export function verifySuccessfulSignUpNotificationMessage() {
   cy.getByTestId(
     SHARED_SELECTORS.notificationMessageParagraph,
   ).should('have.text', "You're now one of our users!");
+}
+export function clickOnSignInButton() {
+  cy.getByTestId(SELECTORS.signInButton).click();
+}
+export function verifySuccessfulSignIn() {
+  console.log(Cypress.env('FRONTEND_URL'));
+
+  // TODO: show a notification saying "We've logged you in!"
+  cy.url().should('include', Cypress.env('FRONTEND_URL'));
 }

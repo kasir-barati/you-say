@@ -78,6 +78,8 @@ jobs:
           FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
+          DOMAIN_OF_COOKIE: "localhost"
+          FRONTEND_URL: "http://localhost:3000"
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Generate Open API

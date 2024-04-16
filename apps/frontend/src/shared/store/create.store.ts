@@ -5,7 +5,7 @@ import {
   NotificationState,
   notificationReducer,
 } from '../components/notification/notification.slice';
-import { AuthState, authReducer } from './auth-slice.api';
+import { AuthState, authReducer } from './auth.slice';
 
 const rootReducer = combineReducers({
   auth: authReducer,

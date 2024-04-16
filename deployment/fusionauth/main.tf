@@ -251,6 +251,23 @@ resource "fusionauth_registration" "you-say-admin-registration" {
   application_id = fusionauth_application.you-say-application.id
 }
 
+resource "fusionauth_user" "you-say-temp-user" {
+  tenant_id                = fusionauth_tenant.you-say-tenant.id
+  email                    = "souma.kazuya@you-say.com"
+  username                 = "souma.kazuya@you-say.com"
+  first_name               = "Souma"
+  last_name                = "Kazuya"
+  password                 = "souma.kazuya"
+  skip_verification        = true
+  password_change_required = false
+  # data       = jsonencode({})
+}
+
+resource "fusionauth_registration" "you-say-temp-user-registration" {
+  user_id        = fusionauth_user.you-say-temp-user.user_id
+  application_id = fusionauth_application.you-say-application.id
+}
+
 data "httpclient_request" "create-super-admin-user" {
   url            = "${var.fusionauth_host}/api/user/registration"
   depends_on     = [fusionauth_theme.custom-theme, data.httpclient_request.get-default-application]

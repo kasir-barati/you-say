@@ -9,7 +9,7 @@ import { createBaseQuery } from './create-base-query.api';
 
 jest.mock('axios');
 const mockedAxios = jest.mocked(axios);
-jest.mock('../store/auth-slice.api', () => ({
+jest.mock('../store/auth.slice', () => ({
   userSignedOut: jest.fn().mockReturnValue({ type: 'signOut' }),
 }));
 

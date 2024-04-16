@@ -1047,12 +1047,13 @@
 [/#if]
 [/#macro]
 
-[#macro button text icon="arrow-right" disabled=false name="" value=""]
+[#macro button text icon="arrow-right" disabled=false name="" value="" id=""]
   <button 
     class="${disabled?then(' disabled', '')} custom-button rounded bg-rose-600 px-6 py-2"
     [#if disabled] disabled="disabled"[/#if]
     [#if name !=""]name="${name}"[/#if]
     [#if value !=""]value="${value}"[/#if]
+    [#if id != ""]id="${id}"[/#if]
   >
     <i class="fa fa-${icon}"></i> ${text}
   </button>

@@ -7,6 +7,8 @@ import {
 
 export interface AuthModuleOptions {
   appBaseUrl: string;
+  frontendUrl: string;
+  domainOfCookie: string;
   fusionAuthHost: string;
   fusionAuthApiKey: string;
   fusionAuthIssuer: string;
@@ -15,6 +17,7 @@ export interface AuthModuleOptions {
   fusionAuthOauthScopes: string;
   fusionAuthAdminGroupId: string;
   fusionAuthApplicationId: string;
+  fusionAuthOauthConfigurationClientSecret: string;
 }
 export interface AuthOptionsFactory {
   createAuthOptions(): Promise<AuthModuleOptions> | AuthModuleOptions;

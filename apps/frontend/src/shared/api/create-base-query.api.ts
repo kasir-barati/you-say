@@ -1,6 +1,6 @@
 import { Mutex } from 'async-mutex';
 import axios from 'axios';
-import { userSignedOut } from '../store/auth-slice.api';
+import { userSignedOut } from '../store/auth.slice';
 import {
   AxiosBaseQueryError,
   axiosBaseQuery,

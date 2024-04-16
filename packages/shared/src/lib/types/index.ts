@@ -1,3 +1,4 @@
+export * from './decoded-id-token.type';
 export * from './http-request';
 export * from './http-response';
 export * from './mock.type';
