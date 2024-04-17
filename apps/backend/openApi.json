@@ -76,11 +76,54 @@
       "get": {
         "operationId": "AuthController_login",
         "summary": "This endpoint creates login URL with all necessary configurations.",
-        "description": "Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies.",
-        "parameters": [],
+        "description": "Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-applogin).",
+        "parameters": [
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "query",
+            "example": "60e15803-1857-400d-8167-968573834454",
+            "description": "Client ID is sent from the client side application to have more flexibility in backend.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "redirect_uri",
+            "required": true,
+            "in": "query",
+            "example": "http://localhost:3000/",
+            "description": "We are also getting the redirect url from the client side application so that if we had different frontend application we know to which one to redirect after completion of login process.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "state",
+            "required": true,
+            "in": "query",
+            "example": "/posts",
+            "description": "The `login` and `register` functions both accept an optional string parameter called state. We'll use it to indicate which page the user was on before redirecting to login or registration, so that the user can be returned to that location after a successful authentication ([ref](https://www.npmjs.com/package/@fusionauth/react-sdk#state-parameter)).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "scope",
+            "required": true,
+            "in": "query",
+            "example": "openid offline_access",
+            "description": "We are also getting scope from @fusionauth/react-sdk. These are scopes that can be used in OAuth2 and OpenID Connect requests.",
+            "schema": { "type": "string" }
+          }
+        ],
         "responses": {
           "200": {
             "description": "User will be redirected to the generated login URL."
+          },
+          "400": {
+            "description": "Bad request; clientId is not string, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error",
@@ -100,13 +143,20 @@
       "get": {
         "operationId": "AuthController_oauthCallback",
         "summary": "Callback endpoint for FusionAuth after user entered their credentials and logged in.",
-        "description": "this is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url.",
+        "description": "This is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-appcallback)",
         "parameters": [
           {
             "name": "code",
             "required": true,
             "in": "query",
             "description": "This is the authorization code that the OAuth server created after the user was logged in. We'll exchange this code for tokens.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "codeVerifier",
+            "required": true,
+            "in": "query",
+            "description": "IDK yet",
             "schema": { "type": "string" }
           },
           {

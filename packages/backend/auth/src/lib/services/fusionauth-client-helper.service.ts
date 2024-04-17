@@ -10,6 +10,7 @@ import {
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
+import { generateRandomString } from '@shared';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
@@ -28,6 +29,51 @@ export class FusionAuthClientHelper implements OnModuleInit {
 
   onModuleInit() {
     this.loggerService.setContext(FusionAuthClientHelper.name);
+  }
+
+  /**
+   * @description State is used to prevent `CSRF`, we'll also incorporate the redirect url to it so that after successful login we know from which frontend app user came from and should be redirect to.
+   */
+  encodeRedirectUrlToState(
+    redirectUrl: string,
+    state: string,
+  ): string {
+    const encodedRedirectUrl =
+      Buffer.from(redirectUrl).toString('base64');
+
+    return encodedRedirectUrl + ':' + state;
+  }
+
+  /**
+   *
+   * @description The PKCE (Proof Key for Code Exchange) extension is designed to protect public clients (e.g. mobile, SPAs) from certain types of attacks when they use the authorization `'code'` grant type. Which is our case.
+   * Client generates `codeVerifier` which is a secret value and a derived value called the `code_challenge`. The `codeVerifier` is sent with the authorization request, and the `code_challenge` is sent with the token request.
+   *
+   * That's also why we are returning `oauthCodeVerifier`. We are creating `code_challenge` in `constructOauth2LoginUrl`.
+   *
+   * @returns {codeChallenge, codeVerifier}
+   */
+  async generatePkce() {
+    const codeVerifier = generateRandomString(32);
+    const data = this.encodeCodeVerifier(codeVerifier);
+    // A digest is a short fixed-length value derived from some variable-length input. Cryptographic digests should exhibit collision-resistance, meaning that it's hard to come up with two different inputs that have the same digest value.
+    const digestedData = await crypto.subtle.digest('SHA-256', data);
+    const codeChallenge = Buffer.from(digestedData)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+
+    return { codeChallenge, codeVerifier };
+  }
+
+  /**
+   * @description It receives a code and returns a Uint8Array containing UTF-8 encoded text.
+   */
+  private encodeCodeVerifier(code: string) {
+    const encoder = new TextEncoder();
+
+    return encoder.encode(code);
   }
 
   /**
@@ -95,8 +141,6 @@ export class FusionAuthClientHelper implements OnModuleInit {
       });
       return;
     }
-
-    return jwtValidationResponse.response.jwt;
   }
 
   private async getJwtOfAccessToken(

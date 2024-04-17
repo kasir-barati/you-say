@@ -20,6 +20,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Response } from 'express';
+import { LoginQueryDto } from './dtos/login-query.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
 import { RegisterDto } from './dtos/register.dto';
@@ -60,18 +61,28 @@ export class AuthController {
     summary:
       'This endpoint creates login URL with all necessary configurations.',
     description:
-      'Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies.',
+      'Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-applogin).',
   })
   @ApiOkResponse({
     description:
       'User will be redirected to the generated login URL.',
   })
+  @ApiBadRequestResponse({
+    type: ErrorResponse,
+    description: 'Bad request; clientId is not string, etc.',
+  })
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorException,
     description: 'Internal server error',
   })
-  login(@Res() response: Response): HttpRedirectResponse {
-    const loginRedirectUrl = this.authService.login(response);
+  async login(
+    @Res() response: Response,
+    @Query() queries: LoginQueryDto,
+  ): Promise<HttpRedirectResponse> {
+    const loginRedirectUrl = await this.authService.login(
+      response,
+      queries,
+    );
 
     return {
       statusCode: 302,

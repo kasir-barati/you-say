@@ -3,6 +3,7 @@ import FusionAuthClient from '@fusionauth/typescript-client';
 import { UnauthorizedException } from '@nestjs/common';
 import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
 import { Response } from 'express';
+import { LoginQueryDto } from '../dtos/login-query.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import {
@@ -120,15 +121,26 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should generate a login URL', () => {
+    it('should generate a login URL', async () => {
       const response = SinonMock.with<Response>({
         cookie: jest.fn(),
       });
-      fusionAuthConfigs.fusionAuthClientId = 'uuid';
-      fusionAuthConfigs.fusionAuthOauthScopes =
-        'profile offline_access openid';
+      const queries: LoginQueryDto = {
+        state: '/posts',
+        clientId: 'uuid',
+        scope: 'openid offline_access',
+        redirectUrl: 'http://localhost:3000',
+      };
+      fusionAuthClientHelper.encodeRedirectUrlToState.returns(
+        'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
+      );
+      fusionAuthClientHelper.generatePkce.resolves({
+        codeChallenge: '0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU',
+        codeVerifier: 'wuruazmrvvteawaflktmzxyw_gwmt-yz',
+      });
 
-      const loginRedirectUrl = new URL(authService.login(response));
+      const result = await authService.login(response, queries);
+      const loginRedirectUrl = new URL(result);
 
       expect(loginRedirectUrl.protocol).toBe('http:');
       expect(loginRedirectUrl.host).toBe('fusionauth:9011');
@@ -137,7 +149,7 @@ describe('AuthService', () => {
         loginRedirectUrl.searchParams.get('code_challenge_method'),
       ).toBe('S256');
       expect(loginRedirectUrl.searchParams.get('scope')).toBe(
-        'profile offline_access openid',
+        'openid offline_access',
       );
       expect(loginRedirectUrl.searchParams.get('response_type')).toBe(
         'code',
@@ -145,46 +157,45 @@ describe('AuthService', () => {
       expect(loginRedirectUrl.searchParams.get('client_id')).toBe(
         'uuid',
       );
-      expect(loginRedirectUrl.searchParams.get('state')).toEqual(
-        expect.any(String),
+      expect(loginRedirectUrl.searchParams.get('state')).toBe(
+        'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
       );
-      expect(loginRedirectUrl.searchParams.get('nonce')).toEqual(
-        expect.any(String),
+      expect(loginRedirectUrl.searchParams.get('redirect_uri')).toBe(
+        'http:localhost:3001/auth/oauth-callback',
       );
-      expect(
-        loginRedirectUrl.searchParams.get('redirect_uri'),
-      ).toEqual(expect.any(String));
       expect(
         loginRedirectUrl.searchParams.get('code_challenge'),
-      ).toEqual(expect.any(String));
+      ).toEqual('0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU');
     });
 
-    it('should generate a login URL with cookies who are secure', () => {
+    it('should generate a login URL with cookies who are secure', async () => {
       const response = SinonMock.with<Response>({});
       fusionAuthConfigs.appBaseUrl = 'https://you-say.com';
       fusionAuthConfigs.fusionAuthClientId = 'uuid';
-      fusionAuthConfigs.fusionAuthOauthScopes =
-        'profile offline_access openid';
+      fusionAuthClientHelper.generatePkce.resolves({
+        codeChallenge: '0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU',
+        codeVerifier: 'wuruazmrvvteawaflktmzxyw_gwmt-yz',
+      });
 
-      authService.login(response);
+      await authService.login(response, {
+        state: '/posts',
+        clientId: 'uuid',
+        scope: 'openid offline_access',
+        redirectUrl: 'http://localhost:3000',
+      });
 
-      expect(response.cookie.callCount).toBe(3);
-      for (const cookieName of [
-        'oauth_state',
-        'oauth_code_verifier',
-        'oauth_nonce',
-      ]) {
-        expect(
-          response.cookie.calledWithExactly(
-            cookieName,
-            Sinon.match.string,
-            {
-              httpOnly: true,
-              secure: true,
-            },
-          ),
-        ).toBeTruthy();
-      }
+      expect(response.cookie.callCount).toBe(1);
+      expect(
+        response.cookie.calledWithExactly(
+          'codeVerifier',
+          Sinon.match.string,
+          {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: true,
+          },
+        ),
+      ).toBeTruthy();
     });
   });
 

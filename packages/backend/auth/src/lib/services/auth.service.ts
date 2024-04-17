@@ -8,14 +8,13 @@ import {
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
-import { generateRandomString } from '@shared';
-import { createHash } from 'crypto';
 import { Response } from 'express';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
   FUSIONAUTH_OAUTH_CALLBACK_URL,
 } from '../auth.constants';
+import { LoginQueryDto } from '../dtos/login-query.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import {
@@ -96,13 +95,26 @@ export class AuthService implements OnModuleInit {
    *
    * @returns login URL that user should use to be able to login
    */
-  login(response: Response): string {
-    const { oauthState, oauthNonce, oauthCodeVerifier } =
-      this.configureOauth2LoginCookies(response);
+  async login(
+    response: Response,
+    queries: LoginQueryDto,
+  ): Promise<string> {
+    const { clientId, redirectUrl, state, scope } = queries;
+    const newState =
+      this.fusionAuthClientHelper.encodeRedirectUrlToState(
+        redirectUrl,
+        state,
+      );
+    const { codeChallenge, codeVerifier } =
+      await this.fusionAuthClientHelper.generatePkce();
+    this.setSecureCookie(response, 'codeVerifier', codeVerifier);
+    const tokenExchangeUrl = `${this.fusionAuthConfigs.appBaseUrl}/auth/oauth-callback`;
     const loginRedirectUrl = this.constructOauth2LoginUrl({
-      oauthState,
-      oauthNonce,
-      oauthCodeVerifier,
+      state: newState,
+      clientId,
+      redirectUrl: tokenExchangeUrl,
+      codeChallenge,
+      scope,
     });
 
     return loginRedirectUrl;
@@ -166,116 +178,51 @@ export class AuthService implements OnModuleInit {
   }
 
   private constructOauth2LoginUrl({
-    oauthNonce,
-    oauthState,
-    oauthCodeVerifier,
+    clientId,
+    state,
+    scope,
+    redirectUrl,
+    codeChallenge,
   }: {
-    oauthState: string;
-    oauthNonce: string;
-    oauthCodeVerifier: string;
+    scope: string;
+    clientId: string;
+    redirectUrl: string;
+    codeChallenge: string;
+    state: string;
   }): string {
     /**
      * @description this should always be set to `'code'` for this grant. This tells the OAuth server you are using the Authorization Code grant.
      */
     const responseType = 'code';
     /**
-     * @description this is an optional parameter, but because we have implemented PKCE, we must specify how PKCE `code_challenge` parameter was created. It can either be `'plain'` or `'S256'`. We never recommend using anything except `'S256'` which uses SHA-256 secure hashing for PKCE.
+     * @description this is an optional parameter, but because we have implemented PKCE, we must specify how PKCE `codeChallenge` parameter was created. It can either be `'plain'` or `'S256'`. We never recommend using anything except `'S256'` which uses SHA-256 secure hashing for PKCE.
      */
     const codeChallengeMethod = 'S256';
-    /**
-     * @description FusionAuth verifies that the `code_challenge` matches the `oauthCodeVerifier` when issuing the access token. This ensures that the token request is coming from the same client that requested the authorization code.
-     */
-    const codeChallenge = createHash('sha256')
-      .update(oauthCodeVerifier)
-      .digest('base64url');
-    /**
-     * @description We are attaching to the login URL.
-     */
-    const state = oauthState;
-    /**
-     * @description Attaching the generated oath_nonce to the login URL.
-     */
-    const nonce = oauthNonce;
-    const {
-      appBaseUrl,
-      fusionAuthHost,
-      fusionAuthClientId,
-      fusionAuthOauthScopes,
-    } = this.fusionAuthConfigs;
-    /**
-     * @description An endpoint of Our backend that will be called right after when user enters their credentials in the login page of FusionAuth. Learn more by reading its doc.
-     */
-    const redirectUri = `${appBaseUrl}/auth/oauth-callback`;
-    /**
-     * @description To begin the Authorization Code Grant we need to redirect users to the Authorization endpoint from our application. Here we are passing the necessary infos such as: state, nonce, redirect_url, etc thorough query strings.
-     */
-    const loginRedirectUrl = new URL(
-      `${fusionAuthHost}/oauth2/authorize`,
-    );
+    const { fusionAuthHost } = this.fusionAuthConfigs;
+    const oauth2SearchParams = new URLSearchParams({
+      state,
+      scope,
+      client_id: clientId,
+      redirect_uri: redirectUrl,
+      response_type: responseType,
+      code_challenge: codeChallenge,
+      code_challenge_method: codeChallengeMethod,
+    });
+    const loginRedirectUrl = `${fusionAuthHost}/oauth2/authorize?${oauth2SearchParams}`;
 
-    loginRedirectUrl.searchParams.append('state', state);
-    loginRedirectUrl.searchParams.append('nonce', nonce);
-    loginRedirectUrl.searchParams.append('redirect_uri', redirectUri);
-    loginRedirectUrl.searchParams.append(
-      'code_challenge_method',
-      codeChallengeMethod,
-    );
-    loginRedirectUrl.searchParams.append(
-      'code_challenge',
-      codeChallenge,
-    );
-    loginRedirectUrl.searchParams.append(
-      'scope',
-      fusionAuthOauthScopes,
-    );
-    loginRedirectUrl.searchParams.append(
-      'response_type',
-      responseType,
-    );
-    loginRedirectUrl.searchParams.append(
-      'client_id',
-      fusionAuthClientId,
-    );
-
-    return loginRedirectUrl.toString();
+    return loginRedirectUrl;
   }
 
-  // State is used to prevent CSRF, keep this for later.
-  private configureOauth2LoginCookies(response: Response) {
-    /**
-     * @description oauthState is used to prevent `CSRF`, we'll keep this for later.
-     */
-    const oauthState = generateRandomString(86);
-    /**
-     * @description A nonce (number used once) is a random or pseudo-random value generated by backend (`client`) to prevent replay attacks. FusionAuth (authorization server) will reject any request with a nonce it has already seen, preventing attackers from replaying authorization requests to trick users into granting access.
-     */
-    const oauthNonce = generateRandomString(86);
-    /**
-     * @description The PKCE (Proof Key for Code Exchange) extension is designed to protect public clients (e.g. mobile, SPAs) from certain types of attacks when they use the authorization `'code'` grant type. Which is our case.
-     * Client generates `oauth_code_verifier` which is a secret value and a derived value called the `code_challenge`. The `oauth_code_verifier` is sent with the authorization request, and the `code_challenge` is sent with the token request.
-     *
-     * That's also why we are returning `oauthCodeVerifier`. We are creating `code_challenge` in `constructOauth2LoginUrl`.
-     */
-    const oauthCodeVerifier = generateRandomString(86);
-
-    response.cookie('oauth_state', oauthState, {
+  private setSecureCookie(
+    response: Response,
+    name: string,
+    value: string,
+  ) {
+    response.cookie(name, value, {
       httpOnly: true,
+      sameSite: 'lax',
       secure: this.isSecure(),
     });
-    response.cookie('oauth_code_verifier', oauthCodeVerifier, {
-      httpOnly: true,
-      secure: this.isSecure(),
-    });
-    response.cookie('oauth_nonce', oauthNonce, {
-      httpOnly: true,
-      secure: this.isSecure(),
-    });
-
-    return {
-      oauthState,
-      oauthNonce,
-      oauthCodeVerifier,
-    };
   }
 
   /**
@@ -318,8 +265,7 @@ export class AuthService implements OnModuleInit {
   }
 
   private isSecure(): boolean {
-    const { appBaseUrl } = this.fusionAuthConfigs;
-    return !appBaseUrl.includes('localhost');
+    return !this.fusionAuthConfigs.appBaseUrl.includes('localhost');
   }
 
   private getMemberships(

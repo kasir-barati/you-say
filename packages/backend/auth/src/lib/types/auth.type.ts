@@ -14,7 +14,6 @@ export interface AuthModuleOptions {
   fusionAuthIssuer: string;
   fusionAuthClientId: string;
   fusionAuthTenantId: string;
-  fusionAuthOauthScopes: string;
   fusionAuthAdminGroupId: string;
   fusionAuthApplicationId: string;
   fusionAuthOauthConfigurationClientSecret: string;

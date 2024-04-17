@@ -244,4 +244,26 @@ describe('FusionAuthClientHelper', () => {
       ).toBeTruthy();
     });
   });
+
+  describe('generatePkce', () => {
+    it('should generate pkce', async () => {
+      const result = await fusionAuthClientHelper.generatePkce();
+
+      expect(result).toStrictEqual({
+        codeChallenge: expect.any(String),
+        codeVerifier: expect.any(String),
+      });
+    });
+  });
+
+  describe('encodeRedirectUrlToState', () => {
+    it('should encode redirect url to state', async () => {
+      const result = fusionAuthClientHelper.encodeRedirectUrlToState(
+        'http://localhost:3000/',
+        '/posts',
+      );
+
+      expect(result).toBe('aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts');
+    });
+  });
 });

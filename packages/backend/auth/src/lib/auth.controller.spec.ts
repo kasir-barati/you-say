@@ -1,6 +1,7 @@
 import { SinonMock, SinonMockType } from '@shared';
 import { Response } from 'express';
 import { AuthController } from './auth.controller';
+import { LoginQueryDto } from './dtos/login-query.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
 import { RegisterDto } from './dtos/register.dto';
@@ -43,12 +44,14 @@ describe('AuthController', () => {
   });
 
   describe('GET /login', () => {
-    it('should generate login URL', () => {
-      const loginUrl =
-        'http://localhost:9011/oauth2/authorize?client_id=3c219e58-ed0e-4b18-ad48-f4f92793ae32&response_type=code&redirect_uri=%2Fadmin%2Flogin&scope=offline_access&code_challenge=WrODM4U9PJqIWr4Pw9Reu8v7Jda1Fbh_YE94JJoJ02M&code_challenge_method=S256&state=pBC42ZzFqSn49sL30td6dXUgxAkeaN7s0g1RgOgaDkA';
-      authService.login.returns(loginUrl);
+    it('should generate login URL', async () => {
+      const loginUrl = 'TODO:';
+      authService.login.resolves(loginUrl);
 
-      const loginRedirectUrl = controller.login({} as Response);
+      const loginRedirectUrl = await controller.login(
+        {} as Response,
+        {} as LoginQueryDto,
+      );
 
       expect(loginRedirectUrl).toStrictEqual({
         statusCode: 302,
@@ -59,11 +62,14 @@ describe('AuthController', () => {
     });
 
     it('should propagate error occurred in the authService.login', () => {
-      authService.login.throws(new Error());
+      authService.login.rejects(new Error());
 
-      expect(() => controller.login({} as Response)).toThrow(
-        new Error(),
+      const loginRedirectUrl = controller.login(
+        {} as Response,
+        {} as LoginQueryDto,
       );
+
+      expect(loginRedirectUrl).rejects.toThrow(new Error());
     });
   });
 
