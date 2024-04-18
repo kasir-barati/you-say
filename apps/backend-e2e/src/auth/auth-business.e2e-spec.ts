@@ -58,7 +58,6 @@ describe('Auth -- business', () => {
   describe('GET /login', () => {
     it('should generate a FusionAuth login URL', async () => {
       const response = await authApi.authControllerLogin({
-        scope: 'openid offline_access',
         state: '/posts',
         redirectUri: FRONTEND_URL,
         clientId: FUSIONAUTH_CLIENT_ID,

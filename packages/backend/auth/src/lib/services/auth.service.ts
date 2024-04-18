@@ -99,7 +99,7 @@ export class AuthService implements OnModuleInit {
     response: Response,
     queries: LoginQueryDto,
   ): Promise<string> {
-    const { clientId, redirectUrl, state, scope } = queries;
+    const { clientId, redirectUrl, state } = queries;
     const newState =
       this.fusionAuthClientHelper.encodeRedirectUrlToState(
         redirectUrl,
@@ -114,7 +114,7 @@ export class AuthService implements OnModuleInit {
       clientId,
       redirectUrl: tokenExchangeUrl,
       codeChallenge,
-      scope,
+      scope: 'openid offline_access',
     });
 
     return loginRedirectUrl;

@@ -128,7 +128,6 @@ describe('AuthService', () => {
       const queries: LoginQueryDto = {
         state: '/posts',
         clientId: 'uuid',
-        scope: 'openid offline_access',
         redirectUrl: 'http://localhost:3000',
       };
       fusionAuthClientHelper.encodeRedirectUrlToState.returns(
@@ -180,7 +179,6 @@ describe('AuthService', () => {
       await authService.login(response, {
         state: '/posts',
         clientId: 'uuid',
-        scope: 'openid offline_access',
         redirectUrl: 'http://localhost:3000',
       });
 

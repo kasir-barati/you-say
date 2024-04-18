@@ -34,14 +34,4 @@ export class LoginQueryDto {
   @IsString()
   @IsNotEmpty()
   state: string;
-
-  @ApiProperty({
-    example: 'openid offline_access',
-    description:
-      'We are also getting scope from @fusionauth/react-sdk. These are scopes that can be used in OAuth2 and OpenID Connect requests.',
-  })
-  @Transform(({ value }) => value?.trim?.())
-  @IsString()
-  @IsNotEmpty()
-  scope: string;
 }
