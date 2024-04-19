@@ -45,7 +45,8 @@ describe('AuthController', () => {
 
   describe('GET /login', () => {
     it('should generate login URL', async () => {
-      const loginUrl = 'TODO:';
+      const loginUrl =
+        'http://localhost:9011/oauth2/authorize?state=aHR0cDovL2xvY2FsaG9zdDozMDAw%3A%2Fposts&scope=openid+offline_access&client_id=b94471aa-bc85-4538-b1a8-e3c4642c9c8b&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Foauth-callback&response_type=code&code_challenge=ehCJNHDlbPRoZmVShA5YWxqa1oVI-qmfcout3iAf6KU&code_challenge_method=S256';
       authService.login.resolves(loginUrl);
 
       const loginRedirectUrl = await controller.login(
@@ -80,7 +81,7 @@ describe('AuthController', () => {
 
       const result = await controller.oauthCallback(
         { cookie: {} } as Response,
-        { oauthState: '' } as OauthCallbackCookie,
+        { codeVerifier: '' } as OauthCallbackCookie,
         { code: '' } as OauthCallbackQuery,
       );
 
@@ -92,7 +93,7 @@ describe('AuthController', () => {
       expect(
         authService.oauthCallback.calledWith({
           response: { cookie: {} },
-          cookies: { oauthState: '' },
+          cookies: { codeVerifier: '' },
           queries: { code: '' },
         }),
       ).toBeTruthy();

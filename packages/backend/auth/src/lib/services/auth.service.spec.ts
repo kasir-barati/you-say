@@ -1,6 +1,6 @@
 import { LoggerService } from '@backend/logger';
 import FusionAuthClient from '@fusionauth/typescript-client';
-import { UnauthorizedException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from '../dtos/login-query.dto';
@@ -145,35 +145,26 @@ describe('AuthService', () => {
       expect(loginRedirectUrl.host).toBe('fusionauth:9011');
       expect(loginRedirectUrl.pathname).toBe('/oauth2/authorize');
       expect(
-        loginRedirectUrl.searchParams.get('code_challenge_method'),
-      ).toBe('S256');
-      expect(loginRedirectUrl.searchParams.get('scope')).toBe(
-        'openid offline_access',
-      );
-      expect(loginRedirectUrl.searchParams.get('response_type')).toBe(
-        'code',
-      );
-      expect(loginRedirectUrl.searchParams.get('client_id')).toBe(
-        'uuid',
-      );
-      expect(loginRedirectUrl.searchParams.get('state')).toBe(
-        'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
-      );
-      expect(loginRedirectUrl.searchParams.get('redirect_uri')).toBe(
-        'http:localhost:3001/auth/oauth-callback',
-      );
-      expect(
-        loginRedirectUrl.searchParams.get('code_challenge'),
-      ).toEqual('0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU');
+        Object.fromEntries(loginRedirectUrl.searchParams),
+      ).toMatchObject({
+        client_id: 'uuid',
+        response_type: 'code',
+        code_challenge_method: 'S256',
+        scope: 'openid offline_access',
+        state: 'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
+        redirect_uri: 'http:localhost:3001/auth/oauth-callback',
+        code_challenge: '0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU',
+      });
     });
 
     it('should generate a login URL with cookies who are secure', async () => {
-      const response = SinonMock.with<Response>({});
-      fusionAuthConfigs.appBaseUrl = 'https://you-say.com';
+      const response = SinonMock.with<Response>({
+        req: { protocol: 'https' },
+      });
       fusionAuthConfigs.fusionAuthClientId = 'uuid';
       fusionAuthClientHelper.generatePkce.resolves({
-        codeChallenge: '0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU',
-        codeVerifier: 'wuruazmrvvteawaflktmzxyw_gwmt-yz',
+        codeChallenge: 'JR-vKNlVo4G1RPdQ2ItHcgdAYIpUr1HJuXr2hH6QIw4',
+        codeVerifier: 'xqzmumbrxyzqpcj-oxznpmpclbgealhavbsabh_ibkn',
       });
 
       await authService.login(response, {
@@ -201,22 +192,28 @@ describe('AuthService', () => {
     it('should return frontend URL', async () => {
       const response = SinonMock.with<Response>({});
       const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: '',
+        codeVerifier: '',
       });
       const queries = SinonMock.with<OauthCallbackQuery>({
-        state: '',
+        code: '',
+        locale: 'en',
+        userState: 'Authenticated',
+        state: 'aHR0cHM6Ly95b3Utc2F5LmNvbS8=:/posts',
       });
       fusionAuthClient.exchangeOAuthCodeForAccessTokenUsingPKCE.resolves(
         {
           response: {
-            id_token: 'idToken',
-            access_token: 'accessToken',
-            refresh_token: 'refreshToken',
+            expires_in: 12,
+            id_token: 'idToken-jwt',
+            access_token: 'accessToken-jwt',
+            refresh_token: 'refresh token',
           },
         },
       );
       fusionAuthClientHelper.verifyExchangedTokens.resolves();
-      fusionAuthConfigs.frontendUrl = 'http://localhost:3000';
+      fusionAuthClientHelper.decodeRedirectUrlFromState.resolves(
+        'https://you-say.com',
+      );
 
       const result = await authService.oauthCallback({
         response,
@@ -224,35 +221,13 @@ describe('AuthService', () => {
         queries,
       });
 
-      expect(result).toBe('http://localhost:3000');
+      expect(result).toBe('https://you-say.com');
     });
 
-    it('should throw UnauthorizedException if cookies.oauthState is not equal to queries.state', () => {
+    it('should throw InternalServerErrorException if fusionAuthClient could not exchange code for tokens', () => {
       const response = SinonMock.with<Response>({});
-      const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: 'some',
-      });
-      const queries = SinonMock.with<OauthCallbackQuery>({
-        state: 'junk',
-      });
-
-      const result = authService.oauthCallback({
-        response,
-        cookies,
-        queries,
-      });
-
-      expect(result).rejects.toThrow(UnauthorizedException);
-    });
-
-    it('should throw UnauthorizedException if fusion auth client throw an error', () => {
-      const response = SinonMock.with<Response>({});
-      const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: '',
-      });
-      const queries = SinonMock.with<OauthCallbackQuery>({
-        state: '',
-      });
+      const cookies = SinonMock.with<OauthCallbackCookie>({});
+      const queries = SinonMock.with<OauthCallbackQuery>({});
       fusionAuthClient.exchangeOAuthCodeForAccessTokenUsingPKCE.rejects();
 
       const result = authService.oauthCallback({
@@ -261,28 +236,25 @@ describe('AuthService', () => {
         queries,
       });
 
-      expect(result).rejects.toThrow(UnauthorizedException);
+      expect(result).rejects.toThrow(InternalServerErrorException);
     });
 
-    it('should set necessary secure cookies for the response', async () => {
-      const response = SinonMock.with<Response>({});
-      const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: '',
+    it('should set necessary cookies for the response', async () => {
+      const response = SinonMock.with<Response>({
+        req: { protocol: 'https' },
       });
-      const queries = SinonMock.with<OauthCallbackQuery>({
-        state: '',
-      });
+      const cookies = SinonMock.with<OauthCallbackCookie>({});
+      const queries = SinonMock.with<OauthCallbackQuery>({});
       fusionAuthClient.exchangeOAuthCodeForAccessTokenUsingPKCE.resolves(
         {
           response: {
+            expires_in: 5,
             id_token: 'idToken',
             access_token: 'accessToken',
             refresh_token: 'refreshToken',
           },
         },
       );
-      fusionAuthConfigs.appBaseUrl = 'https://you-say.com';
-      fusionAuthConfigs.domainOfCookie = 'localhost';
 
       await authService.oauthCallback({
         response,
@@ -290,48 +262,49 @@ describe('AuthService', () => {
         queries,
       });
 
-      expect(response.cookie.callCount).toBe(3);
+      expect(response.cookie.callCount).toBe(4);
       expect(
-        response.cookie.calledWithExactly(
-          'access_token',
-          'accessToken',
-          {
-            httpOnly: true,
-            secure: true,
-            domain: 'localhost',
-          },
-        ),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly(
-          'refresh_token',
-          'refreshToken',
-          {
-            httpOnly: true,
-            secure: true,
-            domain: 'localhost',
-          },
-        ),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly('id_token', 'idToken', {
+        response.cookie.calledWithExactly('app.at', 'accessToken', {
           secure: true,
-          domain: 'localhost',
+          httpOnly: true,
+          sameSite: 'lax',
         }),
+      ).toBeTruthy();
+      expect(
+        response.cookie.calledWithExactly('app.rt', 'refreshToken', {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
+        }),
+      ).toBeTruthy();
+      expect(
+        response.cookie.calledWithExactly('app.idt', 'idToken', {
+          secure: true,
+          sameSite: 'lax',
+          httpOnly: false,
+        }),
+      ).toBeTruthy();
+      expect(
+        response.cookie.calledWithExactly(
+          'app.at_exp',
+          Sinon.match.number,
+          {
+            secure: true,
+            sameSite: 'lax',
+            httpOnly: false,
+          },
+        ),
       ).toBeTruthy();
     });
 
-    it('should clear oauth_state, oauth_nonce, and oauth_code_verifier cookies', async () => {
+    it('should clear codeVerifier cookies', async () => {
       const response = SinonMock.with<Response>({});
-      const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: '',
-      });
-      const queries = SinonMock.with<OauthCallbackQuery>({
-        state: '',
-      });
+      const cookies = SinonMock.with<OauthCallbackCookie>({});
+      const queries = SinonMock.with<OauthCallbackQuery>({});
       fusionAuthClient.exchangeOAuthCodeForAccessTokenUsingPKCE.resolves(
         {
           response: {
+            expires_in: 14,
             id_token: 'idToken',
             access_token: 'accessToken',
             refresh_token: 'refreshToken',
@@ -341,29 +314,20 @@ describe('AuthService', () => {
 
       await authService.oauthCallback({ response, cookies, queries });
 
-      expect(response.clearCookie.callCount).toEqual(3);
-      for (const cookieName of [
-        'oauth_state',
-        'oauth_code_verifier',
-        'oauth_nonce',
-      ]) {
-        expect(
-          response.clearCookie.calledWith(cookieName),
-        ).toBeTruthy();
-      }
+      expect(response.clearCookie.callCount).toEqual(1);
+      expect(
+        response.clearCookie.calledWith('codeVerifier'),
+      ).toBeTruthy();
     });
 
     it('should propagate any error that had occurred in verifyExchangedTokens method', () => {
       const response = SinonMock.with<Response>({});
-      const cookies = SinonMock.with<OauthCallbackCookie>({
-        oauthState: '',
-      });
-      const queries = SinonMock.with<OauthCallbackQuery>({
-        state: '',
-      });
+      const cookies = SinonMock.with<OauthCallbackCookie>({});
+      const queries = SinonMock.with<OauthCallbackQuery>({});
       fusionAuthClient.exchangeOAuthCodeForAccessTokenUsingPKCE.resolves(
         {
           response: {
+            expires_in: 29,
             id_token: 'idToken',
             access_token: 'accessToken',
             refresh_token: 'refreshToken',

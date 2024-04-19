@@ -76,7 +76,7 @@
       "get": {
         "operationId": "AuthController_login",
         "summary": "This endpoint creates login URL with all necessary configurations.",
-        "description": "Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-applogin).",
+        "description": "Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://github.com/FusionAuth/fusionauth-javascript-sdk-express/tree/main?tab=readme-ov-file#get-applogin).",
         "parameters": [
           {
             "name": "client_id",
@@ -100,14 +100,6 @@
             "in": "query",
             "example": "/posts",
             "description": "The `login` and `register` functions both accept an optional string parameter called state. We'll use it to indicate which page the user was on before redirecting to login or registration, so that the user can be returned to that location after a successful authentication ([ref](https://www.npmjs.com/package/@fusionauth/react-sdk#state-parameter)).",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "scope",
-            "required": true,
-            "in": "query",
-            "example": "openid offline_access",
-            "description": "We are also getting scope from @fusionauth/react-sdk. These are scopes that can be used in OAuth2 and OpenID Connect requests.",
             "schema": { "type": "string" }
           }
         ],
@@ -143,7 +135,7 @@
       "get": {
         "operationId": "AuthController_oauthCallback",
         "summary": "Callback endpoint for FusionAuth after user entered their credentials and logged in.",
-        "description": "This is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-appcallback)",
+        "description": "This is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url. [Learn more here](https://github.com/FusionAuth/fusionauth-javascript-sdk-express/tree/main?tab=readme-ov-file#get-appcallback)",
         "parameters": [
           {
             "name": "code",
@@ -153,17 +145,24 @@
             "schema": { "type": "string" }
           },
           {
-            "name": "codeVerifier",
-            "required": true,
-            "in": "query",
-            "description": "IDK yet",
-            "schema": { "type": "string" }
-          },
-          {
             "name": "state",
             "required": true,
             "in": "query",
             "description": "This is the same value of the state parameter we passed to the OAuth server. This is echoed back to the application so that the application can verify that the code came from the correct location.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "locale",
+            "required": true,
+            "in": "query",
+            "description": "Not sure if it should be mandatory! following the example implementation of FusionAuth in GH!",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "userState",
+            "required": true,
+            "in": "query",
+            "description": "Not sure if it should be mandatory! following the example implementation of FusionAuth in GH!",
             "schema": { "type": "string" }
           }
         ],

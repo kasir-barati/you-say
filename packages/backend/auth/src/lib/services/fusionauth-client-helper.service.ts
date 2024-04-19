@@ -5,10 +5,10 @@ import FusionAuthClient, {
 } from '@fusionauth/typescript-client';
 import ClientResponse from '@fusionauth/typescript-client/build/src/ClientResponse';
 import {
+  HttpException,
   Inject,
   Injectable,
   OnModuleInit,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { generateRandomString } from '@shared';
 import {
@@ -45,48 +45,57 @@ export class FusionAuthClientHelper implements OnModuleInit {
   }
 
   /**
+   * @description This method decode the redirect URL from state and also attach locale and userState to the URL in query string so that we can use them in our frontend application to show a welcome message or change the language to whatever the locale might be.
+   */
+  decodeRedirectUrlFromState({
+    state,
+    locale,
+    userState,
+  }: {
+    state: string;
+    locale: string;
+    userState: string;
+  }): string {
+    const [encodedUri, savedState] = state.split(':');
+    const redirectUri = Buffer.from(encodedUri, 'base64').toString(
+      'ascii',
+    );
+    const queryParams = {
+      state: savedState,
+      locale,
+      userState,
+    };
+    const query = new URLSearchParams(queryParams);
+
+    return `${redirectUri}?${query}`;
+  }
+
+  /**
    *
    * @description The PKCE (Proof Key for Code Exchange) extension is designed to protect public clients (e.g. mobile, SPAs) from certain types of attacks when they use the authorization `'code'` grant type. Which is our case.
-   * Client generates `codeVerifier` which is a secret value and a derived value called the `code_challenge`. The `codeVerifier` is sent with the authorization request, and the `code_challenge` is sent with the token request.
-   *
-   * That's also why we are returning `oauthCodeVerifier`. We are creating `code_challenge` in `constructOauth2LoginUrl`.
+   * Client generates `codeVerifier` which is a secret value and a derived value called the `codeChallenge`. The `codeVerifier` is sent with the authorization request, and the `codeChallenge` is sent with the token request.
    *
    * @returns {codeChallenge, codeVerifier}
    */
   async generatePkce() {
-    const codeVerifier = generateRandomString(32);
+    // code verifier requirements: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+    const codeVerifier = generateRandomString(43);
     const data = this.encodeCodeVerifier(codeVerifier);
     // A digest is a short fixed-length value derived from some variable-length input. Cryptographic digests should exhibit collision-resistance, meaning that it's hard to come up with two different inputs that have the same digest value.
-    const digestedData = await crypto.subtle.digest('SHA-256', data);
-    const codeChallenge = Buffer.from(digestedData)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    const codeChallenge = await this.generateCodeChallengeFrom(data);
 
     return { codeChallenge, codeVerifier };
   }
 
   /**
-   * @description It receives a code and returns a Uint8Array containing UTF-8 encoded text.
-   */
-  private encodeCodeVerifier(code: string) {
-    const encoder = new TextEncoder();
-
-    return encoder.encode(code);
-  }
-
-  /**
-   * @description Validates access token and ID token with OAuth server, here we are verifying other important parts of JWT tokens we've received; thing such as iss, aud, etc.
+   * @description Validates access token and ID token with OAuth server, here we are verifying other important parts of JWT tokens we've received; thing such as iss, and aud.
    */
   async verifyExchangedTokens({
     idToken,
-    oauthNonce,
     accessToken,
     refreshToken,
   }: {
     idToken: string;
-    oauthNonce: string;
     accessToken: string;
     refreshToken: string;
   }): Promise<Promise<never | void>> {
@@ -95,31 +104,28 @@ export class FusionAuthClientHelper implements OnModuleInit {
       this.loggerService.error(
         'Refresh token is missing in the response of the exchanged tokens for OAuth code!',
       );
-      throw new UnauthorizedException();
+      throw new HttpException(undefined, 503);
     }
 
     const jwtOfAccessToken =
       await this.getJwtOfAccessToken(accessToken);
     if (!jwtOfAccessToken) {
       this.loggerService.error('Exchanged access token is invalid!');
-      throw new UnauthorizedException();
+      throw new HttpException(undefined, 503);
     }
 
-    const jwtOfIdToken = await this.getJwtOfIdToken(
-      idToken,
-      oauthNonce,
-    );
+    const jwtOfIdToken = await this.getJwtOfIdToken(idToken);
     if (!jwtOfIdToken) {
       this.loggerService.error('Exchanged ID token is invalid!');
-      throw new UnauthorizedException();
+      throw new HttpException(undefined, 503);
     }
   }
 
   private async getJwtOfIdToken(
     idToken: string,
-    oauthNonce: string,
   ): Promise<void | JWT> {
     let jwtValidationResponse: ClientResponse<ValidateResponse>;
+
     try {
       jwtValidationResponse =
         await this.fusionAuthClient.validateJWT(idToken);
@@ -130,17 +136,7 @@ export class FusionAuthClientHelper implements OnModuleInit {
       return;
     }
 
-    const jwtNonce = jwtValidationResponse.response.jwt?.['nonce'];
-
-    if (!this.areNoncesTheSame(jwtNonce, oauthNonce)) {
-      this.loggerService.error({
-        message:
-          'The passed nonce is not equal to the one in the validated jwt!',
-        jwtNonce,
-        oauthNonce,
-      });
-      return;
-    }
+    return jwtValidationResponse.response.jwt;
   }
 
   private async getJwtOfAccessToken(
@@ -219,7 +215,22 @@ export class FusionAuthClientHelper implements OnModuleInit {
     return issuer === this.fusionAuthConfigs.fusionAuthIssuer;
   }
 
-  private areNoncesTheSame(nonce1: string, nonce2: string) {
-    return nonce1 === nonce2;
+  private async generateCodeChallengeFrom(data: Uint8Array) {
+    const digestedData = await crypto.subtle.digest('SHA-256', data);
+
+    return Buffer.from(digestedData)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
+
+  /**
+   * @description It receives a code and returns a Uint8Array containing UTF-8 encoded text.
+   */
+  private encodeCodeVerifier(code: string) {
+    const encoder = new TextEncoder();
+
+    return encoder.encode(code);
   }
 }

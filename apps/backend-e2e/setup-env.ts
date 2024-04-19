@@ -1,4 +1,10 @@
 import axios, { AxiosError } from 'axios';
+import { config } from 'dotenv';
+import { join } from 'path';
+
+config({
+  path: join(process.cwd(), '.env'),
+});
 
 axios.interceptors.response.use(
   (response) => response,

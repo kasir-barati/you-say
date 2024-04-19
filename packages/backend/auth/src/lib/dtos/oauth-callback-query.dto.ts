@@ -8,7 +8,7 @@ export class OauthCallbackQuery implements OauthCallbackRequestQuery {
     description:
       "This is the authorization code that the OAuth server created after the user was logged in. We'll exchange this code for tokens.",
   })
-  @Transform(({ value }) => trimAndSanitize(value))
+  @Transform(({ value }) => value?.trim?.())
   @IsNotEmpty()
   @IsString()
   code: string;
@@ -17,15 +17,26 @@ export class OauthCallbackQuery implements OauthCallbackRequestQuery {
     description:
       'This is the same value of the state parameter we passed to the OAuth server. This is echoed back to the application so that the application can verify that the code came from the correct location.',
   })
-  @Transform(({ value }) => trimAndSanitize(value))
+  @Transform(({ value }) => value?.trim?.())
   @IsNotEmpty()
   @IsString()
   state: string;
-}
 
-// Maybe can be a shared decorator if we need it somewhere else too
-function trimAndSanitize(value: unknown): string {
-  const sanitizedValue = Array.isArray(value) ? value[0] : value;
+  @ApiProperty({
+    example: 'en',
+    description: 'Set by OAuth server',
+  })
+  @Transform(({ value }) => value?.trim?.())
+  @IsNotEmpty()
+  @IsString()
+  locale: string;
 
-  return sanitizedValue?.trim?.();
+  @ApiProperty({
+    example: 'Authenticated',
+    description: 'It is set by FusionAuth.',
+  })
+  @Transform(({ value }) => value?.trim?.())
+  @IsNotEmpty()
+  @IsString()
+  userState: string;
 }

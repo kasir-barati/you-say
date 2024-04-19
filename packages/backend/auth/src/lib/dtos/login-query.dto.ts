@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { LoginRequestQuery } from '@shared';
 import { Expose, Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
 
-export class LoginQueryDto {
+export class LoginQueryDto implements LoginRequestQuery {
   @ApiProperty({
     name: 'client_id',
     example: '60e15803-1857-400d-8167-968573834454',

@@ -5,9 +5,10 @@ import FusionAuthClient, {
 import {
   Inject,
   Injectable,
+  InternalServerErrorException,
   OnModuleInit,
-  UnauthorizedException,
 } from '@nestjs/common';
+import { setCookie, setSecureCookie } from '@shared';
 import { Response } from 'express';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
@@ -107,7 +108,9 @@ export class AuthService implements OnModuleInit {
       );
     const { codeChallenge, codeVerifier } =
       await this.fusionAuthClientHelper.generatePkce();
-    this.setSecureCookie(response, 'codeVerifier', codeVerifier);
+
+    setSecureCookie(response, 'codeVerifier', codeVerifier);
+
     const tokenExchangeUrl = `${this.fusionAuthConfigs.appBaseUrl}/auth/oauth-callback`;
     const loginRedirectUrl = this.constructOauth2LoginUrl({
       state: newState,
@@ -129,17 +132,10 @@ export class AuthService implements OnModuleInit {
     cookies: OauthCallbackCookie;
     queries: OauthCallbackQuery;
   }): Promise<string> {
-    if (cookies.oauthState !== queries.state) {
-      this.loggerService.error(
-        'OAuth state in the cookie is not equal to the one pass to the endpoint in query params',
-      );
-      throw new UnauthorizedException();
-    }
-    this.cleanupOauth2LoginCookiesCookies(response);
-
     const {
       response: {
         id_token: idToken,
+        expires_in: expiresIn,
         access_token: accessToken,
         refresh_token: refreshToken,
       },
@@ -150,31 +146,41 @@ export class AuthService implements OnModuleInit {
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.fusionAuthOauthCallbackUrl,
-        cookies.oauthCodeVerifier,
+        cookies.codeVerifier,
       )
       .catch((error) => {
-        this.loggerService.error(
-          'exchanging OAuth code for JWT tokens using PKCE failed!',
-          { error },
-        );
-        throw new UnauthorizedException();
+        this.loggerService.error({
+          message:
+            'exchanging OAuth code for JWT tokens using PKCE failed!',
+          error,
+        });
+        throw new InternalServerErrorException();
       });
+    const expiresInMs = expiresIn * 1_000;
+    const accessTokenExpiresIn = (Date.now() + expiresInMs) / 1000;
 
     await this.fusionAuthClientHelper.verifyExchangedTokens({
       idToken,
       accessToken,
       refreshToken,
-      oauthNonce: cookies.oauthNonce,
     });
 
-    this.configureOauthCallbackCookies({
-      response,
-      accessToken,
-      refreshToken,
-      idToken,
-    });
+    setSecureCookie(response, 'app.at', accessToken);
+    setSecureCookie(response, 'app.rt', refreshToken);
+    // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
+    setCookie(response, 'app.idt', idToken);
+    setCookie(response, 'app.at_exp', accessTokenExpiresIn);
+    // Since the cookies set in the login endpoint are `httpOnly` we cannot delete them in client side. Thus we are removing them here, [read more](https://stackoverflow.com/a/1085792/8784518).
+    response.clearCookie('codeVerifier');
 
-    return this.fusionAuthConfigs.frontendUrl;
+    const redirectUrl =
+      this.fusionAuthClientHelper.decodeRedirectUrlFromState({
+        state: queries.state,
+        locale: queries.locale,
+        userState: queries.userState,
+      });
+
+    return redirectUrl;
   }
 
   private constructOauth2LoginUrl({
@@ -211,61 +217,6 @@ export class AuthService implements OnModuleInit {
     const loginRedirectUrl = `${fusionAuthHost}/oauth2/authorize?${oauth2SearchParams}`;
 
     return loginRedirectUrl;
-  }
-
-  private setSecureCookie(
-    response: Response,
-    name: string,
-    value: string,
-  ) {
-    response.cookie(name, value, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: this.isSecure(),
-    });
-  }
-
-  /**
-   * @description since the cookies set in the login endpoint are `httpOnly` we cannot delete them in client side. Thus we are removing them here, [read more](https://stackoverflow.com/a/1085792/8784518).
-   */
-  private cleanupOauth2LoginCookiesCookies(response: Response) {
-    response.clearCookie('oauth_state');
-    response.clearCookie('oauth_nonce');
-    response.clearCookie('oauth_code_verifier');
-  }
-
-  /**
-   * @description as a security best practice we are saving access token and refresh token as `httpOnly` to prevent client from reading it with JS. But at the same time client application needs to communicate with backend and probably some info about user, things such as name, permissions, etc. Those will be handled via ID token -- that's why it is not `httpOnly`.
-   */
-  private configureOauthCallbackCookies({
-    idToken,
-    response,
-    accessToken,
-    refreshToken,
-  }: {
-    idToken: string;
-    response: Response;
-    accessToken: string;
-    refreshToken: string;
-  }) {
-    response.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: this.isSecure(),
-      domain: this.fusionAuthConfigs.domainOfCookie,
-    });
-    response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: this.isSecure(),
-      domain: this.fusionAuthConfigs.domainOfCookie,
-    });
-    response.cookie('id_token', idToken, {
-      secure: this.isSecure(),
-      domain: this.fusionAuthConfigs.domainOfCookie,
-    });
-  }
-
-  private isSecure(): boolean {
-    return !this.fusionAuthConfigs.appBaseUrl.includes('localhost');
   }
 
   private getMemberships(

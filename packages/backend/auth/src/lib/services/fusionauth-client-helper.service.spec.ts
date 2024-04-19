@@ -1,6 +1,6 @@
 import { LoggerService } from '@backend/logger';
 import FusionAuthClient, { JWT } from '@fusionauth/typescript-client';
-import { UnauthorizedException } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
 import { AuthModuleOptions } from '../types/auth.type';
 import { FusionAuthClientHelper } from './fusionauth-client-helper.service';
@@ -34,7 +34,22 @@ describe('FusionAuthClientHelper', () => {
   });
 
   describe('verifyExchangedTokens', () => {
-    it('should verify tokens', async () => {
+    it.each<{
+      idToken: string;
+      accessToken: string;
+      refreshToken: string;
+    }>([
+      {
+        idToken: 'jwt',
+        accessToken: 'jwt at',
+        refreshToken: 'rf',
+      },
+      {
+        idToken: 'some-jwt',
+        accessToken: 'jwt access token',
+        refreshToken: 'someRandomString',
+      },
+    ])('should pass when tokens are: %o', async (tokens) => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
       fusionAuthClient.validateJWT.resolves({
@@ -42,46 +57,43 @@ describe('FusionAuthClientHelper', () => {
           jwt: {
             aud: 'client-uuid',
             iss: 'https://you-say.com',
-            nonce: 'some-random-string',
           } as JWT,
         },
       });
 
-      const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
-        refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
-      });
+      const result =
+        fusionAuthClientHelper.verifyExchangedTokens(tokens);
 
       expect(result).resolves.not.toThrow();
     });
 
-    it('should throw UnauthorizedException if refresh token is missing', () => {
+    it('should throw HttpException if refresh token is missing', () => {
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'jwt',
+        accessToken: 'jwt at',
         refreshToken: undefined,
-        oauthNonce: 'some-random-string',
       });
 
-      expect(result).rejects.toThrow(UnauthorizedException);
+      expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
     });
 
-    it('should throw UnauthorizedException if fusionAuthClient.validateJWT says access token is invalid', () => {
+    it('should throw HttpException if fusionAuthClient.validateJWT says access token is invalid', () => {
       fusionAuthClient.validateJWT.rejects();
 
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'jwt1',
+        accessToken: 'jwt ac token',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      expect(result).rejects.toThrow(UnauthorizedException);
+      expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
     });
 
-    it('should throw UnauthorizedException if issuer is invalid', async () => {
+    it('should throw HttpException if issuer is invalid', async () => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
         response: {
@@ -92,13 +104,14 @@ describe('FusionAuthClientHelper', () => {
       });
 
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'jwt4',
+        accessToken: 'jwt2',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      await expect(result).rejects.toThrow(UnauthorizedException);
+      await expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
       // Just to make sure that issuer was the cause for the error. We are throwing same error so that's the best we can do in order to put our mind at ease.
       expect(
         loggerService.error.calledWith({
@@ -109,7 +122,7 @@ describe('FusionAuthClientHelper', () => {
       ).toBeTruthy();
     });
 
-    it('should throw UnauthorizedException if issuer is not in JWT', async () => {
+    it('should throw HttpException if issuer is not in JWT', async () => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
         response: {
@@ -118,13 +131,14 @@ describe('FusionAuthClientHelper', () => {
       });
 
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'jwt5',
+        accessToken: 'jwt9',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      await expect(result).rejects.toThrow(UnauthorizedException);
+      await expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
       // Just to make sure that issuer was the cause for the error. We are throwing same error so that's the best we can do in order to put our mind at ease.
       expect(
         loggerService.error.calledWith(
@@ -133,7 +147,7 @@ describe('FusionAuthClientHelper', () => {
       ).toBeTruthy();
     });
 
-    it('should throw UnauthorizedException if audience is invalid', async () => {
+    it('should throw HttpException if audience is invalid', async () => {
       fusionAuthConfigs.fusionAuthClientId = 'some-uuid';
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
@@ -146,13 +160,14 @@ describe('FusionAuthClientHelper', () => {
       });
 
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'jwt-token',
+        accessToken: 'funny-jwt-token',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      await expect(result).rejects.toThrow(UnauthorizedException);
+      await expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
       // Just to make sure that issuer was the cause for the error. We are throwing same error so that's the best we can do in order to put our mind at ease.
       expect(
         loggerService.error.calledWith({
@@ -163,7 +178,7 @@ describe('FusionAuthClientHelper', () => {
       ).toBeTruthy();
     });
 
-    it('should throw UnauthorizedException if audience is missing in jwt', async () => {
+    it('should throw HttpException if audience is missing in jwt', async () => {
       fusionAuthConfigs.fusionAuthClientId = 'some-uuid';
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
@@ -175,13 +190,14 @@ describe('FusionAuthClientHelper', () => {
       });
 
       const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
+        idToken: 'hi-jwt',
+        accessToken: 'by-jwt',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      await expect(result).rejects.toThrow(UnauthorizedException);
+      await expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
       // Just to make sure that issuer was the cause for the error. We are throwing same error so that's the best we can do in order to put our mind at ease.
       expect(
         loggerService.error.calledWith(
@@ -190,7 +206,7 @@ describe('FusionAuthClientHelper', () => {
       ).toBeTruthy();
     });
 
-    it('should throw UnauthorizedException if fusionAuthClient.validateJWT says ID token is invalid', () => {
+    it('should throw HttpException if fusionAuthClient.validateJWT says ID token is invalid', () => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
       fusionAuthClient.validateJWT.withArgs('accessToken').resolves({
@@ -207,41 +223,11 @@ describe('FusionAuthClientHelper', () => {
         idToken: 'idToken',
         accessToken: 'accessToken',
         refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
       });
 
-      expect(result).rejects.toThrow(UnauthorizedException);
-    });
-
-    it('should throw UnauthorizedException if the nonce in the validated jwt is not the same as the one passed to it as argument', async () => {
-      fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
-      fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
-      fusionAuthClient.validateJWT.resolves({
-        response: {
-          jwt: {
-            aud: 'client-uuid',
-            iss: 'https://you-say.com',
-            nonce: 'some-nonce',
-          } as JWT,
-        },
-      });
-
-      const result = fusionAuthClientHelper.verifyExchangedTokens({
-        idToken: '',
-        accessToken: '',
-        refreshToken: 'refresh token',
-        oauthNonce: 'some-random-string',
-      });
-
-      await expect(result).rejects.toThrow(UnauthorizedException);
-      expect(
-        loggerService.error.calledWith({
-          message:
-            'The passed nonce is not equal to the one in the validated jwt!',
-          jwtNonce: 'some-nonce',
-          oauthNonce: 'some-random-string',
-        }),
-      ).toBeTruthy();
+      expect(result).rejects.toThrow(
+        new HttpException(undefined, 503),
+      );
     });
   });
 
@@ -257,13 +243,65 @@ describe('FusionAuthClientHelper', () => {
   });
 
   describe('encodeRedirectUrlToState', () => {
-    it('should encode redirect url to state', async () => {
-      const result = fusionAuthClientHelper.encodeRedirectUrlToState(
-        'http://localhost:3000/',
-        '/posts',
-      );
+    it.each<{ redirectUrl: string; encodedUrl: string }>([
+      {
+        redirectUrl: 'http://localhost:3000/',
+        encodedUrl: 'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
+      },
+      {
+        redirectUrl: 'https://you-say.com/',
+        encodedUrl: 'aHR0cHM6Ly95b3Utc2F5LmNvbS8=:/posts',
+      },
+    ])(
+      'should encode $redirectUrl to state',
+      async ({ redirectUrl, encodedUrl }) => {
+        const result =
+          fusionAuthClientHelper.encodeRedirectUrlToState(
+            redirectUrl,
+            '/posts',
+          );
 
-      expect(result).toBe('aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts');
-    });
+        expect(result).toBe(encodedUrl);
+      },
+    );
+
+    it.each<unknown>([123, true, { some: 1 }])(
+      'should fail when invalid data type (%o) have been passed as URL',
+      (url) => {
+        expect(() =>
+          fusionAuthClientHelper.encodeRedirectUrlToState(
+            url as string,
+            '/posts',
+          ),
+        ).toThrow();
+      },
+    );
+  });
+
+  describe('decodeRedirectUrlFromState', () => {
+    it.each<{ redirectUrl: string; encodedUrl: string }>([
+      {
+        redirectUrl: 'http://localhost:3000/',
+        encodedUrl: 'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
+      },
+      {
+        redirectUrl: 'https://you-say.com/',
+        encodedUrl: 'aHR0cHM6Ly95b3Utc2F5LmNvbS8=:/posts',
+      },
+    ])(
+      'should decode redirect url ($redirectUrl) from state',
+      ({ redirectUrl, encodedUrl }) => {
+        const result =
+          fusionAuthClientHelper.decodeRedirectUrlFromState({
+            state: encodedUrl,
+            locale: 'en',
+            userState: 'Authenticated',
+          });
+
+        expect(result).toBe(
+          `${redirectUrl}?state=%2Fposts&locale=en&userState=Authenticated`,
+        );
+      },
+    );
   });
 });

@@ -1,5 +1,9 @@
 import { AuthApi } from '../api-client';
 import { cleanup } from '../utils/cleanup.util';
+import {
+  FRONTEND_URL,
+  FUSIONAUTH_CLIENT_ID,
+} from '../utils/env-variables.util';
 
 describe('Auth -- business', () => {
   const authApi: AuthApi = new AuthApi();
@@ -76,17 +80,18 @@ describe('Auth -- business', () => {
      * It is also not viable to test the OAuth flow in e2e tests since it requires real user interaction with the browser, we will cover this part in Cypress.
      */
 
-    it('should throw UnauthorizedException when state in the query string is not equal to state in the cookie', async () => {
-      const cookie = `oauth_state='another-state';oauth_nonce=doesNotMatter;oauth_code_verifier=doesNotMatter;`;
-
+    it('should throw 500 when code/codeVerifier is not valid', async () => {
       const { status } = await authApi.authControllerOauthCallback(
         {
-          code: 'doesNotMatter',
-          state: 'some-state',
+          locale: 'en',
+          userState: 'Authenticated',
+          state:
+            'HR0cDovL2xvY2FsaG9zdDozMDAw%3Aa3589a11ef6a19f9c77b78456604a4ed0c372a379a17007bc2471136%3A',
+          code: 'md2lLzEDsv2bPePUOlV0mudVhHmRCGInM67At9wB3Ew',
         },
         {
           headers: {
-            Cookie: cookie,
+            Cookie: `codeVerifier=wuruazmrvvteawaflktmzxyw_gwmt-yz`,
           },
           validateStatus(statusCode) {
             return statusCode > 200;
@@ -94,7 +99,7 @@ describe('Auth -- business', () => {
         },
       );
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(500);
     });
   });
 });

@@ -5,10 +5,12 @@ import {
 import { wait } from '@shared';
 import axios from 'axios';
 import { stringify } from 'querystring';
-import './env-loader.util';
+import {
+  FUSIONAUTH_API_KEY,
+  FUSIONAUTH_HOST,
+  FUSIONAUTH_TENANT_ID,
+} from './env-variables.util';
 
-const FUSIONAUTH_HOST = 'http://localhost:9011';
-const { FUSIONAUTH_TENANT_ID, FUSIONAUTH_API_KEY } = process.env;
 const defaultUsersEmails = ['admin@you-say.com', 'admin@admin.com'];
 
 export async function cleanupFusionAuth() {

@@ -15,8 +15,5 @@ export interface AppConfig {
   FUSIONAUTH_ADMIN_GROUP_ID: string;
   FUSIONAUTH_ISSUER: string;
   FUSIONAUTH_CLIENT_ID: string;
-  FUSIONAUTH_OAUTH_SCOPES: string;
-  FRONTEND_URL: string;
-  DOMAIN_OF_COOKIE: string;
   OAUTH_CONFIGURATION_CLIENT_SECRET: string;
 }

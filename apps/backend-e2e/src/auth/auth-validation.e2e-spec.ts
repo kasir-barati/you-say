@@ -1,4 +1,5 @@
 import {
+  LoginRequestQuery,
   OauthCallbackRequestQuery,
   generateRandomString,
 } from '@shared';
@@ -68,26 +69,88 @@ describe('Auth -- validation', () => {
     });
   });
 
-  describe('GET /auth/oauth-callback', () => {
-    let cookie: string;
+  describe('GET /auth/login', () => {
+    it('should pass the validation layer', async () => {
+      const { status } = await authApi.authControllerLogin(
+        {
+          state: '/posts',
+          redirectUri: 'http://localhost:3000/',
+          clientId: '21215650-c4c8-44fe-b069-7b6484e1c6a4',
+        },
+        {
+          validateStatus(statusCode) {
+            return statusCode > 200;
+          },
+          // To prevent this e2e test from getting redirected to OAuth server
+          maxRedirects: 0,
+        },
+      );
 
-    beforeEach(() => {
-      const state = generateRandomString();
-      const nonce = generateRandomString();
-      const codeVerifier = generateRandomString();
-
-      cookie = `oauth_state=${state};oauth_nonce=${nonce};oauth_code_verifier=${codeVerifier};`;
+      expect(status).not.toEqual(400);
     });
 
+    it.each<LoginRequestQuery>([
+      {
+        clientId: '',
+        redirectUrl: 'http://localhost:3000',
+        state: '/posts',
+      },
+      {
+        clientId: generateRandomString(),
+        redirectUrl: 'http://localhost:3000',
+        state: '/posts',
+      },
+      {
+        clientId: '5bc550db-47b5-4058-8f39-ecd860352954',
+        redirectUrl: generateRandomString(),
+        state: '/posts',
+      },
+      {
+        clientId: '88612369-6cef-4c35-8302-cfeac55abd1e',
+        redirectUrl: '',
+        state: '/posts',
+      },
+      {
+        clientId: '88612369-6cef-4c35-8302-cfeac55abd1e',
+        redirectUrl: 'https://you-say.com',
+        state: '',
+      },
+    ])(
+      'should throw 400 error when query param is %o',
+      async (loginQuery) => {
+        const { status } = await authApi.authControllerLogin(
+          {
+            state: loginQuery.state,
+            clientId: loginQuery.clientId,
+            redirectUri: loginQuery.redirectUrl,
+          },
+          {
+            validateStatus(statusCode) {
+              return statusCode > 200;
+            },
+          },
+        );
+
+        expect(status).toEqual(400);
+      },
+    );
+  });
+
+  describe('GET /auth/oauth-callback', () => {
     it('should pass the validation layer', async () => {
       const code = generateRandomString();
       const state = generateRandomString();
 
       const { status } = await authApi.authControllerOauthCallback(
-        { code, state },
+        {
+          code,
+          state,
+          locale: 'en',
+          userState: 'Authenticated',
+        },
         {
           headers: {
-            Cookie: cookie,
+            Cookie: 'codeVerifier=wuruazmrvvteawaflktmzxyw_gwmt-yz',
           },
           validateStatus(statusCode) {
             return statusCode > 200;
@@ -98,20 +161,17 @@ describe('Auth -- validation', () => {
       expect(status).not.toEqual(400);
     });
 
-    it.each<string>([
-      '',
-      'oauth_state=state;',
-      'oauth_nonce=nonce;',
-      'oauth_code_verifier=code',
-      'oauth_state=state; oauth_nonce=nonce;',
-      'oauth_state=state; oauth_code_verifier=code;',
-      'oauth_nonce=nonce; oauth_code_verifier=code;',
-      'oauth_state=; oauth_nonce=; oauth_code_verifier=;',
-    ])(
-      'should fail when it is missing one or more than one of the cookies',
+    it.each<string>(['', 'codeVerifier='])(
+      'should fail when request is missing codeVerifier cookies',
       async (cookie) => {
         const { status } = await authApi.authControllerOauthCallback(
-          { code: 'code', state: 'state' },
+          {
+            code: 'md2lLzEDsv2bPePUOlV0mudVhHmRCGInM67At9wB3Ew',
+            state:
+              'aHR0cDovL2xvY2FsaG9zdDozMDAw%3Aa3589a11ef6a19f9c77b78456604a4ed0c372a379a17007bc2471136%3A',
+            locale: 'en',
+            userState: 'Authenticated',
+          },
           {
             headers: {
               Cookie: cookie,
@@ -127,17 +187,32 @@ describe('Auth -- validation', () => {
     );
 
     it.each<OauthCallbackRequestQuery>([
-      { code: '', state: '' },
-      { code: 'jp-code', state: '' },
-      { code: '', state: 'f-state' },
+      {
+        code: '',
+        state: '',
+        locale: 'en',
+        userState: 'Authenticated',
+      },
+      {
+        code: generateRandomString(),
+        state: 'some encoded random string',
+        locale: '',
+        userState: 'Authenticated',
+      },
+      {
+        code: '',
+        locale: 'en',
+        state: 'a long string which is encoded',
+        userState: 'Authenticated',
+      },
     ])(
-      'should fail when state/code is missing from the query parameters',
+      'should fail when something in query param is invalid',
       async (queryParams) => {
         const { status } = await authApi.authControllerOauthCallback(
           queryParams,
           {
             headers: {
-              Cookie: cookie,
+              Cookie: 'codeVerifier=wuruazmrvvteawaflktmzxyw_gwmt-yz',
             },
             validateStatus(statusCode) {
               return statusCode > 200;

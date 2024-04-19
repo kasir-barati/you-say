@@ -61,7 +61,7 @@ export class AuthController {
     summary:
       'This endpoint creates login URL with all necessary configurations.',
     description:
-      'Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://www.npmjs.com/package/@fusionauth/react-sdk#get-applogin).',
+      'Client needs to call this endpoint first in order to generate a unique login URL so that OAuth server can take over. By redirecting user to the generated URL, user can enter their credentials. Calling this endpoint is crucial since it generates mandatory parameters and cookies. [Learn more here](https://github.com/FusionAuth/fusionauth-javascript-sdk-express/tree/main?tab=readme-ov-file#get-applogin).',
   })
   @ApiOkResponse({
     description:
@@ -96,7 +96,7 @@ export class AuthController {
     summary:
       'Callback endpoint for FusionAuth after user entered their credentials and logged in.',
     description:
-      'this is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url.',
+      'This is the URL in our application to which the OAuth server will redirect the user to after they log in. This URL must be and is registered with the OAuth server as a authorized redirect url. [Learn more here](https://github.com/FusionAuth/fusionauth-javascript-sdk-express/tree/main?tab=readme-ov-file#get-appcallback)',
   })
   @ApiOkResponse({
     description:

@@ -78,18 +78,6 @@ class EnvironmentVariables implements AppConfig {
 
   @IsOptional()
   @IsString()
-  FUSIONAUTH_OAUTH_SCOPES = 'profile offline_access openid';
-
-  @IsOptional()
-  @IsString()
   OAUTH_CONFIGURATION_CLIENT_SECRET =
     'ee5e6b455bfe90afd80709da39a3b0d32f956018';
-
-  @IsOptional()
-  @IsString()
-  DOMAIN_OF_COOKIE = 'localhost';
-
-  @IsOptional()
-  @IsString()
-  FRONTEND_URL = 'http://localhost:3000';
 }
