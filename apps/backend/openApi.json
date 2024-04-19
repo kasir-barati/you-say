@@ -155,14 +155,16 @@
             "name": "locale",
             "required": true,
             "in": "query",
-            "description": "Not sure if it should be mandatory! following the example implementation of FusionAuth in GH!",
+            "example": "en",
+            "description": "Set by OAuth server",
             "schema": { "type": "string" }
           },
           {
             "name": "userState",
             "required": true,
             "in": "query",
-            "description": "Not sure if it should be mandatory! following the example implementation of FusionAuth in GH!",
+            "example": "Authenticated",
+            "description": "It is set by FusionAuth.",
             "schema": { "type": "string" }
           }
         ],
@@ -202,6 +204,48 @@
           }
         },
         "tags": ["auth"]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "summary": "Will returns the Claims about the authenticated End-User.",
+        "description": "This endpoint gonna return userinfo which we get from OAuth server, our react SDK for OAuth server calls this endpoint after successful login.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "security": [{ "bearer": [] }]
       }
     }
   },
@@ -249,7 +293,93 @@
         },
         "required": ["email", "firstName", "lastName"]
       },
-      "ErrorResponse": { "type": "object", "properties": {} }
+      "ErrorResponse": { "type": "object", "properties": {} },
+      "MeResponseDto": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "The unique Id of the Application for which the User has been authenticated."
+          },
+          "email": {
+            "type": "string",
+            "example": "example@ex.com",
+            "description": "The email address of the User whose claims are represented by this JWT."
+          },
+          "email_verified": {
+            "type": "boolean",
+            "example": true,
+            "description": "The OpenId Connect claim indicating if the User's email has been verified."
+          },
+          "family_name": {
+            "type": "string",
+            "example": "Kazuya",
+            "description": "User's family if available."
+          },
+          "given_name": {
+            "type": "string",
+            "example": "Souma",
+            "description": "User's name if available."
+          },
+          "preferred_username": {
+            "type": "string",
+            "example": "souma.kazuya@you-say.com",
+            "description": "We've configured our OAuth server to use user's email address as their preferred username."
+          },
+          "roles": {
+            "example": [],
+            "description": "The roles assigned to the User in the authenticated Application. This claim is only present if the User has a registration to the Application.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "scope": {
+            "type": "string",
+            "example": "openid offline_access",
+            "description": "Scopes of OAuth server"
+          },
+          "settings": {
+            "type": "object",
+            "example": {},
+            "description": "User's settings"
+          },
+          "sid": {
+            "type": "string",
+            "example": "659b75da-69f9-471f-813d-62c8baff1f86",
+            "description": "The unique Id of the refresh token returned along with this access token when the offline_access scope was requested. This unique Id is the persistent identifier for this refresh token, and will not change even when using one-time use refresh tokens. This value may optionally be used to revoke the token using the Refresh Token API."
+          },
+          "sub": {
+            "type": "string",
+            "example": "7b176652-c80f-47a4-9533-6e80ddc4f355",
+            "description": "The subject of the access token. This value is equal to the User's ID in OAuth server."
+          },
+          "tenant": {
+            "type": "object",
+            "example": {},
+            "description": "Tenant's info"
+          },
+          "tid": {
+            "type": "string",
+            "example": "16fc8438-3ec0-466d-89dc-92c35db746a4",
+            "description": "The FusionAuth Tenant unique Id."
+          }
+        },
+        "required": [
+          "applicationId",
+          "email",
+          "email_verified",
+          "family_name",
+          "given_name",
+          "preferred_username",
+          "roles",
+          "scope",
+          "settings",
+          "sid",
+          "sub",
+          "tenant",
+          "tid"
+        ]
+      }
     }
   }
 }

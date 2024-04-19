@@ -9,9 +9,11 @@ import {
   Query,
   Redirect,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -19,11 +21,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { MeResponse } from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from './dtos/login-query.dto';
+import { MeCookie } from './dtos/me-cookie.dto';
+import { MeResponseDto } from './dtos/me-response.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
 import { RegisterDto } from './dtos/register.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './services/auth.service';
 
 @ApiTags('auth')
@@ -130,5 +136,32 @@ export class AuthController {
       statusCode: 302,
       url: frontendUrl,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Will returns the Claims about the authenticated End-User.',
+    description:
+      'This endpoint gonna return userinfo which we get from OAuth server, our react SDK for OAuth server calls this endpoint after successful login.',
+  })
+  @ApiOkResponse({
+    type: MeResponseDto,
+    description: 'User info',
+  })
+  @ApiInternalServerErrorResponse({
+    type: InternalServerErrorException,
+    description: 'Internal server error',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponse,
+    description: 'Bad request',
+  })
+  async me(@Cookies() cookies: MeCookie): Promise<MeResponse> {
+    const userInfo = await this.authService.me(cookies);
+
+    return userInfo;
   }
 }

@@ -1,9 +1,14 @@
 import { LoggerService } from '@backend/logger';
 import FusionAuthClient from '@fusionauth/typescript-client';
 import { InternalServerErrorException } from '@nestjs/common';
-import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
+import {
+  MeResponse,
+  MockedEntityWithSinonStubs,
+  SinonMock,
+} from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from '../dtos/login-query.dto';
+import { MeCookie } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import {
@@ -343,6 +348,46 @@ describe('AuthService', () => {
         cookies,
         queries,
       });
+
+      expect(result).rejects.toThrow(Error);
+    });
+  });
+
+  describe('me', () => {
+    it('should return user info', async () => {
+      const cookies: MeCookie = { accessToken: '' };
+      const response: MeResponse = {
+        applicationId: 'uuid',
+        email: 'email',
+        email_verified: true,
+        family_name: 'family',
+        given_name: 'name',
+        preferred_username: 'email',
+        roles: [],
+        scope: 'openid offline_access',
+        settings: {},
+        sid: 'uuid',
+        sub: 'uuid',
+        tenant: {},
+        tid: 'uuid',
+      };
+      fusionAuthClient.retrieveUserInfoFromAccessToken
+        .withArgs(cookies.accessToken)
+        .resolves({
+          response,
+        });
+
+      const result = await authService.me(cookies);
+
+      expect(result).toStrictEqual(response);
+    });
+
+    it('should propagate errors thrown at fusionAuthClient.retrieveUserInfoFromAccessToken', () => {
+      fusionAuthClient.retrieveUserInfoFromAccessToken.rejects(
+        new Error(),
+      );
+
+      const result = authService.me({ accessToken: '' });
 
       expect(result).rejects.toThrow(Error);
     });

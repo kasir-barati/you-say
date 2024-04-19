@@ -23,7 +23,7 @@ export class LoginQueryDto implements LoginRequestQuery {
   })
   @Expose({ name: 'redirect_uri' })
   @Transform(({ value }) => value?.trim?.())
-  @IsUrl({ require_tld: false })
+  @IsUrl({ require_tld: false, require_protocol: true })
   redirectUrl: string;
 
   @ApiProperty({

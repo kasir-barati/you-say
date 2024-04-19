@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { DecodedIdToken } from '@shared';
 import { Request } from 'express';
 import { passportJwtSecret } from 'jwks-rsa';
 import {
@@ -21,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
+        // Fetch the public keys from the jwksUri endpoint.
         jwksUri: `${authModuleOptions.fusionAuthHost}/.well-known/jwks.json`,
       }),
       jwtFromRequest,
@@ -30,13 +32,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } as WithSecretOrKeyProvider);
   }
 
-  validate(payload: Request['user']): Request['user'] {
+  validate(payload: DecodedIdToken): DecodedIdToken {
     return payload;
   }
 }
 export function jwtFromRequest(request: Request): string | null {
-  if (request?.cookies?.accessToken) {
-    return request.cookies.accessToken;
+  if (request?.cookies?.['app.at']) {
+    return request.cookies['app.at'];
   }
 
   if (request?.headers) {

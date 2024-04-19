@@ -20,4 +20,6 @@ export interface DecodedIdToken {
   sid: string;
   auth_time: number;
   tid: string;
+  applicationId: string;
+  tenant: unknown;
 }

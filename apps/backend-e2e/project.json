@@ -15,7 +15,10 @@
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
-        "command": "NODE_ENV=test jest --config apps/backend-e2e/jest-e2e.config.ts"
+        "commands": [
+          "clear",
+          "NODE_ENV=test jest --config apps/backend-e2e/jest-e2e.config.ts"
+        ]
       }
     },
     "test:e2e:docker": {

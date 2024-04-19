@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Role } from '@shared';
+import { DecodedIdToken, Role } from '@shared';
 import { Request } from 'express';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
 import { JwtStrategy, jwtFromRequest } from './jwt.strategy';
@@ -34,11 +34,13 @@ describe('JwtStrategy', () => {
     expect(strategy).toBeDefined();
   });
 
-  it.each<Request['user']>([
+  it.each<Partial<DecodedIdToken>>([
     { roles: [], sub: 'user1-uuid' },
     { roles: [Role.FileUploader], sub: 'user2-uuid' },
   ])('should be able to return the payload', (payload) => {
-    const validatedPayload = strategy.validate(payload);
+    const validatedPayload = strategy.validate(
+      payload as DecodedIdToken,
+    );
 
     expect(validatedPayload).toEqual(payload);
   });
@@ -48,7 +50,7 @@ describe('jwtFromRequest', () => {
     'should return the accessToken from the cookie',
     (accessToken) => {
       const req = {
-        cookies: { accessToken },
+        cookies: { 'app.at': accessToken },
       } as Request;
 
       const accessTokenFromReq = jwtFromRequest(req);

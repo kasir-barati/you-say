@@ -8,6 +8,8 @@ A rule of thumb on how to edit glossaries:
 - **Reference**: Easer to reference key terms as needed, without having to search for definitions elsewhere.
 - **Transparency**: It is a sign of commitment to transparency and clarity in this project's governance and communication practices.
 
-| Terminology or jargon | Description |
-| --------------------- | ----------- |
-| OAuth server          | FusionAuth  |
+| Terminology or jargon | Description                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| OAuth server          | FusionAuth                                                                         |
+| JWKS                  | JSON Web Key Set ([SuperTokens](https://supertokens.com/blog/understanding-jwks)). |
+| JWT                   | JSON Web Tokens ([wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)).       |

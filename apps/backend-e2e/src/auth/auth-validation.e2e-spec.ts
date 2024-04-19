@@ -70,7 +70,23 @@ describe('Auth -- validation', () => {
   });
 
   describe('GET /auth/login', () => {
-    it('should pass the validation layer', async () => {
+    it.each<LoginRequestQuery>([
+      {
+        state: '/posts',
+        redirectUrl: 'http://localhost:3000/',
+        clientId: '21215650-c4c8-44fe-b069-7b6484e1c6a4',
+      },
+      {
+        state: '/contact-us',
+        redirectUrl: 'https://you-say.com',
+        clientId: 'd070911e-bc8c-472f-a5d3-e83a584e0073',
+      },
+      {
+        state: '/contact-us',
+        redirectUrl: 'http://localhost',
+        clientId: 'd070911e-bc8c-472f-a5d3-e83a584e0073',
+      },
+    ])('should pass the validation layer', async () => {
       const { status } = await authApi.authControllerLogin(
         {
           state: '/posts',
@@ -221,6 +237,27 @@ describe('Auth -- validation', () => {
         );
 
         expect(status).toEqual(400);
+      },
+    );
+  });
+
+  describe('GET /auth/me', () => {
+    it.each<string>([
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+      'invalid token',
+    ])(
+      'should fail when access token is either expired, invalid.',
+      async (accessToken) => {
+        const { status } = await authApi.authControllerMe({
+          headers: {
+            Cookie: `app.at=${accessToken}`,
+          },
+          validateStatus(statusCode) {
+            return statusCode > 200;
+          },
+        });
+
+        expect(status).toEqual(401);
       },
     );
   });

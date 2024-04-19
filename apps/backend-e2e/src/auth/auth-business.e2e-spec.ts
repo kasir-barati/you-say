@@ -1,9 +1,13 @@
+import { getTempUser } from '@shared';
 import { AuthApi } from '../api-client';
 import { cleanup } from '../utils/cleanup.util';
 import {
   FRONTEND_URL,
+  FUSIONAUTH_APPLICATION_ID,
   FUSIONAUTH_CLIENT_ID,
+  FUSIONAUTH_TENANT_ID,
 } from '../utils/env-variables.util';
+import { login } from '../utils/login.util';
 
 describe('Auth -- business', () => {
   const authApi: AuthApi = new AuthApi();
@@ -100,6 +104,39 @@ describe('Auth -- business', () => {
       );
 
       expect(status).toEqual(500);
+    });
+  });
+
+  describe('GET /auth/me', () => {
+    it('should return user info.', async () => {
+      const user = getTempUser();
+      const authenticationResult = await login({
+        username: user.email,
+        password: user.password,
+      });
+      const { status, data } = await authApi.authControllerMe({
+        headers: authenticationResult.headers,
+        validateStatus(statusCode) {
+          return statusCode >= 200;
+        },
+      });
+
+      expect(status).toEqual(200);
+      expect(data).toStrictEqual({
+        applicationId: FUSIONAUTH_APPLICATION_ID,
+        email: 'souma.kazuya@you-say.com',
+        email_verified: true,
+        family_name: 'Kazuya',
+        given_name: 'Souma',
+        preferred_username: 'souma.kazuya@you-say.com',
+        roles: [],
+        scope: 'openid offline_access',
+        settings: {},
+        sid: expect.any(String),
+        sub: expect.any(String),
+        tenant: {},
+        tid: FUSIONAUTH_TENANT_ID,
+      });
     });
   });
 });

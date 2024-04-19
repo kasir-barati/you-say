@@ -15,7 +15,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/backend-e2e',
-  detectOpenHandles: true,
   testMatch: ['**/*.e2e-spec.ts'],
   setupFilesAfterEnv: ['<rootDir>/setup-env.ts'],
 } satisfies Config;

@@ -8,7 +8,7 @@ import {
   InternalServerErrorException,
   OnModuleInit,
 } from '@nestjs/common';
-import { setCookie, setSecureCookie } from '@shared';
+import { MeResponse, setCookie, setSecureCookie } from '@shared';
 import { Response } from 'express';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
@@ -16,6 +16,7 @@ import {
   FUSIONAUTH_OAUTH_CALLBACK_URL,
 } from '../auth.constants';
 import { LoginQueryDto } from '../dtos/login-query.dto';
+import { MeCookie } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import {
@@ -181,6 +182,15 @@ export class AuthService implements OnModuleInit {
       });
 
     return redirectUrl;
+  }
+
+  async me(cookies: MeCookie): Promise<MeResponse> {
+    const { response } =
+      await this.fusionAuthClient.retrieveUserInfoFromAccessToken(
+        cookies.accessToken,
+      );
+
+    return response as MeResponse;
   }
 
   private constructOauth2LoginUrl({
