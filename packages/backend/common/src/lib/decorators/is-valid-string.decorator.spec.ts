@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { IsValidString } from './is-valid-string.decorator';
 
@@ -14,7 +14,7 @@ class OtherTestClass {
 
 describe('IsValidString', () => {
   it('should validate a valid string', async () => {
-    const testClass = plainToClass(TestClass, {
+    const testClass = plainToInstance(TestClass, {
       test: 'valid string',
     });
 
@@ -24,7 +24,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate an empty string', async () => {
-    const testClass = plainToClass(TestClass, { test: '' });
+    const testClass = plainToInstance(TestClass, { test: '' });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -37,7 +37,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a non-string value', async () => {
-    const testClass = plainToClass(TestClass, { test: 123 });
+    const testClass = plainToInstance(TestClass, { test: 123 });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -50,7 +50,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a string shorter than the minimum length', async () => {
-    const testClass = plainToClass(TestClass, { test: 'a' });
+    const testClass = plainToInstance(TestClass, { test: 'a' });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -63,7 +63,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a string longer than the maximum length', async () => {
-    const testClass = plainToClass(TestClass, {
+    const testClass = plainToInstance(TestClass, {
       test: 'a'.repeat(256),
     });
 
@@ -79,7 +79,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a string with only spaces', async () => {
-    const testClass = plainToClass(TestClass, { test: '   ' });
+    const testClass = plainToInstance(TestClass, { test: '   ' });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -92,7 +92,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a string shorter than the default minimum length', async () => {
-    const testClass = plainToClass(OtherTestClass, { test: 'a' });
+    const testClass = plainToInstance(OtherTestClass, { test: 'a' });
 
     const errors = await validate(testClass, {
       stopAtFirstError: true,
@@ -105,7 +105,7 @@ describe('IsValidString', () => {
   });
 
   it('should not validate a string longer than the default maximum length', async () => {
-    const testClass = plainToClass(OtherTestClass, {
+    const testClass = plainToInstance(OtherTestClass, {
       test: 'a'.repeat(129),
     });
 

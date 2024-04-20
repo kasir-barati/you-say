@@ -1,7 +1,8 @@
+import { IsUrl } from '@backend/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { LoginRequestQuery } from '@shared';
 import { Expose, Transform } from 'class-transformer';
-import { IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class LoginQueryDto implements LoginRequestQuery {
   @ApiProperty({
@@ -23,7 +24,7 @@ export class LoginQueryDto implements LoginRequestQuery {
   })
   @Expose({ name: 'redirect_uri' })
   @Transform(({ value }) => value?.trim?.())
-  @IsUrl({ require_tld: false, require_protocol: true })
+  @IsUrl()
   redirectUrl: string;
 
   @ApiProperty({

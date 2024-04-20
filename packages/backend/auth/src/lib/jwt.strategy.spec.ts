@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DecodedIdToken, Role } from '@shared';
 import { Request } from 'express';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
+import { oauthCookieTokens } from './contracts/oauth-cookie-tokens.contract';
 import { JwtStrategy, jwtFromRequest } from './jwt.strategy';
 import { AuthModuleOptions } from './types/auth.type';
 
@@ -50,7 +51,7 @@ describe('jwtFromRequest', () => {
     'should return the accessToken from the cookie',
     (accessToken) => {
       const req = {
-        cookies: { 'app.at': accessToken },
+        cookies: { [oauthCookieTokens.accessToken]: accessToken },
       } as Request;
 
       const accessTokenFromReq = jwtFromRequest(req);

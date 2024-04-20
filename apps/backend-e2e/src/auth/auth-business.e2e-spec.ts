@@ -1,5 +1,8 @@
 import { getTempUser } from '@shared';
-import { AuthApi } from '../api-client';
+import {
+  AuthApi,
+  AuthApiAuthControllerLogoutRequest,
+} from '../api-client';
 import { cleanup } from '../utils/cleanup.util';
 import {
   FRONTEND_URL,
@@ -109,10 +112,10 @@ describe('Auth -- business', () => {
 
   describe('GET /auth/me', () => {
     it('should return user info.', async () => {
-      const user = getTempUser();
+      const tempUser = getTempUser();
       const authenticationResult = await login({
-        username: user.email,
-        password: user.password,
+        username: tempUser.email,
+        password: tempUser.password,
       });
       const { status, data } = await authApi.authControllerMe({
         headers: authenticationResult.headers,
@@ -137,6 +140,53 @@ describe('Auth -- business', () => {
         tenant: {},
         tid: FUSIONAUTH_TENANT_ID,
       });
+    });
+  });
+
+  describe('GET /auth/logout', () => {
+    it.each<AuthApiAuthControllerLogoutRequest>([
+      {
+        postLogoutRedirectUri: 'http://localhost:3000',
+      },
+      {
+        postLogoutRedirectUri: 'https://you-say.com',
+        clientId: FUSIONAUTH_CLIENT_ID,
+      },
+    ])('should logout', async (queries) => {
+      const tempUser = getTempUser();
+      const authenticationResult = await login({
+        username: tempUser.email,
+        password: tempUser.password,
+      });
+      const searchParams = new URLSearchParams();
+      searchParams.append(
+        'post_logout_redirect_uri',
+        queries.postLogoutRedirectUri,
+      );
+      if (queries.clientId) {
+        searchParams.append('client_id', queries.clientId);
+      } else {
+        searchParams.append(
+          'id_token_hint',
+          authenticationResult.idToken,
+        );
+      }
+
+      const { status, headers } = await authApi.authControllerLogout(
+        queries,
+        {
+          headers: authenticationResult.headers,
+          validateStatus(status) {
+            return status >= 200;
+          },
+          maxRedirects: 0,
+        },
+      );
+
+      expect(status).toEqual(302);
+      expect(headers.location).toBe(
+        `http://localhost:9011/oauth2/logout?${searchParams}`,
+      );
     });
   });
 });

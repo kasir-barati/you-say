@@ -182,18 +182,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized request; something is not right about the request, it might be because of unmatched states in the cookies and query param.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal server error or something about the request is not right.",
             "content": {
               "application/json": {
                 "schema": {
@@ -233,8 +223,78 @@
               }
             }
           },
+          "401": {
+            "description": "Could not validate and verify the provided JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "operationId": "AuthController_logout",
+        "summary": "Log the User out of the OAuth server SSO session using a GET request",
+        "description": "By calling this endpoint user's OAuth cookies will be removed and they will be redirected to the specified URL in the query string.",
+        "parameters": [
+          {
+            "name": "post_logout_redirect_uri",
+            "required": true,
+            "in": "query",
+            "description": "",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "client_id",
+            "required": false,
+            "in": "query",
+            "description": "The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are requesting to logout, this value is used to identify the correct redirect URI. Generally speaking this parameter is required, but it becomes redundant because the application can be identified based on the `id_token` in cookies.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redirect user to the logout page of OAuth server."
+          },
+          "400": {
+            "description": "Bad request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Could not validate and verify the provided JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
             "content": {
               "application/json": {
                 "schema": {
@@ -379,7 +439,8 @@
           "tenant",
           "tid"
         ]
-      }
+      },
+      "UnauthorizedException": { "type": "object", "properties": {} }
     }
   }
 }

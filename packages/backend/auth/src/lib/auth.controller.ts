@@ -9,6 +9,7 @@ import {
   Query,
   Redirect,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -24,6 +25,7 @@ import {
 import { MeResponse } from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from './dtos/login-query.dto';
+import { LogoutQueryDto } from './dtos/logout-query.dto';
 import { MeCookie } from './dtos/me-cookie.dto';
 import { MeResponseDto } from './dtos/me-response.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
@@ -112,14 +114,10 @@ export class AuthController {
     type: ErrorResponse,
     description: 'Bad request; oauthState must be a string, etc.',
   })
-  @ApiUnauthorizedResponse({
-    type: ErrorResponse,
-    description:
-      'Unauthorized request; something is not right about the request, it might be because of unmatched states in the cookies and query param.',
-  })
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorException,
-    description: 'Internal server error',
+    description:
+      'Internal server error or something about the request is not right.',
   })
   async oauthCallback(
     @Res() response: Response,
@@ -159,9 +157,52 @@ export class AuthController {
     type: ErrorResponse,
     description: 'Bad request',
   })
+  @ApiUnauthorizedResponse({
+    type: UnauthorizedException,
+    description:
+      'Could not validate and verify the provided JWT token',
+  })
   async me(@Cookies() cookies: MeCookie): Promise<MeResponse> {
     const userInfo = await this.authService.me(cookies);
 
     return userInfo;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('logout')
+  @Redirect()
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Log the User out of the OAuth server SSO session using a GET request',
+    description:
+      "By calling this endpoint user's OAuth cookies will be removed and they will be redirected to the specified URL in the query string.",
+  })
+  @ApiOkResponse({
+    description: 'Redirect user to the logout page of OAuth server.',
+  })
+  @ApiInternalServerErrorResponse({
+    type: InternalServerErrorException,
+    description: 'Internal server error.',
+  })
+  @ApiUnauthorizedResponse({
+    type: UnauthorizedException,
+    description:
+      'Could not validate and verify the provided JWT token',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponse,
+    description: 'Bad request.',
+  })
+  logout(
+    @Res() response: Response,
+    @Query() queries: LogoutQueryDto,
+  ): HttpRedirectResponse {
+    const logoutUrl = this.authService.logout(response, queries);
+
+    return {
+      url: logoutUrl,
+      statusCode: 302,
+    };
   }
 }

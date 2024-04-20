@@ -7,7 +7,9 @@ import {
   SinonMock,
 } from '@shared';
 import { Response } from 'express';
+import { oauthCookieTokens } from '../contracts/oauth-cookie-tokens.contract';
 import { LoginQueryDto } from '../dtos/login-query.dto';
+import { LogoutQueryDto } from '../dtos/logout-query.dto';
 import { MeCookie } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
@@ -157,7 +159,7 @@ describe('AuthService', () => {
         code_challenge_method: 'S256',
         scope: 'openid offline_access',
         state: 'aHR0cDovL2xvY2FsaG9zdDozMDAwLw==:/posts',
-        redirect_uri: 'http:localhost:3001/auth/oauth-callback',
+        redirect_uri: 'http://localhost:3001/auth/oauth-callback',
         code_challenge: '0zBVTVGBnbqkUpbFXJbRewNmXn4ZCECfZYv792oo1LU',
       });
     });
@@ -269,29 +271,41 @@ describe('AuthService', () => {
 
       expect(response.cookie.callCount).toBe(4);
       expect(
-        response.cookie.calledWithExactly('app.at', 'accessToken', {
-          secure: true,
-          httpOnly: true,
-          sameSite: 'lax',
-        }),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly('app.rt', 'refreshToken', {
-          secure: true,
-          httpOnly: true,
-          sameSite: 'lax',
-        }),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly('app.idt', 'idToken', {
-          secure: true,
-          sameSite: 'lax',
-          httpOnly: false,
-        }),
+        response.cookie.calledWithExactly(
+          oauthCookieTokens.accessToken,
+          'accessToken',
+          {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax',
+          },
+        ),
       ).toBeTruthy();
       expect(
         response.cookie.calledWithExactly(
-          'app.at_exp',
+          oauthCookieTokens.refreshToken,
+          'refreshToken',
+          {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'lax',
+          },
+        ),
+      ).toBeTruthy();
+      expect(
+        response.cookie.calledWithExactly(
+          oauthCookieTokens.idToken,
+          'idToken',
+          {
+            secure: true,
+            sameSite: 'lax',
+            httpOnly: false,
+          },
+        ),
+      ).toBeTruthy();
+      expect(
+        response.cookie.calledWithExactly(
+          oauthCookieTokens.expiresIn,
           Sinon.match.number,
           {
             secure: true,
@@ -391,5 +405,103 @@ describe('AuthService', () => {
 
       expect(result).rejects.toThrow(Error);
     });
+  });
+
+  describe('logout', () => {
+    let response: MockedEntityWithSinonStubs<Response>;
+
+    beforeEach(() => {
+      response = SinonMock.with<Response>({ req: { cookies: {} } });
+    });
+
+    it.each<string>(['https://you-say.com', 'http://localhost:3000'])(
+      'should return logout url',
+      (postLogoutRedirectUrl) => {
+        const queries: LogoutQueryDto = { postLogoutRedirectUrl };
+        response.req.cookies[oauthCookieTokens.idToken] =
+          'jwt-id-token';
+        fusionAuthConfigs.fusionAuthHost = 'http://localhost:9011';
+        const searchParams = new URLSearchParams();
+        searchParams.append(
+          'post_logout_redirect_uri',
+          postLogoutRedirectUrl,
+        );
+        searchParams.append('id_token_hint', 'jwt-id-token');
+
+        const result = authService.logout(response, queries);
+
+        expect(result).toBe(
+          `${fusionAuthConfigs.fusionAuthHost}/oauth2/logout?${searchParams}`,
+        );
+      },
+    );
+
+    it('should clear OAuth related cookies', () => {
+      const queries: LogoutQueryDto = {
+        postLogoutRedirectUrl: 'http://localhost:3000',
+      };
+      response.req.cookies[oauthCookieTokens.idToken] =
+        'jwt-id-token';
+      fusionAuthConfigs.fusionAuthHost = 'http://localhost:9011';
+
+      authService.logout(response, queries);
+
+      expect(response.clearCookie.callCount).toEqual(4);
+      expect(
+        response.clearCookie.calledWithExactly(
+          oauthCookieTokens.accessToken,
+        ),
+      ).toBeTruthy();
+      expect(
+        response.clearCookie.calledWithExactly(
+          oauthCookieTokens.refreshToken,
+        ),
+      ).toBeTruthy();
+      expect(
+        response.clearCookie.calledWithExactly(
+          oauthCookieTokens.idToken,
+        ),
+      ).toBeTruthy();
+      expect(
+        response.clearCookie.calledWithExactly(
+          oauthCookieTokens.expiresIn,
+        ),
+      ).toBeTruthy();
+    });
+
+    it.each<string>(['uuid', 'another-uuid'])(
+      'should add client_id when it is set in query params',
+      (clientId) => {
+        const queries: LogoutQueryDto = {
+          clientId,
+          postLogoutRedirectUrl: 'https://you-say.com',
+        };
+        response.req.cookies = {
+          [oauthCookieTokens.idToken]: 'jwt-id-token',
+        };
+
+        const logoutUrl = authService.logout(response, queries);
+
+        expect(logoutUrl).toContain(`client_id=${clientId}`);
+        expect(logoutUrl).not.toContain(`id_token_hint`);
+      },
+    );
+
+    it.each<string>(['jwt-id-token', 'jwt-id-token1'])(
+      'should add id_token_hint when client_id has is not in query params',
+      (idToken) => {
+        const queries: LogoutQueryDto = {
+          postLogoutRedirectUrl: 'https://you-say.com',
+        };
+        response.req.cookies = {
+          [oauthCookieTokens.idToken]: idToken,
+        };
+
+        const logoutUrl = authService.logout(response, queries);
+
+        expect(logoutUrl).toContain(`id_token_hint=${idToken}`);
+        expect(logoutUrl).not.toContain(`client_id`);
+      },
+    );
   });
 });

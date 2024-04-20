@@ -9,6 +9,7 @@ import {
   WithSecretOrKeyProvider,
 } from 'passport-jwt';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
+import { oauthCookieTokens } from './contracts/oauth-cookie-tokens.contract';
 import { AuthModuleOptions } from './types/auth.type';
 
 @Injectable()
@@ -37,8 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 }
 export function jwtFromRequest(request: Request): string | null {
-  if (request?.cookies?.['app.at']) {
-    return request.cookies['app.at'];
+  const { accessToken } = oauthCookieTokens;
+
+  if (request?.cookies?.[accessToken]) {
+    return request.cookies[accessToken];
   }
 
   if (request?.headers) {

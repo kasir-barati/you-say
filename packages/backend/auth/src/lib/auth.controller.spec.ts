@@ -2,6 +2,8 @@ import { SinonMock, SinonMockType } from '@shared';
 import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { LoginQueryDto } from './dtos/login-query.dto';
+import { LogoutQueryDto } from './dtos/logout-query.dto';
+import { MeCookie } from './dtos/me-cookie.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
 import { RegisterDto } from './dtos/register.dto';
@@ -109,6 +111,64 @@ describe('AuthController', () => {
       );
 
       expect(result).rejects.toThrow(Error);
+    });
+  });
+
+  describe('GET /me', () => {
+    it('should return user info returned from auth service', async () => {
+      const cookies: MeCookie = { accessToken: '' };
+      const userInfo = { sub: '' };
+      authService.me.withArgs(cookies).resolves(userInfo);
+
+      const result = await controller.me(cookies);
+
+      expect(result).toStrictEqual(userInfo);
+    });
+
+    it('should propagate error occurred in authService.me', () => {
+      const cookies: MeCookie = { accessToken: '' };
+      authService.me.rejects(new Error());
+
+      const result = controller.me(cookies);
+
+      expect(result).rejects.toThrow(Error);
+    });
+  });
+
+  describe('GET /logout', () => {
+    it.each<LogoutQueryDto>([
+      {
+        clientId: 'uuid',
+        postLogoutRedirectUrl: 'http://localhost:3000',
+      },
+      {
+        postLogoutRedirectUrl: 'http://localhost:3000',
+      },
+    ])('should return logout url', (queries) => {
+      const response = {} as Response;
+      authService.logout
+        .withArgs(response, queries)
+        .returns('http://localhost:9011/oauth2/logout');
+
+      const result = controller.logout(response, queries);
+
+      expect(result).toStrictEqual({
+        statusCode: 302,
+        url: 'http://localhost:9011/oauth2/logout',
+      });
+    });
+
+    it('should propagate errors occurred in authService.logout', () => {
+      const response = {} as Response;
+      const queries = {} as LogoutQueryDto;
+
+      authService.logout
+        .withArgs(response, queries)
+        .throws(new Error());
+
+      expect(() => controller.logout(response, queries)).toThrow(
+        Error,
+      );
     });
   });
 });

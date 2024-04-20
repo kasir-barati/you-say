@@ -15,7 +15,9 @@ import {
   AUTH_MODULE_OPTIONS,
   FUSIONAUTH_OAUTH_CALLBACK_URL,
 } from '../auth.constants';
+import { oauthCookieTokens } from '../contracts/oauth-cookie-tokens.contract';
 import { LoginQueryDto } from '../dtos/login-query.dto';
+import { LogoutQueryDto } from '../dtos/logout-query.dto';
 import { MeCookie } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
@@ -112,7 +114,10 @@ export class AuthService implements OnModuleInit {
 
     setSecureCookie(response, 'codeVerifier', codeVerifier);
 
-    const tokenExchangeUrl = `${this.fusionAuthConfigs.appBaseUrl}/auth/oauth-callback`;
+    const tokenExchangeUrl = new URL(
+      '/auth/oauth-callback',
+      this.fusionAuthConfigs.appBaseUrl,
+    ).toString();
     const loginRedirectUrl = this.constructOauth2LoginUrl({
       state: newState,
       clientId,
@@ -166,11 +171,23 @@ export class AuthService implements OnModuleInit {
       refreshToken,
     });
 
-    setSecureCookie(response, 'app.at', accessToken);
-    setSecureCookie(response, 'app.rt', refreshToken);
+    setSecureCookie(
+      response,
+      oauthCookieTokens.accessToken,
+      accessToken,
+    );
+    setSecureCookie(
+      response,
+      oauthCookieTokens.refreshToken,
+      refreshToken,
+    );
     // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
-    setCookie(response, 'app.idt', idToken);
-    setCookie(response, 'app.at_exp', accessTokenExpiresIn);
+    setCookie(response, oauthCookieTokens.idToken, idToken);
+    setCookie(
+      response,
+      oauthCookieTokens.expiresIn,
+      accessTokenExpiresIn,
+    );
     // Since the cookies set in the login endpoint are `httpOnly` we cannot delete them in client side. Thus we are removing them here, [read more](https://stackoverflow.com/a/1085792/8784518).
     response.clearCookie('codeVerifier');
 
@@ -191,6 +208,51 @@ export class AuthService implements OnModuleInit {
       );
 
     return response as MeResponse;
+  }
+
+  logout(response: Response, queries: LogoutQueryDto) {
+    const idToken = response.req.cookies[oauthCookieTokens.idToken];
+    const { clientId, postLogoutRedirectUrl } = queries;
+
+    response.clearCookie(oauthCookieTokens.accessToken);
+    response.clearCookie(oauthCookieTokens.refreshToken);
+    response.clearCookie(oauthCookieTokens.idToken);
+    response.clearCookie(oauthCookieTokens.expiresIn);
+
+    const logoutUrl = this.constructLogoutUrl({
+      clientId,
+      idToken,
+      postLogoutRedirectUrl,
+    });
+
+    return logoutUrl;
+  }
+
+  private constructLogoutUrl({
+    clientId,
+    idToken,
+    postLogoutRedirectUrl,
+  }: {
+    idToken?: string;
+    clientId?: string;
+    postLogoutRedirectUrl: string;
+  }): string {
+    const url = new URL(
+      '/oauth2/logout',
+      this.fusionAuthConfigs.fusionAuthHost,
+    );
+    url.searchParams.append(
+      'post_logout_redirect_uri',
+      postLogoutRedirectUrl,
+    );
+
+    if (clientId) {
+      url.searchParams.append('client_id', clientId);
+    } else {
+      url.searchParams.append('id_token_hint', idToken);
+    }
+
+    return url.toString();
   }
 
   private constructOauth2LoginUrl({
@@ -214,19 +276,23 @@ export class AuthService implements OnModuleInit {
      * @description this is an optional parameter, but because we have implemented PKCE, we must specify how PKCE `codeChallenge` parameter was created. It can either be `'plain'` or `'S256'`. We never recommend using anything except `'S256'` which uses SHA-256 secure hashing for PKCE.
      */
     const codeChallengeMethod = 'S256';
-    const { fusionAuthHost } = this.fusionAuthConfigs;
-    const oauth2SearchParams = new URLSearchParams({
-      state,
-      scope,
-      client_id: clientId,
-      redirect_uri: redirectUrl,
-      response_type: responseType,
-      code_challenge: codeChallenge,
-      code_challenge_method: codeChallengeMethod,
-    });
-    const loginRedirectUrl = `${fusionAuthHost}/oauth2/authorize?${oauth2SearchParams}`;
+    const url = new URL(
+      '/oauth2/authorize',
+      this.fusionAuthConfigs.fusionAuthHost,
+    );
 
-    return loginRedirectUrl;
+    url.searchParams.append('state', state);
+    url.searchParams.append('scope', scope);
+    url.searchParams.append('client_id', clientId);
+    url.searchParams.append('redirect_uri', redirectUrl);
+    url.searchParams.append('response_type', responseType);
+    url.searchParams.append('code_challenge', codeChallenge);
+    url.searchParams.append(
+      'code_challenge_method',
+      codeChallengeMethod,
+    );
+
+    return url.toString();
   }
 
   private getMemberships(

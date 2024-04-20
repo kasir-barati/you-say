@@ -3,6 +3,7 @@ export * from './lib/contracts/forbidden-error.contract';
 export * from './lib/contracts/not-found-error.contract';
 export * from './lib/contracts/unique-error';
 export * from './lib/decorators/cookies.decorator';
+export * from './lib/decorators/is-url.decorator';
 export * from './lib/decorators/is-valid-string.decorator';
 export * from './lib/filters/http-exception.filter';
 export * from './lib/helpers/create-swagger-configuration.helper';

@@ -2,8 +2,14 @@ import {
   LoginRequestQuery,
   OauthCallbackRequestQuery,
   generateRandomString,
+  getTempUser,
 } from '@shared';
-import { AuthApi, RegisterDto } from '../api-client';
+import {
+  AuthApi,
+  AuthApiAuthControllerLogoutRequest,
+  RegisterDto,
+} from '../api-client';
+import { login } from '../utils/login.util';
 
 describe('Auth -- validation', () => {
   const authApi: AuthApi = new AuthApi();
@@ -144,6 +150,7 @@ describe('Auth -- validation', () => {
             validateStatus(statusCode) {
               return statusCode > 200;
             },
+            maxRedirects: 0,
           },
         );
 
@@ -258,6 +265,72 @@ describe('Auth -- validation', () => {
         });
 
         expect(status).toEqual(401);
+      },
+    );
+  });
+
+  describe('GET /auth/logout', () => {
+    it.each<AuthApiAuthControllerLogoutRequest>([
+      {
+        postLogoutRedirectUri: 'https://you-say.com',
+      },
+      {
+        postLogoutRedirectUri: 'http://localhost:3000',
+        clientId: 'dbaa2003-a000-4d69-a59d-3f1a227a2e86',
+      },
+    ])(
+      'should pass the validation layer when queries are: %o',
+      async (queries) => {
+        const tempUser = getTempUser();
+        const authenticationResult = await login({
+          username: tempUser.email,
+          password: tempUser.password,
+        });
+
+        const { status } = await authApi.authControllerLogout(
+          queries,
+          {
+            validateStatus(status) {
+              return status >= 200;
+            },
+            headers: authenticationResult.headers,
+            maxRedirects: 0,
+          },
+        );
+
+        expect(status).not.toEqual(400);
+      },
+    );
+
+    it.each<AuthApiAuthControllerLogoutRequest>([
+      {
+        postLogoutRedirectUri: generateRandomString(),
+        clientId: generateRandomString(),
+      },
+      {
+        postLogoutRedirectUri: 'www.you-say.com',
+      },
+    ])(
+      'should not pass the validation layer when queries are: %o',
+      async (queries) => {
+        const tempUser = getTempUser();
+        const authenticationResult = await login({
+          username: tempUser.email,
+          password: tempUser.password,
+        });
+
+        const { status } = await authApi.authControllerLogout(
+          queries,
+          {
+            validateStatus(status) {
+              return status > 200;
+            },
+            headers: authenticationResult.headers,
+            maxRedirects: 0,
+          },
+        );
+
+        expect(status).toEqual(400);
       },
     );
   });
