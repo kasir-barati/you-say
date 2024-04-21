@@ -3,6 +3,7 @@ import {
   OauthCallbackRequestQuery,
   generateRandomString,
   getTempUser,
+  oauthCookieTokens,
 } from '@shared';
 import {
   AuthApi,
@@ -333,5 +334,33 @@ describe('Auth -- validation', () => {
         expect(status).toEqual(400);
       },
     );
+  });
+
+  describe('POST /auth/refresh', () => {
+    it('should pass the validation layer', async () => {
+      const { status } = await authApi.authControllerRefresh({
+        headers: {
+          Cookie: `${oauthCookieTokens.refreshToken}=${generateRandomString()}`,
+        },
+        validateStatus(status) {
+          return status > 200;
+        },
+      });
+
+      expect(status).not.toEqual(400);
+    });
+
+    it('should not pass validation layer', async () => {
+      const { status } = await authApi.authControllerRefresh({
+        headers: {
+          Cookie: `${oauthCookieTokens.refreshToken}=`,
+        },
+        validateStatus(status) {
+          return status > 200;
+        },
+      });
+
+      expect(status).toEqual(400);
+    });
   });
 });

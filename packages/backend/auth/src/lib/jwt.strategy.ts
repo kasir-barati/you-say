@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { DecodedIdToken } from '@shared';
+import { DecodedIdToken, oauthCookieTokens } from '@shared';
 import { Request } from 'express';
 import { passportJwtSecret } from 'jwks-rsa';
 import {
@@ -9,7 +9,6 @@ import {
   WithSecretOrKeyProvider,
 } from 'passport-jwt';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
-import { oauthCookieTokens } from './contracts/oauth-cookie-tokens.contract';
 import { AuthModuleOptions } from './types/auth.type';
 
 @Injectable()

@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DecodedIdToken, Role } from '@shared';
+import { DecodedIdToken, Role, oauthCookieTokens } from '@shared';
 import { Request } from 'express';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
-import { oauthCookieTokens } from './contracts/oauth-cookie-tokens.contract';
 import { JwtStrategy, jwtFromRequest } from './jwt.strategy';
 import { AuthModuleOptions } from './types/auth.type';
 

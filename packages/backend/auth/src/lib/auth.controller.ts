@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpRedirectResponse,
   InternalServerErrorException,
   Post,
@@ -26,10 +27,11 @@ import { MeResponse } from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from './dtos/login-query.dto';
 import { LogoutQueryDto } from './dtos/logout-query.dto';
-import { MeCookie } from './dtos/me-cookie.dto';
+import { MeCookieDto } from './dtos/me-cookie.dto';
 import { MeResponseDto } from './dtos/me-response.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from './dtos/refresh-cookie.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './services/auth.service';
@@ -162,7 +164,7 @@ export class AuthController {
     description:
       'Could not validate and verify the provided JWT token',
   })
-  async me(@Cookies() cookies: MeCookie): Promise<MeResponse> {
+  async me(@Cookies() cookies: MeCookieDto): Promise<MeResponse> {
     const userInfo = await this.authService.me(cookies);
 
     return userInfo;
@@ -204,5 +206,31 @@ export class AuthController {
       url: logoutUrl,
       statusCode: 302,
     };
+  }
+
+  @Post('refresh')
+  @HttpCode(204)
+  @ApiOperation({
+    summary: 'Refresh Token Grant Request',
+    description:
+      "You will make a request to this endpoint to exchange the user's refresh token for an access token and replace existing cookies with the new ones.",
+  })
+  @ApiOkResponse({
+    description:
+      'Get new tokens from OAuth server and replace them with the existing ones',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponse,
+    description: 'Refresh token is missing in request cookies.',
+  })
+  @ApiInternalServerErrorResponse({
+    type: InternalServerErrorException,
+    description: 'Internal server error.',
+  })
+  async refresh(
+    @Res() response: Response,
+    @Cookies() cookies: RefreshCookieDto,
+  ): Promise<void> {
+    await this.authService.refresh(response, cookies);
   }
 }

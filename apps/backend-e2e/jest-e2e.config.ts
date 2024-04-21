@@ -18,4 +18,6 @@ export default {
   testMatch: ['**/*.e2e-spec.ts'],
   setupFilesAfterEnv: ['<rootDir>/setup-env.ts'],
   detectOpenHandles: true,
+  openHandlesTimeout: 5000,
+  forceExit: true,
 } satisfies Config;

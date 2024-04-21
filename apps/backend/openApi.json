@@ -307,6 +307,40 @@
         "tags": ["auth"],
         "security": [{ "bearer": [] }]
       }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "summary": "Refresh Token Grant Request",
+        "description": "You will make a request to this endpoint to exchange the user's refresh token for an access token and replace existing cookies with the new ones.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get new tokens from OAuth server and replace them with the existing ones"
+          },
+          "400": {
+            "description": "Refresh token is missing in request cookies.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"]
+      }
     }
   },
   "info": {

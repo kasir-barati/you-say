@@ -5,14 +5,15 @@ import {
   MeResponse,
   MockedEntityWithSinonStubs,
   SinonMock,
+  oauthCookieTokens,
 } from '@shared';
 import { Response } from 'express';
-import { oauthCookieTokens } from '../contracts/oauth-cookie-tokens.contract';
 import { LoginQueryDto } from '../dtos/login-query.dto';
 import { LogoutQueryDto } from '../dtos/logout-query.dto';
-import { MeCookie } from '../dtos/me-cookie.dto';
+import { MeCookieDto } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
 import {
   AuthModuleOptions,
   FusionAuthUserGroup,
@@ -269,51 +270,7 @@ describe('AuthService', () => {
         queries,
       });
 
-      expect(response.cookie.callCount).toBe(4);
-      expect(
-        response.cookie.calledWithExactly(
-          oauthCookieTokens.accessToken,
-          'accessToken',
-          {
-            secure: true,
-            httpOnly: true,
-            sameSite: 'lax',
-          },
-        ),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly(
-          oauthCookieTokens.refreshToken,
-          'refreshToken',
-          {
-            secure: true,
-            httpOnly: true,
-            sameSite: 'lax',
-          },
-        ),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly(
-          oauthCookieTokens.idToken,
-          'idToken',
-          {
-            secure: true,
-            sameSite: 'lax',
-            httpOnly: false,
-          },
-        ),
-      ).toBeTruthy();
-      expect(
-        response.cookie.calledWithExactly(
-          oauthCookieTokens.expiresIn,
-          Sinon.match.number,
-          {
-            secure: true,
-            sameSite: 'lax',
-            httpOnly: false,
-          },
-        ),
-      ).toBeTruthy();
+      expectCookiesAreAttachedToTheResponse(response);
     });
 
     it('should clear codeVerifier cookies', async () => {
@@ -369,7 +326,7 @@ describe('AuthService', () => {
 
   describe('me', () => {
     it('should return user info', async () => {
-      const cookies: MeCookie = { accessToken: '' };
+      const cookies: MeCookieDto = { accessToken: '' };
       const response: MeResponse = {
         applicationId: 'uuid',
         email: 'email',
@@ -504,4 +461,120 @@ describe('AuthService', () => {
       },
     );
   });
+
+  describe('refresh', () => {
+    let response: MockedEntityWithSinonStubs<Response>;
+
+    beforeEach(() => {
+      response = SinonMock.with<Response>({
+        req: { protocol: 'https' },
+      });
+    });
+
+    it('should throw InternalServerErrorException if it could not exchange refresh token for new tokens', () => {
+      const cookies: RefreshCookieDto = { refreshToken: '' };
+      fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
+      fusionAuthConfigs.fusionAuthOauthConfigurationClientSecret =
+        'secret';
+      fusionAuthClient.exchangeRefreshTokenForAccessToken
+        .withArgs(
+          cookies.refreshToken,
+          fusionAuthConfigs.fusionAuthClientId,
+          fusionAuthConfigs.fusionAuthOauthConfigurationClientSecret,
+          'openid offline_access',
+          null,
+        )
+        .rejects(Error);
+
+      const result = authService.refresh(response, cookies);
+
+      expect(result).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('should attach new tokens to the response cookies', async () => {
+      const cookies = SinonMock.with<RefreshCookieDto>({});
+      fusionAuthClient.exchangeRefreshTokenForAccessToken.resolves({
+        response: {
+          expires_in: 5,
+          id_token: 'idToken',
+          access_token: 'accessToken',
+          refresh_token: 'refreshToken',
+        },
+      });
+
+      await authService.refresh(response, cookies);
+
+      expectCookiesAreAttachedToTheResponse(response);
+    });
+
+    it('should propagate any error that had occurred in verifyExchangedTokens method', () => {
+      const cookies = SinonMock.with<RefreshCookieDto>({});
+      fusionAuthClient.exchangeRefreshTokenForAccessToken.resolves({
+        response: {
+          expires_in: 29,
+          id_token: 'idToken',
+          access_token: 'accessToken',
+          refresh_token: 'refreshToken',
+        },
+      });
+      fusionAuthClientHelper.verifyExchangedTokens.rejects(
+        new Error(),
+      );
+
+      const result = authService.refresh(response, cookies);
+
+      expect(result).rejects.toThrow(Error);
+    });
+  });
 });
+
+function expectCookiesAreAttachedToTheResponse(
+  response: MockedEntityWithSinonStubs<Response>,
+) {
+  expect(response.cookie.callCount).toBe(4);
+  expect(response.cookie.callCount).toBe(4);
+  expect(
+    response.cookie.calledWithExactly(
+      oauthCookieTokens.accessToken,
+      'accessToken',
+      {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      },
+    ),
+  ).toBeTruthy();
+  expect(
+    response.cookie.calledWithExactly(
+      oauthCookieTokens.refreshToken,
+      'refreshToken',
+      {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      },
+    ),
+  ).toBeTruthy();
+  expect(
+    response.cookie.calledWithExactly(
+      oauthCookieTokens.idToken,
+      'idToken',
+      {
+        secure: true,
+        sameSite: 'lax',
+        httpOnly: false,
+      },
+    ),
+  ).toBeTruthy();
+  expect(
+    response.cookie.calledWithExactly(
+      oauthCookieTokens.expiresIn,
+      Sinon.match.number,
+      {
+        secure: true,
+        sameSite: 'lax',
+        httpOnly: false,
+      },
+    ),
+  ).toBeTruthy();
+}

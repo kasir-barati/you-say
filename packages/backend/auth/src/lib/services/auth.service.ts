@@ -8,19 +8,24 @@ import {
   InternalServerErrorException,
   OnModuleInit,
 } from '@nestjs/common';
-import { MeResponse, setCookie, setSecureCookie } from '@shared';
+import {
+  MeResponse,
+  oauthCookieTokens,
+  setCookie,
+  setSecureCookie,
+} from '@shared';
 import { Response } from 'express';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
   FUSIONAUTH_OAUTH_CALLBACK_URL,
 } from '../auth.constants';
-import { oauthCookieTokens } from '../contracts/oauth-cookie-tokens.contract';
 import { LoginQueryDto } from '../dtos/login-query.dto';
 import { LogoutQueryDto } from '../dtos/logout-query.dto';
-import { MeCookie } from '../dtos/me-cookie.dto';
+import { MeCookieDto } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
 import {
   AuthModuleOptions,
   FusionAuthUserGroup,
@@ -30,6 +35,7 @@ import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service
 
 @Injectable()
 export class AuthService implements OnModuleInit {
+  private readonly scope = 'openid offline_access';
   constructor(
     @Inject(AUTH_MODULE_OPTIONS)
     private readonly fusionAuthConfigs: AuthModuleOptions,
@@ -123,7 +129,7 @@ export class AuthService implements OnModuleInit {
       clientId,
       redirectUrl: tokenExchangeUrl,
       codeChallenge,
-      scope: 'openid offline_access',
+      scope: this.scope,
     });
 
     return loginRedirectUrl;
@@ -171,23 +177,13 @@ export class AuthService implements OnModuleInit {
       refreshToken,
     });
 
-    setSecureCookie(
+    this.attachExchangedTokensToResponse({
+      idToken,
       response,
-      oauthCookieTokens.accessToken,
       accessToken,
-    );
-    setSecureCookie(
-      response,
-      oauthCookieTokens.refreshToken,
       refreshToken,
-    );
-    // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
-    setCookie(response, oauthCookieTokens.idToken, idToken);
-    setCookie(
-      response,
-      oauthCookieTokens.expiresIn,
       accessTokenExpiresIn,
-    );
+    });
     // Since the cookies set in the login endpoint are `httpOnly` we cannot delete them in client side. Thus we are removing them here, [read more](https://stackoverflow.com/a/1085792/8784518).
     response.clearCookie('codeVerifier');
 
@@ -201,7 +197,7 @@ export class AuthService implements OnModuleInit {
     return redirectUrl;
   }
 
-  async me(cookies: MeCookie): Promise<MeResponse> {
+  async me(cookies: MeCookieDto): Promise<MeResponse> {
     const { response } =
       await this.fusionAuthClient.retrieveUserInfoFromAccessToken(
         cookies.accessToken,
@@ -226,6 +222,82 @@ export class AuthService implements OnModuleInit {
     });
 
     return logoutUrl;
+  }
+
+  async refresh(response: Response, cookies: RefreshCookieDto) {
+    const {
+      response: {
+        access_token: accessToken,
+        id_token: idToken,
+        refresh_token: refreshToken,
+        expires_in: expiresIn,
+      },
+    } = await this.fusionAuthClient
+      .exchangeRefreshTokenForAccessToken(
+        cookies.refreshToken,
+        this.fusionAuthConfigs.fusionAuthClientId,
+        this.fusionAuthConfigs
+          .fusionAuthOauthConfigurationClientSecret,
+        this.scope,
+        null,
+      )
+      .catch((error) => {
+        this.loggerService.error({
+          message:
+            'Could not exchange the refresh token for an access token',
+          error,
+        });
+        throw new InternalServerErrorException();
+      });
+
+    await this.fusionAuthClientHelper.verifyExchangedTokens({
+      idToken,
+      accessToken,
+      refreshToken,
+    });
+
+    const expiresInMs = expiresIn * 1_000;
+    const accessTokenExpiresIn = (Date.now() + expiresInMs) / 1000;
+
+    this.attachExchangedTokensToResponse({
+      idToken,
+      response,
+      accessToken,
+      refreshToken,
+      accessTokenExpiresIn,
+    });
+  }
+
+  private attachExchangedTokensToResponse({
+    idToken,
+    response,
+    accessToken,
+    refreshToken,
+    accessTokenExpiresIn,
+  }: {
+    idToken: string;
+    response: Response;
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresIn: number;
+  }) {
+    setSecureCookie(
+      response,
+      oauthCookieTokens.accessToken,
+      accessToken,
+    );
+    setSecureCookie(
+      response,
+      oauthCookieTokens.refreshToken,
+      refreshToken,
+    );
+    // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
+    setCookie(response, oauthCookieTokens.idToken, idToken);
+    setCookie(
+      response,
+      oauthCookieTokens.expiresIn,
+      accessTokenExpiresIn,
+    );
   }
 
   private constructLogoutUrl({

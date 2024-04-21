@@ -1,11 +1,16 @@
-import { SinonMock, SinonMockType } from '@shared';
+import {
+  SinonMock,
+  SinonMockType,
+  generateRandomString,
+} from '@shared';
 import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { LoginQueryDto } from './dtos/login-query.dto';
 import { LogoutQueryDto } from './dtos/logout-query.dto';
-import { MeCookie } from './dtos/me-cookie.dto';
+import { MeCookieDto } from './dtos/me-cookie.dto';
 import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from './dtos/refresh-cookie.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { AuthService } from './services/auth.service';
 
@@ -116,7 +121,7 @@ describe('AuthController', () => {
 
   describe('GET /me', () => {
     it('should return user info returned from auth service', async () => {
-      const cookies: MeCookie = { accessToken: '' };
+      const cookies: MeCookieDto = { accessToken: '' };
       const userInfo = { sub: '' };
       authService.me.withArgs(cookies).resolves(userInfo);
 
@@ -126,7 +131,7 @@ describe('AuthController', () => {
     });
 
     it('should propagate error occurred in authService.me', () => {
-      const cookies: MeCookie = { accessToken: '' };
+      const cookies: MeCookieDto = { accessToken: '' };
       authService.me.rejects(new Error());
 
       const result = controller.me(cookies);
@@ -169,6 +174,34 @@ describe('AuthController', () => {
       expect(() => controller.logout(response, queries)).toThrow(
         Error,
       );
+    });
+  });
+
+  describe('POST /refresh', () => {
+    it('should return nothing', async () => {
+      const cookies: RefreshCookieDto = {
+        refreshToken: generateRandomString(),
+      };
+      const response = {} as Response;
+      authService.refresh.withArgs(response, cookies).resolves();
+
+      const result = await controller.refresh(response, cookies);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should propagate errors occurred in authService.refresh', () => {
+      const cookies: RefreshCookieDto = {
+        refreshToken: '',
+      };
+      const response = {} as Response;
+      authService.refresh
+        .withArgs(response, cookies)
+        .rejects(new Error());
+
+      const result = controller.refresh(response, cookies);
+
+      expect(result).rejects.toThrow(Error);
     });
   });
 });
