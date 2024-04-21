@@ -1,5 +1,4 @@
-import axios from 'axios';
-import QueryString from 'qs';
+import { oauthCookieTokens } from '@shared';
 import {
   FUSIONAUTH_CLIENT_ID,
   FUSIONAUTH_HOST,
@@ -8,6 +7,10 @@ import {
 
 interface Login {
   headers: { Cookie: string };
+  accessToken: string;
+  refreshToken: string;
+  idToken: string;
+  expiresIn: number;
 }
 
 export async function login({
@@ -21,9 +24,15 @@ export async function login({
     'oauth2/token',
     FUSIONAUTH_HOST,
   ).toString();
-  const { data } = await axios.post(
-    authorizationCodeGrantUrl,
-    QueryString.stringify({
+  const response = await fetch(authorizationCodeGrantUrl, {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
+    },
+    body: new URLSearchParams({
       username,
       password,
       grant_type: 'password',
@@ -31,19 +40,19 @@ export async function login({
       client_id: FUSIONAUTH_CLIENT_ID,
       client_secret: OAUTH_CONFIGURATION_CLIENT_SECRET,
     }),
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json',
-      },
-    },
-  );
+    keepalive: false,
+  });
+  const data = await response.json();
   const expiresInMs = data.expires_in * 1_000;
   const expiresIn = (Date.now() + expiresInMs) / 1000;
 
   return {
     headers: {
-      Cookie: `app.idt=${data.id_token}; app.at=${data.access_token}; rt=${data.refresh_token}; app.at_exp=${expiresIn}`,
+      Cookie: `${oauthCookieTokens.idToken}=${data.id_token}; ${oauthCookieTokens.accessToken}=${data.access_token}; ${oauthCookieTokens.refreshToken}=${data.refresh_token}; ${oauthCookieTokens.expiresIn}=${expiresIn}`,
     },
+    accessToken: data.access_token,
+    refreshToken: data.refresh_token,
+    idToken: data.id_token,
+    expiresIn,
   };
 }
