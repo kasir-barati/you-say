@@ -6,4 +6,4 @@ Your account has been created and you must setup a password. Click on the follow
     </a>
 </div>
 
-- FusionAuth Admin
+- you-say Admin

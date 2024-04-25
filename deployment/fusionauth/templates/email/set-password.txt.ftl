@@ -2,4 +2,4 @@ Your account has been created and you must setup a password. Click on the follow
 
 http://localhost:9011/password/change/${changePasswordId}?tenantId=${user.tenantId}
 
-- FusionAuth Admin
+- you-say Admin

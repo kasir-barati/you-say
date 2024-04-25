@@ -4,15 +4,15 @@ import {
   generateRandomString,
 } from '@shared';
 import { Response } from 'express';
+import { LoginQueryDto } from '../dtos/login-query.dto';
+import { LogoutQueryDto } from '../dtos/logout-query.dto';
+import { MeCookieDto } from '../dtos/me-cookie.dto';
+import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
+import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
+import { RegisterDto } from '../dtos/register.dto';
+import { AuthService } from '../services/auth.service';
 import { AuthController } from './auth.controller';
-import { LoginQueryDto } from './dtos/login-query.dto';
-import { LogoutQueryDto } from './dtos/logout-query.dto';
-import { MeCookieDto } from './dtos/me-cookie.dto';
-import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
-import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
-import { RefreshCookieDto } from './dtos/refresh-cookie.dto';
-import { RegisterDto } from './dtos/register.dto';
-import { AuthService } from './services/auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -24,29 +24,29 @@ describe('AuthController', () => {
   });
 
   describe('POST /register', () => {
-    it.each<RegisterDto>([
-      {
-        email: 'email@email.com',
-        firstName: 'first name1',
-        lastName: 'last name1',
-      },
-      {
-        email: 'test@test.com',
-        firstName: 'first name2',
-        lastName: 'last name2',
-      },
-    ])('should register a user', async (registerDto) => {
-      authService.register.resolves('uuid');
+    it('should register a user', async () => {
+      const registerDto: RegisterDto = {
+        email: 'xin.chen@byd.com',
+        firstName: 'Xing',
+        lastName: 'Chen',
+      };
+      authService.register.withArgs(registerDto).resolves('uuid');
 
-      await controller.register(registerDto);
+      const result = controller.register(registerDto);
 
-      expect(authService.register.callCount).toEqual(1);
-      expect(
-        authService.register.calledWith({
-          ...registerDto,
-          groups: [],
-        }),
-      ).toBeTruthy();
+      expect(result).resolves.toBeUndefined();
+    });
+
+    it('should propagate errors occurred in authService.register', async () => {
+      authService.register.rejects(new Error());
+
+      const result = controller.register({
+        email: 'ying.chen@byd.com',
+        firstName: 'Ying',
+        lastName: 'Chen',
+      });
+
+      expect(result).rejects.toThrow(Error);
     });
   });
 

@@ -1,8 +1,8 @@
+import { FusionOAuthError } from '@backend/common';
 import { Errors } from '@fusionauth/typescript-client';
-import ClientResponse from '@fusionauth/typescript-client/build/src/ClientResponse';
 import { Injectable } from '@nestjs/common';
 import { DuplicateEmailError } from '../contracts/duplicate-email-error.contract';
-import { FusionAuthError } from '../contracts/fusionauth-error.contract';
+import { FusionAuthOAuthError } from '../types/fusionauth.type';
 
 @Injectable()
 export class FusionAuthErrorSerializer {
@@ -19,7 +19,22 @@ export class FusionAuthErrorSerializer {
     }
   }
 
-  fusionAuthError(error: ClientResponse<unknown>): never {
-    throw new FusionAuthError(JSON.stringify(error.exception));
+  oauthError(oauthError: FusionAuthOAuthError): void | never {
+    if (
+      oauthError?.statusCode &&
+      oauthError?.exception?.error_description
+    ) {
+      throw new FusionOAuthError(
+        oauthError.exception.error_description,
+        oauthError.statusCode,
+      );
+    }
+  }
+
+  unknownError(error: unknown): never {
+    throw new FusionOAuthError(
+      JSON.stringify(error?.['exception']),
+      500,
+    );
   }
 }

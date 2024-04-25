@@ -16,7 +16,7 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/backend-e2e',
   testMatch: ['**/*.e2e-spec.ts'],
-  setupFilesAfterEnv: ['<rootDir>/setup-env.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   detectOpenHandles: true,
   openHandlesTimeout: 5000,
   forceExit: true,

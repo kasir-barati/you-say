@@ -16,18 +16,21 @@ resource "fusionauth_tenant" "you-say-tenant" {
     login_policy = "Disabled"
   }
   email_configuration {
-    security                       = var.fusionauth_email_security
-    host                           = var.fusionauth_email_configuration_host
-    port                           = var.fusionauth_email_configuration_port
-    username                       = var.fusionauth_email_configuration_username
-    password                       = var.fusionauth_email_configuration_password
-    set_password_email_template_id = fusionauth_email.setup-password-email-template.id
+    security                         = var.fusionauth_email_security
+    host                             = var.fusionauth_email_configuration_host
+    port                             = var.fusionauth_email_configuration_port
+    username                         = var.fusionauth_email_configuration_username
+    password                         = var.fusionauth_email_configuration_password
+    set_password_email_template_id   = fusionauth_email.setup-password-email-template.id
+    email_verified_email_template_id = fusionauth_email.email-verification-template.id
+    # implicit_email_verification_allowed = true
   }
   jwt_configuration {
-    id_token_key_id                       = fusionauth_key.id-token-key.id
-    access_token_key_id                   = fusionauth_key.access-token-key.id
-    time_to_live_in_seconds               = 3600
-    refresh_token_time_to_live_in_minutes = 43200
+    id_token_key_id                                    = fusionauth_key.id-token-key.id
+    access_token_key_id                                = fusionauth_key.access-token-key.id
+    time_to_live_in_seconds                            = 3600
+    refresh_token_time_to_live_in_minutes              = 43200
+    refresh_token_revocation_policy_on_password_change = true
   }
   external_identifier_configuration {
     change_password_id_time_to_live_in_seconds     = 600
@@ -84,6 +87,14 @@ resource "fusionauth_tenant" "you-say-tenant" {
 
     one_time_password_time_to_live_in_seconds          = 60
     external_authentication_id_time_to_live_in_seconds = 300
+  }
+  password_validation_rules {
+    min_length        = 8
+    validate_on_login = true
+    remember_previous_passwords {
+      count   = 1
+      enabled = true
+    }
   }
 }
 
@@ -187,6 +198,7 @@ resource "fusionauth_theme" "custom-theme" {
   password_complete = file("${path.module}/templates/change-password-complete.ftl")
 }
 
+#region Email templates
 resource "fusionauth_email" "setup-password-email-template" {
   name                  = "Setup password email template"
   from_email            = "email@email.com"
@@ -195,6 +207,15 @@ resource "fusionauth_email" "setup-password-email-template" {
   default_html_template = file("${path.module}/templates/email/set-password.html.ftl")
   default_text_template = file("${path.module}/templates/email/set-password.txt.ftl")
 }
+resource "fusionauth_email" "email-verification-template" {
+  name                  = "Email verification template"
+  from_email            = "email@email.com"
+  default_subject       = "Verify your email"
+  default_from_name     = "test@test.com"
+  default_html_template = file("${path.module}/templates/email/email-verification.html.ftl")
+  default_text_template = file("${path.module}/templates/email/email-verification.txt.ftl")
+}
+#endregion
 
 data "httpclient_request" "set-you-say-tenant-theme" {
   request_method = "PATCH"

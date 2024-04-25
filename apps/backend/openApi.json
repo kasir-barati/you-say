@@ -69,7 +69,7 @@
             }
           }
         },
-        "tags": ["auth"]
+        "tags": ["Auth"]
       }
     },
     "/auth/login": {
@@ -128,7 +128,7 @@
             }
           }
         },
-        "tags": ["auth"]
+        "tags": ["Auth"]
       }
     },
     "/auth/oauth-callback": {
@@ -193,7 +193,7 @@
             }
           }
         },
-        "tags": ["auth"]
+        "tags": ["Auth"]
       }
     },
     "/auth/me": {
@@ -244,7 +244,7 @@
             }
           }
         },
-        "tags": ["auth"],
+        "tags": ["Auth"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -304,7 +304,7 @@
             }
           }
         },
-        "tags": ["auth"],
+        "tags": ["Auth"],
         "security": [{ "bearer": [] }]
       }
     },
@@ -339,7 +339,101 @@
             }
           }
         },
-        "tags": ["auth"]
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/mobile/register": {
+      "post": {
+        "operationId": "MobileAuthController_register",
+        "summary": "This endpoint creates a new user in FusionAuth.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobileRegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns nothing. Use http status code 201 to indicate success."
+          },
+          "400": {
+            "description": "Bad request; email already exists, or name is invalid, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Mobile Auth"]
+      }
+    },
+    "/auth/mobile/login": {
+      "post": {
+        "operationId": "MobileAuthController_login",
+        "summary": "Login users from mobile devices.",
+        "description": "This endpoint will receive user credentials and exchanged them fo tokens with OAuth server.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobileLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns generated tokens.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileLoginResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request; email or password is invalid, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Mobile Auth"]
       }
     }
   },
@@ -474,7 +568,82 @@
           "tid"
         ]
       },
-      "UnauthorizedException": { "type": "object", "properties": {} }
+      "UnauthorizedException": { "type": "object", "properties": {} },
+      "MobileRegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's Email address",
+            "example": "some.random.email@gmail.com"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User's first name"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User's last name"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "description": "User's password. Please do not allow user to use white space at the end or beginning of their password(we will trim it!). note that spaces inside password are fine (find specificities about password requirements in `deployment/fusionauth/main.tf` in `password_validation_rules` section). One more thing, since data will be sent over HTTPS there will be no issue with password being sent in plain text."
+          }
+        },
+        "required": ["email", "firstName", "lastName", "password"]
+      },
+      "MobileLoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "exmaple@gmail.com",
+            "description": "User's Email address"
+          },
+          "password": {
+            "type": "string",
+            "example": "<P@SS Word>",
+            "minLength": 8,
+            "description": "User's password. Find the details about password requirements in `deployment/fusionauth/main.tf` in `password_validation_rules` section."
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "MobileLoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "JWT ID Token"
+          },
+          "tokenType": {
+            "type": "object",
+            "example": "Bearer",
+            "description": "JWT token type"
+          },
+          "accessTokenExpiresIn": {
+            "type": "number",
+            "example": 3600,
+            "description": "JWT token expiration time in seconds"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token, used to exchange for new tokens. It is not a JWT token."
+          }
+        },
+        "required": [
+          "idToken",
+          "tokenType",
+          "accessTokenExpiresIn",
+          "accessToken",
+          "refreshToken"
+        ]
+      }
     }
   }
 }

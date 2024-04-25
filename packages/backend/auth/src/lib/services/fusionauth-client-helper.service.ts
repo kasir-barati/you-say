@@ -1,5 +1,6 @@
 import { LoggerService } from '@backend/logger';
 import FusionAuthClient, {
+  GroupMember,
   JWT,
   ValidateResponse,
 } from '@fusionauth/typescript-client';
@@ -10,12 +11,22 @@ import {
   Injectable,
   OnModuleInit,
 } from '@nestjs/common';
-import { generateRandomString } from '@shared';
+import {
+  generateRandomString,
+  oauthCookieTokens,
+  setCookie,
+  setSecureCookie,
+} from '@shared';
+import { Response } from 'express';
 import {
   AUTH_MODULE_FUSIONAUTH_CLIENT,
   AUTH_MODULE_OPTIONS,
 } from '../auth.constants';
-import { AuthModuleOptions } from '../types/auth.type';
+import {
+  AuthModuleOptions,
+  FusionAuthUserGroup,
+} from '../types/auth.type';
+import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 
 @Injectable()
 export class FusionAuthClientHelper implements OnModuleInit {
@@ -25,6 +36,7 @@ export class FusionAuthClientHelper implements OnModuleInit {
     @Inject(AUTH_MODULE_FUSIONAUTH_CLIENT)
     private readonly fusionAuthClient: FusionAuthClient,
     private readonly loggerService: LoggerService,
+    private readonly fusionAuthErrorSerializer: FusionAuthErrorSerializer,
   ) {}
 
   onModuleInit() {
@@ -121,6 +133,78 @@ export class FusionAuthClientHelper implements OnModuleInit {
     }
   }
 
+  async register({
+    email,
+    groups,
+    lastName,
+    password,
+    firstName,
+    applicationId,
+  }: Register): Promise<string> | never {
+    const memberships = this.getMemberships(groups);
+
+    try {
+      // Passing an empty string as userId signifies that FusionAuth should create it automatically.
+      const { response } = await this.fusionAuthClient.register('', {
+        sendSetPasswordEmail: password ? false : true,
+        skipVerification: password ? false : true,
+        registration: {
+          applicationId,
+        },
+        user: {
+          email,
+          lastName,
+          firstName,
+          memberships,
+          ...(password ? { password } : {}),
+          fullName: `${firstName} ${lastName}`,
+          data: {
+            // Here we can save meta data, or settings and other info
+          },
+        },
+      });
+
+      if (!response?.user || !response?.user?.id) {
+        throw `[Unexpected-a3abc897fd] we do not have access to ${
+          response.user ? 'user id' : 'user'
+        }!`;
+      }
+      await this.fusionAuthClient.refreshUserSearchIndex();
+
+      return response.user.id;
+    } catch (error) {
+      this.loggerService.error(error);
+      this.fusionAuthErrorSerializer.duplicateEmail(error, email);
+      this.fusionAuthErrorSerializer.oauthError(error);
+      this.fusionAuthErrorSerializer.unknownError(error);
+    }
+  }
+
+  attachExchangedTokensToResponse({
+    idToken,
+    response,
+    accessToken,
+    refreshToken,
+    accessTokenExpiresIn,
+  }: AttachExchangedTokensToResponse): void {
+    const expiresInMs = accessTokenExpiresIn * 1_000;
+    const expiresIn = (Date.now() + expiresInMs) / 1000;
+
+    setSecureCookie(
+      response,
+      oauthCookieTokens.accessToken,
+      accessToken,
+    );
+    setSecureCookie(
+      response,
+      oauthCookieTokens.refreshToken,
+      refreshToken,
+    );
+    // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
+    setCookie(response, oauthCookieTokens.idToken, idToken);
+    setCookie(response, oauthCookieTokens.expiresIn, expiresIn);
+  }
+
   private async getJwtOfIdToken(
     idToken: string,
   ): Promise<void | JWT> {
@@ -137,6 +221,20 @@ export class FusionAuthClientHelper implements OnModuleInit {
     }
 
     return jwtValidationResponse.response.jwt;
+  }
+
+  private getMemberships(
+    groups: FusionAuthUserGroup[],
+  ): GroupMember[] {
+    const memberships: GroupMember[] = [];
+
+    if (groups.includes(FusionAuthUserGroup.Admin)) {
+      memberships.push({
+        groupId: this.fusionAuthConfigs.fusionAuthAdminGroupId,
+      });
+    }
+
+    return memberships;
   }
 
   private async getJwtOfAccessToken(
@@ -233,4 +331,20 @@ export class FusionAuthClientHelper implements OnModuleInit {
 
     return encoder.encode(code);
   }
+}
+
+interface Register {
+  email: string;
+  lastName: string;
+  firstName: string;
+  password?: string;
+  applicationId: string;
+  groups: FusionAuthUserGroup[];
+}
+interface AttachExchangedTokensToResponse {
+  idToken: string;
+  accessTokenExpiresIn: number;
+  response: Response;
+  accessToken: string;
+  refreshToken: string;
 }

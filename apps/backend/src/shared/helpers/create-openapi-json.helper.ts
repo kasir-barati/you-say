@@ -1,4 +1,9 @@
-import { AuthController, AuthService } from '@backend/auth';
+import {
+  AuthController,
+  AuthService,
+  MobileAuthController,
+  MobileAuthService,
+} from '@backend/auth';
 import {
   createSwaggerConfiguration,
   writeOpenApi,
@@ -21,10 +26,14 @@ import appConfig from '../../app/configs/app.config';
       cache: true,
     }),
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController, AuthController, MobileAuthController],
   providers: [
     { provide: AppService, useValue: Sinon.stub(AppService) },
     { provide: AuthService, useValue: Sinon.stub(AuthService) },
+    {
+      provide: MobileAuthService,
+      useValue: Sinon.stub(MobileAuthService),
+    },
   ],
 })
 class OpenApiModule {}

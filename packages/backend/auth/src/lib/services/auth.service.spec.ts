@@ -8,20 +8,17 @@ import {
   oauthCookieTokens,
 } from '@shared';
 import { Response } from 'express';
+import * as Sinon from 'sinon';
 import { LoginQueryDto } from '../dtos/login-query.dto';
 import { LogoutQueryDto } from '../dtos/logout-query.dto';
 import { MeCookieDto } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
-import {
-  AuthModuleOptions,
-  FusionAuthUserGroup,
-} from '../types/auth.type';
+import { RegisterDto } from '../dtos/register.dto';
+import { AuthModuleOptions } from '../types/auth.type';
 import { AuthService } from './auth.service';
 import { FusionAuthClientHelper } from './fusionauth-client-helper.service';
-import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
-import Sinon = require('sinon');
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -31,7 +28,6 @@ describe('AuthService', () => {
   let loggerService: MockedEntityWithSinonStubs<LoggerService>;
 
   beforeEach(() => {
-    const fusionAuthErrorSerializer = new FusionAuthErrorSerializer();
     fusionAuthConfigs = {
       appBaseUrl: 'http:localhost:3001',
       fusionAuthHost: 'http://fusionauth:9011',
@@ -45,7 +41,6 @@ describe('AuthService', () => {
       fusionAuthConfigs,
       fusionAuthClient,
       'http://localhost:3001/auth/oauth-callback',
-      fusionAuthErrorSerializer,
       loggerService,
       fusionAuthClientHelper,
     );
@@ -61,70 +56,46 @@ describe('AuthService', () => {
   });
 
   describe('register', () => {
-    it.each<
-      { userId: string } & Parameters<typeof authService.register>[0]
-    >([
+    it.each<RegisterDto>([
       {
-        groups: [],
-        userId: 'uuid1',
-        email: 'test@te.js',
+        email: 'email@exam.js',
+        firstName: 'Mohammad',
+        lastName: 'Barati',
       },
       {
-        groups: [],
-        userId: 'uuid1',
-        email: 'test@te.js',
-        firstName: 'test',
-        lastName: 'test',
+        email: 'sum@sun.com',
+        firstName: 'Sun',
+        lastName: 'sunny',
       },
-      {
-        userId: 'uuid2',
-        email: 'temp@te.com',
-        groups: [FusionAuthUserGroup.Admin],
-      },
-    ])(
-      'should return $userId this.fusionAuthClient.register when I call register',
-      async ({ email, groups, userId, firstName, lastName }) => {
-        fusionAuthClient.register.resolves({
-          response: { user: { id: userId } },
-        });
-
-        const result = await authService.register({
-          email,
-          firstName,
-          lastName,
-          groups,
-        });
-
-        expect(result).toBe(userId);
-      },
-    );
-
-    it.each<{ response: { user?: { id?: string } } }>([
-      { response: {} },
-      { response: { user: {} } },
-    ])(
-      'should throw an error when user or user.id does not exist in the response',
-      async (mockedResponse) => {
-        fusionAuthClient.register.resolves(mockedResponse);
-
-        const result = authService.register({
-          email: 't@t.com',
+    ])('should return userId', async (registerDto) => {
+      fusionAuthConfigs.fusionAuthApplicationId = 'app-uuid';
+      fusionAuthClientHelper.register
+        .withArgs({
           groups: [],
-        });
+          ...registerDto,
+          applicationId: 'app-uuid',
+        })
+        .resolves('user-uuid');
 
-        await expect(result).rejects.toThrow();
-      },
-    );
-
-    it('should throw an error when fusionAuthClient.register throws an error', async () => {
-      fusionAuthClient.register.rejects();
-
-      const result = authService.register({
-        email: 't@t.com',
+      const result = await authService.register({
         groups: [],
+        ...registerDto,
       });
 
-      await expect(result).rejects.toThrow();
+      expect(result).toEqual('user-uuid');
+    });
+
+    it('should propagate errors occurred in fusionAuthClientHelper.register', async () => {
+      fusionAuthClientHelper.register.rejects(new Error());
+
+      const result = authService.register({
+        groups: [],
+        email: 'alex@butz.com',
+        firstName: 'Alex',
+        lastName: 'butz',
+      });
+
+      expect(result).rejects.toThrow(Error);
     });
   });
 
@@ -269,8 +240,6 @@ describe('AuthService', () => {
         cookies,
         queries,
       });
-
-      expectCookiesAreAttachedToTheResponse(response);
     });
 
     it('should clear codeVerifier cookies', async () => {
@@ -503,8 +472,6 @@ describe('AuthService', () => {
       });
 
       await authService.refresh(response, cookies);
-
-      expectCookiesAreAttachedToTheResponse(response);
     });
 
     it('should propagate any error that had occurred in verifyExchangedTokens method', () => {
@@ -527,54 +494,3 @@ describe('AuthService', () => {
     });
   });
 });
-
-function expectCookiesAreAttachedToTheResponse(
-  response: MockedEntityWithSinonStubs<Response>,
-) {
-  expect(response.cookie.callCount).toBe(4);
-  expect(response.cookie.callCount).toBe(4);
-  expect(
-    response.cookie.calledWithExactly(
-      oauthCookieTokens.accessToken,
-      'accessToken',
-      {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'lax',
-      },
-    ),
-  ).toBeTruthy();
-  expect(
-    response.cookie.calledWithExactly(
-      oauthCookieTokens.refreshToken,
-      'refreshToken',
-      {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'lax',
-      },
-    ),
-  ).toBeTruthy();
-  expect(
-    response.cookie.calledWithExactly(
-      oauthCookieTokens.idToken,
-      'idToken',
-      {
-        secure: true,
-        sameSite: 'lax',
-        httpOnly: false,
-      },
-    ),
-  ).toBeTruthy();
-  expect(
-    response.cookie.calledWithExactly(
-      oauthCookieTokens.expiresIn,
-      Sinon.match.number,
-      {
-        secure: true,
-        sameSite: 'lax',
-        httpOnly: false,
-      },
-    ),
-  ).toBeTruthy();
-}

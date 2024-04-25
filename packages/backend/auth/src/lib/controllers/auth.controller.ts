@@ -25,18 +25,18 @@ import {
 } from '@nestjs/swagger';
 import { MeResponse } from '@shared';
 import { Response } from 'express';
-import { LoginQueryDto } from './dtos/login-query.dto';
-import { LogoutQueryDto } from './dtos/logout-query.dto';
-import { MeCookieDto } from './dtos/me-cookie.dto';
-import { MeResponseDto } from './dtos/me-response.dto';
-import { OauthCallbackCookie } from './dtos/oauth-callback-cookies.dto';
-import { OauthCallbackQuery } from './dtos/oauth-callback-query.dto';
-import { RefreshCookieDto } from './dtos/refresh-cookie.dto';
-import { RegisterDto } from './dtos/register.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { AuthService } from './services/auth.service';
+import { LoginQueryDto } from '../dtos/login-query.dto';
+import { LogoutQueryDto } from '../dtos/logout-query.dto';
+import { MeCookieDto } from '../dtos/me-cookie.dto';
+import { MeResponseDto } from '../dtos/me-response.dto';
+import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
+import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
+import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
+import { RegisterDto } from '../dtos/register.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { AuthService } from '../services/auth.service';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

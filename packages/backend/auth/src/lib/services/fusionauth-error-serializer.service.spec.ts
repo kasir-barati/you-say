@@ -1,4 +1,4 @@
-import ClientResponse from '@fusionauth/typescript-client/build/src/ClientResponse';
+import { FusionAuthOAuthError } from '../types/fusionauth.type';
 import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 
 describe('FusionAuthErrorSerializer', () => {
@@ -39,14 +39,43 @@ describe('FusionAuthErrorSerializer', () => {
     ).not.toThrow();
   });
 
-  it.each([
+  it.each<FusionAuthOAuthError>([
+    {
+      exception: {
+        error_description: 'The user credentials are invalid.',
+      },
+      statusCode: 400,
+    },
+    {
+      exception: {
+        error_description: 'some other error.',
+      },
+      statusCode: 500,
+    },
+  ])('should throw FusionAuthOAuthError', (error) => {
+    expect(() => {
+      fusionAuthErrorSerializer.oauthError(error);
+    }).toThrow();
+  });
+
+  it('should not throw FusionAuthOAuthError when statusCode or error_description are not provided', () => {
+    expect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fusionAuthErrorSerializer.oauthError(new Error() as any);
+    }).not.toThrow();
+  });
+
+  it.each<unknown>([
     { message: 'something went wrong', name: 'something' },
     { fieldErrors: { 'some.thing': [] } },
-  ])('should throw fusion auth error', (error) => {
-    expect(() =>
-      fusionAuthErrorSerializer.fusionAuthError({
+    new Error(),
+  ])('should throw unknown error: %o', (error) => {
+    expect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fusionAuthErrorSerializer.oauthError(error as any);
+      fusionAuthErrorSerializer.unknownError({
         exception: error,
-      } as ClientResponse<unknown>),
-    ).toThrow(JSON.stringify(error));
+      });
+    }).toThrow(JSON.stringify(error));
   });
 });

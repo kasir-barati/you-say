@@ -17,5 +17,5 @@ export default {
   coverageDirectory: '../../coverage/backend-e2e',
   detectOpenHandles: true,
   testMatch: ['**/*.spec.ts'],
-  setupFilesAfterEnv: ['<rootDir>/setup-env.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 } satisfies Config;

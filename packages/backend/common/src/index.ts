@@ -1,5 +1,6 @@
 export * from './lib/contracts/bad-request-error.contract';
 export * from './lib/contracts/forbidden-error.contract';
+export * from './lib/contracts/fusionauth-error.contract';
 export * from './lib/contracts/not-found-error.contract';
 export * from './lib/contracts/unique-error';
 export * from './lib/decorators/cookies.decorator';

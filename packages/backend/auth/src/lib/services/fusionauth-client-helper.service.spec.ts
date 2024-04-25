@@ -1,15 +1,26 @@
 import { LoggerService } from '@backend/logger';
 import FusionAuthClient, { JWT } from '@fusionauth/typescript-client';
 import { HttpException } from '@nestjs/common';
-import { MockedEntityWithSinonStubs, SinonMock } from '@shared';
-import { AuthModuleOptions } from '../types/auth.type';
+import {
+  MockedEntityWithSinonStubs,
+  SinonMock,
+  oauthCookieTokens,
+} from '@shared';
+import { Response } from 'express';
+import * as Sinon from 'sinon';
+import {
+  AuthModuleOptions,
+  FusionAuthUserGroup,
+} from '../types/auth.type';
 import { FusionAuthClientHelper } from './fusionauth-client-helper.service';
+import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 
 describe('FusionAuthClientHelper', () => {
   let fusionAuthClientHelper: FusionAuthClientHelper;
   let fusionAuthClient: MockedEntityWithSinonStubs<FusionAuthClient>;
   let fusionAuthConfigs: AuthModuleOptions;
   let loggerService: MockedEntityWithSinonStubs<LoggerService>;
+  const fusionAuthErrorSerializer = new FusionAuthErrorSerializer();
 
   beforeEach(() => {
     fusionAuthConfigs = {} as AuthModuleOptions;
@@ -19,6 +30,7 @@ describe('FusionAuthClientHelper', () => {
       fusionAuthConfigs,
       fusionAuthClient,
       loggerService,
+      fusionAuthErrorSerializer,
     );
   });
 
@@ -301,6 +313,251 @@ describe('FusionAuthClientHelper', () => {
         expect(result).toBe(
           `${redirectUrl}?state=%2Fposts&locale=en&userState=Authenticated`,
         );
+      },
+    );
+  });
+
+  describe('register', () => {
+    it.each<Parameters<typeof fusionAuthClientHelper.register>[0]>([
+      {
+        groups: [],
+        firstName: 'test',
+        lastName: 'testi',
+        email: 'test@te.js',
+        password: 'password',
+        applicationId: 'app-uuid1',
+      },
+      {
+        groups: [FusionAuthUserGroup.Admin],
+        firstName: 'Lou',
+        lastName: 'Chen',
+        password: 'complex',
+        email: 'some@thing.jp',
+        applicationId: 'app-uuid2',
+      },
+    ])(
+      'should register user with the passed args (%o) and return user id',
+      async (registerArgs) => {
+        fusionAuthConfigs.fusionAuthAdminGroupId = 'admin-group-id';
+        fusionAuthClient.register.resolves({
+          response: { user: { id: 'user-uuid' } },
+        });
+
+        const result = await fusionAuthClientHelper.register({
+          email: registerArgs.email,
+          groups: registerArgs.groups,
+          lastName: registerArgs.lastName,
+          password: registerArgs.password,
+          firstName: registerArgs.firstName,
+          applicationId: registerArgs.applicationId,
+        });
+
+        expect(result).toBe('user-uuid');
+        expect(
+          fusionAuthClient.register.calledWithMatch('', {
+            sendSetPasswordEmail: false,
+            skipVerification: false,
+            registration: {
+              applicationId: registerArgs.applicationId,
+            },
+            user: {
+              email: registerArgs.email,
+              lastName: registerArgs.lastName,
+              firstName: registerArgs.firstName,
+              password: registerArgs.password,
+              fullName: `${registerArgs.firstName} ${registerArgs.lastName}`,
+              data: {},
+            },
+          }),
+        ).toBeTruthy();
+      },
+    );
+
+    it('should register user with the specified group', async () => {
+      fusionAuthConfigs.fusionAuthAdminGroupId = 'admin-group-id';
+      fusionAuthClient.register.resolves({
+        response: { user: { id: 'user-uuid' } },
+      });
+
+      const result = await fusionAuthClientHelper.register({
+        firstName: 'Lou',
+        lastName: 'Chen',
+        password: 'complex',
+        email: 'some@thing.jp',
+        applicationId: 'app-uuid2',
+        groups: [FusionAuthUserGroup.Admin],
+      });
+
+      expect(result).toBe('user-uuid');
+      expect(
+        fusionAuthClient.register.calledWithMatch('', {
+          user: {
+            memberships: [{ groupId: 'admin-group-id' }],
+          },
+        }),
+      ).toBeTruthy();
+    });
+
+    it('should register user without password', async () => {
+      fusionAuthClient.register.resolves({
+        response: { user: { id: 'userId' } },
+      });
+
+      const result = await fusionAuthClientHelper.register({
+        groups: [],
+        firstName: 'Yu',
+        lastName: 'Zhang',
+        email: 'yu.zhang@yahoo.com',
+        applicationId: 'app-uuid3',
+      });
+
+      expect(result).toBe('userId');
+      expect(
+        fusionAuthClient.register.calledWithMatch('', {
+          sendSetPasswordEmail: true,
+          skipVerification: true,
+        }),
+      );
+    });
+
+    it('should throw an error when user.id does not exist in the response', async () => {
+      fusionAuthClient.register.resolves({ response: { user: {} } });
+
+      const result = fusionAuthClientHelper.register({
+        email: '',
+        groups: [],
+        lastName: '',
+        firstName: '',
+        applicationId: '',
+      });
+
+      await expect(result).rejects.toThrow();
+      expect(
+        loggerService.error.calledWith(
+          '[Unexpected-a3abc897fd] we do not have access to user id!',
+        ),
+      ).toBeTruthy();
+    });
+
+    it('should throw an error when user does not exist in the response', async () => {
+      fusionAuthClient.register.resolves({ response: {} });
+
+      const result = fusionAuthClientHelper.register({
+        email: '',
+        groups: [],
+        lastName: '',
+        firstName: '',
+        applicationId: '',
+      });
+
+      await expect(result).rejects.toThrow();
+      expect(
+        loggerService.error.calledWith(
+          '[Unexpected-a3abc897fd] we do not have access to user!',
+        ),
+      ).toBeTruthy();
+    });
+
+    it('should throw an error when fusionAuthClient.register throws an error', async () => {
+      fusionAuthClient.register.rejects(new Error());
+
+      const result = fusionAuthClientHelper.register({
+        email: '',
+        groups: [],
+        lastName: '',
+        firstName: '',
+        applicationId: '',
+      });
+
+      await expect(result).rejects.toThrow();
+    });
+
+    it('should throw an error when fusionAuthClient.refreshUserSearchIndex throws an error', async () => {
+      const error = new Error('refreshUserSearchIndex exploded');
+      fusionAuthClient.register.resolves({
+        response: { user: { id: 'some-user-uuid' } },
+      });
+      fusionAuthClient.refreshUserSearchIndex.rejects(error);
+
+      const result = fusionAuthClientHelper.register({
+        email: '',
+        groups: [],
+        lastName: '',
+        firstName: '',
+        applicationId: '',
+      });
+
+      await expect(result).rejects.toThrow();
+      expect(loggerService.error.calledWith(error)).toBeTruthy();
+    });
+  });
+
+  describe('attachExchangedTokensToResponse', () => {
+    it.each([
+      {
+        accessTokenExpiresIn: 100,
+        idToken: 'jwt-id-token1',
+        accessToken: 'jwt-at-1',
+        refreshToken: 'random-string-1',
+        response: SinonMock.with<Response>({}),
+      },
+      {
+        accessTokenExpiresIn: 700,
+        accessToken: 'some-jwt-at-1',
+        idToken: 'another-jwt-id-token',
+        refreshToken: 'refresh-token',
+        response: SinonMock.with<Response>({}),
+      },
+    ])(
+      'should attach exchanged tokens to the response: %o',
+      (args) => {
+        fusionAuthClientHelper.attachExchangedTokensToResponse(args);
+
+        expect(args.response.cookie.callCount).toBe(4);
+        expect(
+          args.response.cookie.calledWithExactly(
+            oauthCookieTokens.accessToken,
+            args.accessToken,
+            {
+              secure: true,
+              httpOnly: true,
+              sameSite: 'lax',
+            },
+          ),
+        ).toBeTruthy();
+        expect(
+          args.response.cookie.calledWithExactly(
+            oauthCookieTokens.refreshToken,
+            args.refreshToken,
+            {
+              secure: true,
+              httpOnly: true,
+              sameSite: 'lax',
+            },
+          ),
+        ).toBeTruthy();
+        expect(
+          args.response.cookie.calledWithExactly(
+            oauthCookieTokens.idToken,
+            args.idToken,
+            {
+              secure: true,
+              sameSite: 'lax',
+              httpOnly: false,
+            },
+          ),
+        ).toBeTruthy();
+        expect(
+          args.response.cookie.calledWithExactly(
+            oauthCookieTokens.expiresIn,
+            Sinon.match.number,
+            {
+              secure: true,
+              sameSite: 'lax',
+              httpOnly: false,
+            },
+          ),
+        ).toBeTruthy();
       },
     );
   });

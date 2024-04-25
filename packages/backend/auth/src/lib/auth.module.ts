@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { AUTH_MODULE_OPTIONS } from './auth.constants';
-import { AuthController } from './auth.controller';
+import { AuthController } from './controllers/auth.controller';
+import { MobileAuthController } from './controllers/mobile-auth.controller';
 import { fusionAuthClientFactory } from './factory-providers/fusionauth-client.factory-provider';
 import { fusionAuthOauthCallbackUrlFactory } from './factory-providers/fusionauth-oauth-callback-url.factory-provider';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -19,6 +20,7 @@ import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
 import { AuthService } from './services/auth.service';
 import { FusionAuthClientHelper } from './services/fusionauth-client-helper.service';
 import { FusionAuthErrorSerializer } from './services/fusionauth-error-serializer.service';
+import { MobileAuthService } from './services/mobile-auth.service';
 import {
   AuthModuleAsyncOptions,
   AuthModuleOptions,
@@ -28,24 +30,20 @@ import {
 @Global()
 @Module({
   imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
-  controllers: [AuthController],
+  controllers: [AuthController, MobileAuthController],
   providers: [
     RoleGuard,
     JwtStrategy,
     AuthService,
     JwtAuthGuard,
+    MobileAuthService,
     FusionAuthClientHelper,
     FusionAuthErrorSerializer,
     RoleValidatorMiddlewareFactory,
     fusionAuthClientFactory,
     fusionAuthOauthCallbackUrlFactory,
   ],
-  exports: [
-    RoleGuard,
-    AuthService,
-    JwtAuthGuard,
-    RoleValidatorMiddlewareFactory,
-  ],
+  exports: [RoleGuard, JwtAuthGuard, RoleValidatorMiddlewareFactory],
 })
 export class AuthModule implements OnApplicationShutdown {
   onApplicationShutdown(signal?: string) {

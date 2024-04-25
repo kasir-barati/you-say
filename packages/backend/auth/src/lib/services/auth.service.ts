@@ -1,7 +1,5 @@
 import { LoggerService } from '@backend/logger';
-import FusionAuthClient, {
-  GroupMember,
-} from '@fusionauth/typescript-client';
+import FusionAuthClient from '@fusionauth/typescript-client';
 import {
   Inject,
   Injectable,
@@ -11,7 +9,6 @@ import {
 import {
   MeResponse,
   oauthCookieTokens,
-  setCookie,
   setSecureCookie,
 } from '@shared';
 import { Response } from 'express';
@@ -26,12 +23,12 @@ import { MeCookieDto } from '../dtos/me-cookie.dto';
 import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
+import { RegisterDto } from '../dtos/register.dto';
 import {
   AuthModuleOptions,
   FusionAuthUserGroup,
 } from '../types/auth.type';
 import { FusionAuthClientHelper } from './fusionauth-client-helper.service';
-import { FusionAuthErrorSerializer } from './fusionauth-error-serializer.service';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -43,7 +40,6 @@ export class AuthService implements OnModuleInit {
     private readonly fusionAuthClient: FusionAuthClient,
     @Inject(FUSIONAUTH_OAUTH_CALLBACK_URL)
     private readonly fusionAuthOauthCallbackUrl: string,
-    private readonly fusionAuthErrorSerializer: FusionAuthErrorSerializer,
     private readonly loggerService: LoggerService,
     private readonly fusionAuthClientHelper: FusionAuthClientHelper,
   ) {}
@@ -58,46 +54,19 @@ export class AuthService implements OnModuleInit {
     lastName,
     firstName,
   }: {
-    email: string;
-    lastName?: string;
-    firstName?: string;
     groups: FusionAuthUserGroup[];
-  }): Promise<string> | never {
+  } & RegisterDto): Promise<string> | never {
     const applicationId =
       this.fusionAuthConfigs.fusionAuthApplicationId;
-    const memberships = this.getMemberships(groups);
-    try {
-      // Passing an empty string as userId signifies that FusionAuth should create it automatically.
-      const { response } = await this.fusionAuthClient.register('', {
-        sendSetPasswordEmail: true,
-        registration: {
-          applicationId,
-        },
-        user: {
-          email,
-          lastName,
-          firstName,
-          memberships,
-          fullName: `${firstName} ${lastName}`,
-          data: {
-            // Here we can save meta data, or settings and other info
-          },
-        },
-      });
+    const userId = this.fusionAuthClientHelper.register({
+      email,
+      groups,
+      lastName,
+      firstName,
+      applicationId,
+    });
 
-      if (!response?.user || !response?.user?.id) {
-        throw `[Unexpected-a3abc897fd] we do not have access to ${
-          response.user ? 'user id' : 'user'
-        }`;
-      }
-      await this.fusionAuthClient.refreshUserSearchIndex();
-
-      return response.user.id;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      this.fusionAuthErrorSerializer.duplicateEmail(error, email);
-      this.fusionAuthErrorSerializer.fusionAuthError(error);
-    }
+    return userId;
   }
 
   /**
@@ -147,7 +116,7 @@ export class AuthService implements OnModuleInit {
     const {
       response: {
         id_token: idToken,
-        expires_in: expiresIn,
+        expires_in: accessTokenExpiresIn,
         access_token: accessToken,
         refresh_token: refreshToken,
       },
@@ -166,10 +135,9 @@ export class AuthService implements OnModuleInit {
             'exchanging OAuth code for JWT tokens using PKCE failed!',
           error,
         });
+        // TODO: use this.fusionAuthErrorSerializer.fusionAuthError(error);
         throw new InternalServerErrorException();
       });
-    const expiresInMs = expiresIn * 1_000;
-    const accessTokenExpiresIn = (Date.now() + expiresInMs) / 1000;
 
     await this.fusionAuthClientHelper.verifyExchangedTokens({
       idToken,
@@ -177,7 +145,7 @@ export class AuthService implements OnModuleInit {
       refreshToken,
     });
 
-    this.attachExchangedTokensToResponse({
+    this.fusionAuthClientHelper.attachExchangedTokensToResponse({
       idToken,
       response,
       accessToken,
@@ -230,7 +198,7 @@ export class AuthService implements OnModuleInit {
         access_token: accessToken,
         id_token: idToken,
         refresh_token: refreshToken,
-        expires_in: expiresIn,
+        expires_in: accessTokenExpiresIn,
       },
     } = await this.fusionAuthClient
       .exchangeRefreshTokenForAccessToken(
@@ -256,48 +224,13 @@ export class AuthService implements OnModuleInit {
       refreshToken,
     });
 
-    const expiresInMs = expiresIn * 1_000;
-    const accessTokenExpiresIn = (Date.now() + expiresInMs) / 1000;
-
-    this.attachExchangedTokensToResponse({
+    this.fusionAuthClientHelper.attachExchangedTokensToResponse({
       idToken,
       response,
       accessToken,
       refreshToken,
       accessTokenExpiresIn,
     });
-  }
-
-  private attachExchangedTokensToResponse({
-    idToken,
-    response,
-    accessToken,
-    refreshToken,
-    accessTokenExpiresIn,
-  }: {
-    idToken: string;
-    response: Response;
-    accessToken: string;
-    refreshToken: string;
-    accessTokenExpiresIn: number;
-  }) {
-    setSecureCookie(
-      response,
-      oauthCookieTokens.accessToken,
-      accessToken,
-    );
-    setSecureCookie(
-      response,
-      oauthCookieTokens.refreshToken,
-      refreshToken,
-    );
-    // Client application needs to communicate with backend and user's profile. Those will be handled via ID token -- that's why it is not a secure cookie.
-    setCookie(response, oauthCookieTokens.idToken, idToken);
-    setCookie(
-      response,
-      oauthCookieTokens.expiresIn,
-      accessTokenExpiresIn,
-    );
   }
 
   private constructLogoutUrl({
@@ -353,7 +286,7 @@ export class AuthService implements OnModuleInit {
       this.fusionAuthConfigs.fusionAuthHost,
     );
 
-    url.searchParams.append('state', state);
+    url.searchParams.set('state', state);
     url.searchParams.append('scope', scope);
     url.searchParams.append('client_id', clientId);
     url.searchParams.append('redirect_uri', redirectUrl);
@@ -365,19 +298,5 @@ export class AuthService implements OnModuleInit {
     );
 
     return url.toString();
-  }
-
-  private getMemberships(
-    groups: FusionAuthUserGroup[],
-  ): GroupMember[] {
-    const memberships: GroupMember[] = [];
-
-    if (groups.includes(FusionAuthUserGroup.Admin)) {
-      memberships.push({
-        groupId: this.fusionAuthConfigs.fusionAuthAdminGroupId,
-      });
-    }
-
-    return memberships;
   }
 }

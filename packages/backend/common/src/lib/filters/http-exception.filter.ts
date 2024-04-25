@@ -8,6 +8,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { BadRequestError } from '../contracts/bad-request-error.contract';
 import { ForbiddenError } from '../contracts/forbidden-error.contract';
+import { FusionOAuthError } from '../contracts/fusionauth-error.contract';
 import { NotFoundError } from '../contracts/not-found-error.contract';
 import { UniqueError } from '../contracts/unique-error';
 
@@ -47,10 +48,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
       HttpExceptionFilter.name,
     );
 
+    if (exception instanceof FusionOAuthError) {
+      return exception.status;
+    }
+
     if (exception instanceof HttpException) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return exception.getStatus();
     }
+
     if (
       exception.name === BadRequestError.name ||
       exception.message === 'Bad Request Exception'
@@ -58,14 +64,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 400;
     }
+
     if (exception.name === NotFoundError.name) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 404;
     }
+
     if (exception.name === UniqueError.name) {
       this.loggerService.debug(message, HttpExceptionFilter.name);
       return 409;
     }
+
     if (exception.name === ForbiddenError.name) {
       return 403;
     }
@@ -74,8 +83,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   private getErrorMessage(
-    exception: Error | HttpException,
+    exception: Error | HttpException | FusionOAuthError,
   ): string | string[] {
+    if (exception instanceof FusionOAuthError) {
+      return exception.message;
+    }
+
     const errorMessages = exception?.['response']?.message;
     const isBadRequest =
       exception.message === 'Bad Request Exception';
