@@ -2,6 +2,7 @@ import { ErrorResponseDto } from '@backend/common';
 import {
   Body,
   Controller,
+  HttpCode,
   InternalServerErrorException,
   Post,
 } from '@nestjs/common';
@@ -52,6 +53,7 @@ export class MobileAuthController {
   }
 
   @Post('/login')
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Login users from mobile devices.',
     description:

@@ -12,7 +12,6 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "clear",
           "docker compose down -v",
           "docker compose -f fusionauth.docker-compose.yml down -v",
           "rm -rf ./dist/apps/backend",
@@ -63,7 +62,6 @@
       "options": {
         "parallel": false,
         "commands": [
-          "clear",
           "nx cleanup backend",
           "docker compose -f fusionauth.docker-compose.yml up -d",
           "curl --connect-timeout 5 --retry 5 --retry-delay 5 --retry-all-errors -f http://0.0.0.0:9011/api/status",

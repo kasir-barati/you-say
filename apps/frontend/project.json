@@ -8,14 +8,12 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "clear",
           "docker build -f apps/frontend/Dockerfile --progress=plain . -t frontend"
         ]
       },
       "configurations": {
         "dev": {
           "commands": [
-            "clear",
             "echo 'build without utilizing cache'",
             "docker build --no-cache -f apps/frontend/Dockerfile --progress=plain . -t frontend"
           ]

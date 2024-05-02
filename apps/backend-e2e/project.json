@@ -16,7 +16,6 @@
       "options": {
         "parallel": false,
         "commands": [
-          "clear",
           "NODE_ENV=test jest --config apps/backend-e2e/jest-e2e.config.ts"
         ]
       }
