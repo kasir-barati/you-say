@@ -8,7 +8,21 @@
       "options": {
         "parallel": false,
         "commands": [
+          { "command": "clear" },
           { "command": "nx dev backend", "forwardAllArgs": false },
+          {
+            "command": "nx e2e frontend-e2e",
+            "forwardAllArgs": true
+          }
+        ]
+      }
+    },
+    "test:e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": [
+          { "command": "clear" },
           {
             "command": "nx e2e frontend-e2e",
             "forwardAllArgs": true

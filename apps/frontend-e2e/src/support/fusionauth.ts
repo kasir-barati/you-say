@@ -1,15 +1,21 @@
 const SELECTORS = {
-  loginIdInput: 'loginId',
-  passwordIdInput: 'password',
-  submitButton: 'submit',
+  loginIdInput: '[id="loginId"]',
+  passwordIdInput: '[id="password"]',
+  submitButton: '[id="submit"]',
 };
 
-export function fillLoginIdInput(value: string) {
-  cy.get(`[id=${SELECTORS.loginIdInput}]`).type(value);
+function fillLoginIdInput(value: string) {
+  cy.get(SELECTORS.loginIdInput).type(value);
 }
-export function fillPasswordInput(value: string) {
-  cy.get(`[password=${SELECTORS.passwordIdInput}]`).type(value);
+function fillPasswordInput(value: string) {
+  cy.get(SELECTORS.passwordIdInput).type(value);
 }
-export function clickOnSubmitButton() {
-  cy.get(`[id=${SELECTORS.submitButton}]`).click();
+function clickOnSubmitButton() {
+  cy.get(SELECTORS.submitButton).click();
 }
+
+export const user = {
+  fillLoginIdInput,
+  fillPasswordInput,
+  clickOnSubmitButton,
+};

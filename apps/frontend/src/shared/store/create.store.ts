@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
 
 export interface PreloadedState {
   auth?: AuthState;
-  notifications?: NotificationState;
+  notifications?: NotificationState[];
 }
 export function createStore(preloadedState?: PreloadedState) {
   return configureStore({

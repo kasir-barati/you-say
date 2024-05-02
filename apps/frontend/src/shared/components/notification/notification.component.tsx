@@ -1,38 +1,51 @@
-import classNames from 'classnames';
-import { NotificationIcon } from './notification-icon.component';
-import { Alert } from './notification.slice';
+import { SnackbarCloseReason, SnackbarOrigin } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import { SyntheticEvent } from 'react';
+import { useAppSelector } from '../../store';
+import { useNotification } from './use-notification.hook';
 
-interface NotificationProps {
-  alert: Alert;
-  onClick(id: string): void;
-}
+const anchorOrigin: SnackbarOrigin = {
+  vertical: 'bottom',
+  horizontal: 'right',
+};
 
-export function Notification({
-  alert,
-  onClick,
-}: Readonly<NotificationProps>) {
-  const { message, type, id } = alert;
-
-  // #region handlers
-  const clickHandler = () => {
-    onClick(id);
+export function Notification() {
+  const notification = useAppSelector(
+    (state) => state.notifications,
+  )[0];
+  const { clearNotification } = useNotification();
+  const handleClose = (
+    _event: Event | SyntheticEvent<unknown, Event>,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    clearNotification(notification.id);
   };
-  // #endregion
+
+  if (!notification) {
+    return <></>;
+  }
 
   return (
-    <div
-      data-test={`notification-${id}`}
-      className={classNames(
-        'flex min-h-10 w-72 items-center gap-2 rounded p-3 text-sm font-medium shadow-lg ring-1 ring-slate-400/10',
-        { 'bg-cyan-600': type === 'info' },
-        { 'bg-yellow-600': type === 'warning' },
-        { 'bg-rose-600': type === 'error' },
-        { 'bg-lime-600': type === 'success' },
-      )}
-      onClick={clickHandler}
+    <Snackbar
+      // specifying a key here is necessary to avoid the following issue: it won't remove second snackbar but when you click on the X button it will and show the next one. It is because react could not detect that this component was changed!
+      key={notification.id}
+      open={notification.open}
+      autoHideDuration={notification.timeout}
+      onClose={handleClose}
+      anchorOrigin={anchorOrigin}
     >
-      <NotificationIcon type={type} />
-      <p data-test="notification-message">{message}</p>
-    </div>
+      <Alert
+        aria-label="alert"
+        variant="filled"
+        onClose={handleClose}
+        severity={notification.type}
+      >
+        {notification.message}
+      </Alert>
+    </Snackbar>
   );
 }

@@ -10,31 +10,25 @@ nx add @nx/next
 nx g @nx/next:app apps/frontend
 ```
 
+# Why are we using X technology?
+
+| name       | explanation/reason                                        |
+| ---------- | --------------------------------------------------------- |
+| FusionAuth | Offloading login security and functionality to FusionAuth |
+
 ## Testing strategy
 
-Here we are gonna use e2e tests for both backend and frontend, in general when we say "backend integration tests" we mean that those tests will cover only backend. But it is not gonna mock anything; meaning tests are running against a running backend with its dependencies.
+- We are gonna follow -- Extract the essence of these posts and videos and jot it down here and keep these links as reference.
+  - [Kent C. Dodds - How to know what to test?](https://youtu.be/ahrvE062Kv4?si=iagHA6ZxgwdY4j9G)
+  - [Kent C. Dodds - Effective Snapshot Testing](https://kentcdodds.com/blog/effective-snapshot-testing)
+  - [Kent C. Dodds - Write tests. Not too many. Mostly integration](https://kentcdodds.com/blog/write-tests)
+  - [Should you test child components or parent components? Or both?](https://www.youtube.com/live/0qmPdcV-rN8?si=QsNiG9Jtyke1hXL_)
+    - Test the 'happy path' (which you could treat as the default path) in the parent component which will capture the behaviour of the child components in the default state.
+    - Logic inside the child component that changes the behaviour/UI of the child component due to a non-default prop value, capture that in the child component's test file.
+  - [Static vs Unit vs Integration vs E2E Testing for Frontend Apps](https://kentcdodds.com/blog/static-vs-unit-vs-integration-vs-e2e-tests)
+  - [Confident React - Frontend Testing with Kent C. Dodds](https://youtu.be/eg_TFYF_cKM?si=qGluI5Zpgcc_a8bp)
 
-Same goes for frontend with a slight difference: in frontend when we say e2e tests or integration test we mean that our frontend application is up and running and can send HTTP requests to our backend and receive expected responses. Therefore here we're having the complete chain; nothing is mocked and tests are execute against a real web app.
-
-- Test once, following DRY principle; meaning to not cover same UI/behavior in more than one place.
-- **frontend-e2e** will perform Integration Test against the whole application - backend and frontend - by utilizing Cypress. Here is where we are gonna cover **Critical Business Paths (will be referred to as CBP from here onward).**
-- **backend-e2e** employs Integration Testing strategy and uses [openapi-generator-cli](https://github.com/OpenAPITools/openapi-generator) to test;
-  - DTO validation rules -- Security Tests.
-  - RBAC and permissions -- Security Tests.
-  - Business logics -- System Testings are implemented here.
-
-We make sure that our frontend is working as expected, since I do not have a form validator as of now and I am relying totally on native HTML validators I am not going to test it thoroughly. Besides that, our testing strategy for frontend applications are:
-
-1. Test props in Jest -- I'd like to consider this as Smoke Testing.
-2. Test UI and functionalities via storybook
-   - I'll take it that this'll be Sanity Testing.
-   - > [!CAUTION]
-     >
-     > I've realized that writing tests that some elements have a specific class would be overkill, thus I am suggesting to test how a component/page looks only when it holds an imperative importance to the business or as a mechanism which'll be triggered when we face some sort of issue (_Regression Test_).
-3. We will try to test **CBP** and not everything; e.g. we will not check if user is trying to register to see the error thrown by backend that there is a registered user with the entered email address. But rather we will just try to register and see if we can do it.
-   > [!IMPORTANT]
-   >
-   > Right now we are returning error message from our backend app, but when we migrate from throwing error messages to error code in our backend we need to change this policy too!
+// TODO: Move "Dictionary" to code of conduct
 
 ### Dictionary
 
@@ -95,50 +89,7 @@ Run `nx dev backend` to start the development server. Happy coding!
 
 - Unit tests are executed by running `nx appOrPkgName test`
 - We usually do not have to involve ourselves with these commands since we just wanted to develop the app in our local env via utilizing docker compose and for prod we will use tools such as CI/CD. But for you to have a better understanding I wrote this part. BTW the image for both prod and dev env have the same tag and version.
-
-## Backend
-
-### Build the NestJS app with tsc
-
-Run `nx build backend` to build the application. The build artifacts are stored in the output directory (`./dist/`), ready to be deployed.
-
-### Build the docker image for backend app in prod env
-
-Run `nx build:docker backend`
-Run `nx build:docker backend --no-cache` if you wanna ignore docker caches
-
-### Cleanup backend
-
-Run `nx cleanup backend` to:
-
-1. Remove all the containers created by the `docker-compose.yml`
-2. Execute `docker system prune`
-3. Remove the built artifacts for backend
-
-### Run e2e tests for backend
-
-Run `nx test:e2e:docker backend-e2e` to start backend application, and then execute e2e tests against it.
-Run `nx test:e2e backend-e2e` if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
-
-## Frontend
-
-### Building NextJS app
-
-Run `nx build:docker frontend` to build it in production mode
-Run `nx build:docker frontend --configuration=dev` to build it in development mode:
-
-- It won't utilizes caching mechanism during building docker image
-
-**Note**: Do not use these two configuration options in your `next.config.js`, since by doing that it is gonna make it harder for us to build our app: `output: 'export'` and `distDir: '../../dist/apps/frontend'`. Better to follow the their [official docs](https://nextjs.org/docs/app/building-your-application/deploying#docker-image).
-
-### Run e2e tests for frontend
-
-- Run `nx test:e2e:docker frontend-e2e` to start backend application and then running cypress e2e tests against our frontend app
-- Run `nx e2e frontend-e2e` if you do not need backend application; our backend might be already up and running and we just have changed something in our cypress test or frontend application implementation.
-- Run `nx open-cypress frontend-e2e` to see the Cypress browser if you need it.
-  > [!NOTE]
-  >
-  > If you wanna execute this command you need to start backend application and its friends manually: `nx dev backend`
+- Read each `README.md` file for package/app in order to learn more. Also sometimes we do not have them all in `README.md`s documented, in those cases you can always check respective `project.json` files or `nx.json`.
 
 ## Running tasks
 

@@ -1,4 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+/* eslint "@typescript-eslint/no-restricted-imports": "off" */
+
 import { useDispatch, useSelector } from 'react-redux';
 import { createStore } from './create.store';
 

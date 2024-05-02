@@ -6,10 +6,12 @@ const baseQuery = createBaseQuery(
   process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
 );
 const reducerPath = 'authApi';
+const tagTypes: string[] = [];
 
 export const authApi = createApi({
   baseQuery,
   reducerPath,
+  tagTypes: tagTypes,
   endpoints(build) {
     return {
       signUp: build.mutation<RegisterResponse, RegisterRequestBody>({

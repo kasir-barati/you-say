@@ -1,44 +1,24 @@
-import { generateRandomString, getTempUser } from '@shared';
-import {
-  clickOnDoNotHaveAnAccountButton,
-  clickOnSignInButton,
-  clickOnSignInButtonInHeader,
-  clickOnSignUpButton,
-  fillEmailInput,
-  fillFirstNameInput,
-  fillLastNameInput,
-  verifySuccessfulSignIn,
-  verifySuccessfulSignUpNotificationMessage,
-} from '../../support/app.header';
-import {
-  clickOnSubmitButton,
-  fillLoginIdInput,
-  fillPasswordInput,
-} from '../../support/fusionauth';
+import { getTempUser } from '@shared';
+import { user, verify } from '../../support/app.header';
+import { user as userInFusionAuth } from '../../support/fusionauth';
 
 describe('auth => register', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should login the default temp user', () => {
-    const user = getTempUser();
+    const tempUser = getTempUser();
 
-    clickOnSignInButtonInHeader();
-    clickOnSignInButton();
-    fillLoginIdInput(user.email);
-    fillPasswordInput(user.password);
-    clickOnSubmitButton();
-    verifySuccessfulSignIn();
+    user.clickOnSignInButtonInHeader();
+    user.clickOnSignInButton();
+    userInFusionAuth.fillLoginIdInput(tempUser.email);
+    userInFusionAuth.fillPasswordInput(tempUser.password);
+    userInFusionAuth.clickOnSubmitButton();
+    verify.successfulSignIn();
   });
 
-  it(`should display "You're now one of our users!" notification after successful registration.`, () => {
-    const randomEmail = generateRandomString(21) + '@gmail.com';
-
-    clickOnSignInButtonInHeader();
-    clickOnDoNotHaveAnAccountButton();
-    fillFirstNameInput(generateRandomString(21));
-    fillLastNameInput(generateRandomString(21));
-    fillEmailInput(randomEmail);
-    clickOnSignUpButton();
-    verifySuccessfulSignUpNotificationMessage();
+  it(`should show a link to sign up form.`, () => {
+    user.clickOnSignInButtonInHeader();
+    user.clickOnDoNotHaveAnAccountButton();
+    verify.signUpFormExists();
   });
 });

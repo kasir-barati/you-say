@@ -7,4 +7,10 @@ export default {
   component: Logo,
 } satisfies Meta<typeof Logo>;
 
-export const Default: Story = {};
+// TODO: when theme is added, configure the font family
+export const Default: Story = {
+  args: {
+    variant: 'h1',
+    color: 'black',
+  },
+};

@@ -1,15 +1,29 @@
-# CLI
+# `@fusionauth/react-sdk`
 
-## Add
+- The `openid`, `profile`, and `offline_access` are scopes that can be used in OAuth2 and OpenID Connect requests.
+  - `openid`: Is required for OpenID Connect requests. It signals the OAuth server to return an `id_token` which contains user identity information.
+  - `offline_access`: Can be used to request a refresh token. When this scope is included, the OAuth server will return a refresh token along with the access token. The refresh token can be used to obtain a new access token when the current one expires.
+  - `profile`: An optional scope that can be used in OpenID Connect requests. When this scope is included, the OAuth server will return claims about the user's profile information, such as name, family name, and others. This library sends the `openid offline_access` as scope to our backend. Therefore we can manipulate it in our backend if needed.
 
-### New page/component
+# Scripts
+
+## Building NextJS app
+
+Run `nx build:docker frontend` to build it in production mode
+Run `nx build:docker frontend --configuration=dev` to build it in development mode:
+
+- It won't utilizes caching mechanism during building docker image
+
+**Note**: Do not use these two configuration options in your `next.config.js`, since by doing that it is gonna make it harder for us to build our app: `output: 'export'` and `distDir: '../../dist/apps/frontend'`. Better to follow the their [official docs](https://nextjs.org/docs/app/building-your-application/deploying#docker-image).
+
+## Add New page/component
 
 ```cli
 nx g @nx/next:page my-new-page --directory=dir-where-to-place-the-page
 nx g @nx/next:component my-new-component --directory=dir-where-to-place-the-component
 ```
 
-### Storybook
+## Storybook
 
 To comply with the Nx we needed to use `nx` CLI to add and configure Storybook. You can read more about it [here](https://nx.dev/nx-api/storybook). BTW this script is gonna install old versions of storybook so you need to migrate from what it is to the latest; things like `@storybook/test` is introduces which relief us from having `@storybook/jest` and `@storybook/testing-library`, [learn more here](https://storybook.js.org/blog/storybook-test/).
 

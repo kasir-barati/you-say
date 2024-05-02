@@ -79,7 +79,14 @@ describe('createBaseQuery', () => {
     expect(api.dispatch.callCount).toBe(1);
     expect(api.dispatch.calledWith({ type: 'signOut' })).toBeTruthy();
     expect(result).toStrictEqual({
-      error: { status: 401, data: 'axios error message' },
+      error: {
+        status: 401,
+        data: {
+          message: 'axios error message',
+          path: undefined,
+          timestamp: undefined,
+        },
+      },
     });
   });
 });

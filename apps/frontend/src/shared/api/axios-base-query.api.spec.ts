@@ -74,7 +74,7 @@ describe('axiosBaseQuery', () => {
     },
   );
 
-  it('should will use response.data as error message on failed request', async () => {
+  it('should use response.data as error message on failed request', async () => {
     mockedAxios.request.mockRejectedValue({
       response: {
         status: 500,
@@ -90,7 +90,11 @@ describe('axiosBaseQuery', () => {
 
     expect(result.error).toStrictEqual({
       status: 500,
-      data: 'Server error',
+      data: {
+        message: 'Server error',
+        path: undefined,
+        timestamp: undefined,
+      },
     });
   });
 
@@ -110,7 +114,11 @@ describe('axiosBaseQuery', () => {
 
     expect(result.error).toStrictEqual({
       status: 503,
-      data: 'axios error message',
+      data: {
+        message: 'axios error message',
+        path: undefined,
+        timestamp: undefined,
+      },
     });
   });
 });

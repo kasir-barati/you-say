@@ -1,4 +1,4 @@
-import { ErrorResponse } from '@backend/common';
+import { ErrorResponseDto } from '@backend/common';
 import {
   Body,
   Controller,
@@ -34,7 +34,7 @@ export class MobileAuthController {
       'Returns nothing. Use http status code 201 to indicate success.',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description:
       'Bad request; email already exists, or name is invalid, etc.',
   })
@@ -62,7 +62,7 @@ export class MobileAuthController {
     description: 'Returns generated tokens.',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Bad request; email or password is invalid, etc.',
   })
   @ApiInternalServerErrorResponse({

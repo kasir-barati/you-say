@@ -1,41 +1,25 @@
-import { Store } from '@reduxjs/toolkit';
+'use client';
+
+import { FusionAuthProvider } from '@fusionauth/react-sdk';
+import CssBaseline from '@mui/material/CssBaseline';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { setUser } from '../../store/auth.slice';
-import { getCookie } from '../../utils/get-cookie.util';
-import { getDecodedIdToken } from '../../utils/get-decoded-id-token.util';
-import { NotificationWrapper } from '../notification/notification-wrapper.component';
-
-interface ApplicationProps {
-  store: Store;
-}
+import { fusionAuthConfig } from '../../../config';
+import { getStore } from '../../store';
+import { Notification } from '../notification/notification.component';
 
 export function Application({
   children,
-  store,
-}: Readonly<PropsWithChildren<ApplicationProps>>) {
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-  const dispatch = useAppDispatch();
-  const idTokenCookie = getCookie('id_token');
-
-  if (idTokenCookie && !isLoggedIn) {
-    const decodedIdToken = getDecodedIdToken(idTokenCookie);
-
-    if (decodedIdToken?.roles && decodedIdToken?.sub) {
-      dispatch(
-        setUser({
-          roles: decodedIdToken.roles,
-          sub: decodedIdToken.sub,
-        }),
-      );
-    }
-  }
+}: Readonly<PropsWithChildren>) {
+  const store = getStore();
 
   return (
     <Provider store={store}>
-      <NotificationWrapper />
-      {children}
+      <CssBaseline />
+      <Notification />
+      <FusionAuthProvider {...fusionAuthConfig}>
+        {children}
+      </FusionAuthProvider>
     </Provider>
   );
 }

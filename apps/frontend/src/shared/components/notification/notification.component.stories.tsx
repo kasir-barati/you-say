@@ -1,5 +1,7 @@
+import { generateRandomString } from '@shared';
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, fireEvent, fn, within } from '@storybook/test';
+import { expect, within } from '@storybook/test';
+import { MockProvider } from '../../test-utils/mock-provider.test-util';
 import { Notification } from './notification.component';
 
 type Story = StoryObj<typeof Notification>;
@@ -8,57 +10,107 @@ export default {
   component: Notification,
 } satisfies Meta<typeof Notification>;
 
-export const Success: Story = {
-  args: {
-    alert: {
-      createdAtTimestamp: Date.now(),
-      id: 'success-id',
-      type: 'success',
-      message: 'I am success!',
-    },
-    onClick: fn(),
-  },
-  async play({ canvasElement, args }) {
-    const canvas = within(canvasElement);
-    const notification = canvas.getByTestId(
-      `notification-${args.alert.id}`,
+export const SuccessNotification: Story = {
+  render() {
+    return (
+      <MockProvider
+        initialState={{
+          notifications: [
+            {
+              id: generateRandomString(),
+              message: 'Success notification',
+              type: 'success',
+              open: true,
+              timeout: 10000,
+            },
+          ],
+        }}
+      >
+        <Notification />
+      </MockProvider>
     );
-
-    await fireEvent.click(notification);
-
-    expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
+  play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const notification = canvas.getByText('Success notification');
+    expect(notification).toBeInTheDocument();
   },
 };
-export const Error: Story = {
-  args: {
-    alert: {
-      createdAtTimestamp: Date.now(),
-      id: 'error-id',
-      type: 'error',
-      message: 'I am error!',
-    },
-    onClick: fn(),
+export const ErrorNotification: Story = {
+  render() {
+    return (
+      <MockProvider
+        initialState={{
+          notifications: [
+            {
+              id: generateRandomString(),
+              message: 'Error notification',
+              type: 'error',
+              open: true,
+              timeout: 10000,
+            },
+          ],
+        }}
+      >
+        <Notification />
+      </MockProvider>
+    );
+  },
+  play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const notification = canvas.getByText('Error notification');
+    expect(notification).toBeInTheDocument();
   },
 };
-export const Warning: Story = {
-  args: {
-    alert: {
-      createdAtTimestamp: Date.now(),
-      id: 'warning-id',
-      type: 'warning',
-      message: 'I am warning!',
-    },
-    onClick: fn(),
+export const InfoNotification: Story = {
+  render() {
+    return (
+      <MockProvider
+        initialState={{
+          notifications: [
+            {
+              id: generateRandomString(),
+              message: 'Info notification',
+              type: 'info',
+              open: true,
+              timeout: 10000,
+            },
+          ],
+        }}
+      >
+        <Notification />
+      </MockProvider>
+    );
+  },
+  play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const notification = canvas.getByText('Info notification');
+    expect(notification).toBeInTheDocument();
   },
 };
-export const Info: Story = {
-  args: {
-    alert: {
-      createdAtTimestamp: Date.now(),
-      id: 'info-id',
-      type: 'info',
-      message: 'I am info!',
-    },
-    onClick: fn(),
+export const WarningNotification: Story = {
+  render() {
+    return (
+      <MockProvider
+        initialState={{
+          notifications: [
+            {
+              id: generateRandomString(),
+              message: 'Warning notification',
+              type: 'warning',
+              open: true,
+              timeout: 10000,
+            },
+          ],
+        }}
+      >
+        <Notification />
+      </MockProvider>
+    );
+  },
+  play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const notification = canvas.getByText('Warning notification');
+    expect(notification).toBeInTheDocument();
   },
 };

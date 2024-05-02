@@ -1,4 +1,4 @@
-import { Cookies, ErrorResponse } from '@backend/common';
+import { Cookies, ErrorResponseDto } from '@backend/common';
 import {
   Body,
   Controller,
@@ -50,7 +50,7 @@ export class AuthController {
       'Returns nothing. Use http status code 201 to indicate success.',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description:
       'Bad request; email already exists, or name is invalid, etc.',
   })
@@ -78,7 +78,7 @@ export class AuthController {
       'User will be redirected to the generated login URL.',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Bad request; clientId is not string, etc.',
   })
   @ApiInternalServerErrorResponse({
@@ -113,7 +113,7 @@ export class AuthController {
       'User will be redirected to the frontend application with the JWT tokens attached to it as cookies.',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Bad request; oauthState must be a string, etc.',
   })
   @ApiInternalServerErrorResponse({
@@ -156,7 +156,7 @@ export class AuthController {
     description: 'Internal server error',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Bad request',
   })
   @ApiUnauthorizedResponse({
@@ -193,7 +193,7 @@ export class AuthController {
       'Could not validate and verify the provided JWT token',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Bad request.',
   })
   logout(
@@ -220,7 +220,7 @@ export class AuthController {
       'Get new tokens from OAuth server and replace them with the existing ones',
   })
   @ApiBadRequestResponse({
-    type: ErrorResponse,
+    type: ErrorResponseDto,
     description: 'Refresh token is missing in request cookies.',
   })
   @ApiInternalServerErrorResponse({

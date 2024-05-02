@@ -1,65 +1,97 @@
 import { SHARED_SELECTORS } from './shared-selectors';
 
 const SELECTORS = {
-  appHeader: 'header',
-  singInButtonInHeader: 'sign-in-button-in-header',
-  doNotHaveAnAccountButton: 'do-not-have-an-account-button',
-  signInButton: 'sign-in-button',
-  singUpFirstNameInput: 'sign-up-first-name-input',
-  signUpLastNameInput: 'sign-up-last-name-input',
-  signUpEmailInput: 'sign-up-email-input',
-  signUpButton: 'sign-up-button',
-  notFoundTitle: '404-title',
-  notFoundMessage: '404-message',
-  notFoundLink: '404-link',
+  logo: '[aria-label="Logo"]',
+  singInButtonInHeader: 'button[aria-label="Sign in"]',
+  singUpButtonInHeader: 'button[aria-label="Sign up"]',
+  doNotHaveAnAccountButton: 'button[aria-label="Create one!"]',
+  signInButton: 'button[aria-label="Continue signing in..."]',
+  singUpFirstNameInput: 'input[placeholder="Name"]',
+  signUpLastNameInput: 'input[placeholder="Family"]',
+  signUpEmailInput: 'input[placeholder="email@example.com"]',
+  signUpButtonInSignUpForm: 'sign-up-button-in-sign-up-form',
+  notFoundTitle: '[aria-label="404"]',
+  notFoundMessage: '[aria-label="Page not found"]',
+  notFoundLink: '[aria-label="Go to the front page"]',
 };
 
-export function verifyLogoNameInHeader() {
-  cy.getByTestId(SELECTORS.appHeader)
-    .should('exist')
-    .should('contain', 'you-say');
+// #region User interactions
+function clickOnSignInButtonInHeader() {
+  cy.get(SELECTORS.singInButtonInHeader).click();
 }
-export function verifyNonExistentPage() {
-  cy.getByTestId(SELECTORS.notFoundTitle).should('contain', '404');
-  cy.getByTestId(SELECTORS.notFoundMessage).should(
+function clickOnSignUpButtonInHeader() {
+  cy.get(SELECTORS.singUpButtonInHeader).click();
+}
+function clickOnDoNotHaveAnAccountButton() {
+  cy.get(SELECTORS.doNotHaveAnAccountButton).click();
+}
+function fillFirstNameInput(value: string) {
+  cy.get(SELECTORS.singUpFirstNameInput).type(value);
+}
+function fillLastNameInput(value: string) {
+  cy.get(SELECTORS.signUpLastNameInput).type(value);
+}
+function fillEmailInput(value: string) {
+  cy.get(SELECTORS.signUpEmailInput).type(value);
+}
+function clickOnSignUpButton() {
+  cy.getByTestId(SELECTORS.signUpButtonInSignUpForm).click();
+}
+function clickOnSignInButton() {
+  cy.get(SELECTORS.signInButton).click();
+}
+// #endregion
+
+export const user = {
+  fillEmailInput,
+  fillLastNameInput,
+  fillFirstNameInput,
+  clickOnSignInButton,
+  clickOnSignUpButton,
+  clickOnSignInButtonInHeader,
+  clickOnSignUpButtonInHeader,
+  clickOnDoNotHaveAnAccountButton,
+};
+
+// #region verifiers
+function successfulSignUp() {
+  cy.get(SHARED_SELECTORS.notification).should(
+    'have.text',
+    'Signed up successfully, Now check your email!',
+  );
+}
+function signUpFormExists() {
+  cy.get(SELECTORS.signUpEmailInput).should('be.visible');
+  cy.get(SELECTORS.signUpLastNameInput).should('be.visible');
+  cy.get(SELECTORS.singUpFirstNameInput).should('be.visible');
+  cy.getByTestId(SELECTORS.signUpButtonInSignUpForm).should(
+    'be.visible',
+  );
+}
+function logo() {
+  cy.get(SELECTORS.logo).should('exist').should('contain', 'you-say');
+}
+function notFoundPage() {
+  cy.get(SELECTORS.notFoundTitle).should('contain', '404');
+  cy.get(SELECTORS.notFoundMessage).should(
     'contain',
     'Page not found',
   );
-  cy.getByTestId(SELECTORS.notFoundLink)
+  cy.get(SELECTORS.notFoundLink)
     .should('contain', 'Go to the front page →')
     .should('have.attr', 'href', '/');
 }
-export function clickOnSignInButtonInHeader() {
-  cy.getByTestId(SELECTORS.appHeader)
-    .getByTestId(SELECTORS.singInButtonInHeader)
-    .click();
-}
-export function clickOnDoNotHaveAnAccountButton() {
-  cy.getByTestId(SELECTORS.doNotHaveAnAccountButton).click();
-}
-export function fillFirstNameInput(value: string) {
-  cy.getByTestId(SELECTORS.singUpFirstNameInput).type(value);
-}
-export function fillLastNameInput(value: string) {
-  cy.getByTestId(SELECTORS.signUpLastNameInput).type(value);
-}
-export function fillEmailInput(value: string) {
-  cy.getByTestId(SELECTORS.signUpEmailInput).type(value);
-}
-export function clickOnSignUpButton() {
-  cy.getByTestId(SELECTORS.signUpButton).click();
-}
-export function verifySuccessfulSignUpNotificationMessage() {
-  cy.getByTestId(
-    SHARED_SELECTORS.notificationMessageParagraph,
-  ).should('have.text', "You're now one of our users!");
-}
-export function clickOnSignInButton() {
-  cy.getByTestId(SELECTORS.signInButton).click();
-}
-export function verifySuccessfulSignIn() {
-  console.log(Cypress.env('FRONTEND_URL'));
-
-  // TODO: show a notification saying "We've logged you in!"
+function successfulSignIn() {
+  // TODO: show a notification saying "We've logged you in!", see apps/frontend/src/config.ts
   cy.url().should('include', Cypress.env('FRONTEND_URL'));
+  cy.url().should('include', 'userState=Authenticated');
 }
+// #endregion
+
+export const verify = {
+  logo,
+  notFoundPage,
+  successfulSignIn,
+  successfulSignUp,
+  signUpFormExists,
+};

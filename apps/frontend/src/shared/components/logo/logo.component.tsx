@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import { Leckerli_One } from 'next/font/google';
 
 const leckerliOne = Leckerli_One({
@@ -6,10 +7,24 @@ const leckerliOne = Leckerli_One({
   subsets: ['latin'],
 });
 
-export function Logo() {
+interface LogoProps {
+  variant?: Parameters<typeof Typography>['0']['variant'];
+  color?: Parameters<typeof Typography>['0']['color'];
+}
+
+// TODO: when theme is added, configure the font family
+export function Logo({
+  variant,
+  color = 'white',
+}: Readonly<LogoProps>) {
   return (
-    <span data-test="logo-text" className={leckerliOne.className}>
+    <Typography
+      {...(variant ? { variant } : {})}
+      aria-label="Logo"
+      className={leckerliOne.className}
+      color={color}
+    >
       you-say
-    </span>
+    </Typography>
   );
 }
