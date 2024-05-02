@@ -25,6 +25,8 @@ env:
   MONGO_INITDB_ROOT_PASSWORD: "mongodb-root-password-${{ github.run_id }}-${{ github.run_attempt }}"
   OAUTH_CONFIGURATION_CLIENT_SECRET: "client-secret-${{ github.run_id }}-${{ github.run_attempt }}"
   NODE_ENV: "production"
+  FRONTEND_URL: "http://localhost:3000"
+  FUSIONAUTH_OAUTH_SCOPES: offline_access openid
 
 jobs:
   build-and-test-frontend-e2e:
@@ -64,8 +66,8 @@ jobs:
         id: terraform
         uses: ./.github/actions/terraform-composite
         with:
-          fusionauth_host: "http://localhost:9011"
-          fusionauth_issuer: "http://fusionauth:9011"
+          fusionauth_host: ${{ env.FUSIONAUTH_HOST }}
+          fusionauth_issuer: ${{ env.FUSIONAUTH_ISSUER }}
           fusionauth_api_key: ${{ env.FUSIONAUTH_API_KEY }}
           oauth_configuration_client_secret: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
           fusionauth_email_configuration_password: ${{ env.FUSIONAUTH_EMAIL_CONFIGURATION_PASSWORD }}
@@ -79,8 +81,7 @@ jobs:
           FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
-          DOMAIN_OF_COOKIE: "localhost"
-          FRONTEND_URL: "http://localhost:3000"
+          APP_HOST: localhost
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         # https://stackoverflow.com/a/77972789/8784518
@@ -94,3 +95,6 @@ jobs:
           NEXT_PUBLIC_BACKEND_BASE_URL: "http://localhost:3001"
           NEXT_PUBLIC_NODE_ENV: "production"
           BUILD_STANDALONE: "true"
+          NEXT_PUBLIC_FRONTEND_URL: ${{ env.FRONTEND_URL }}
+          NEXT_PUBLIC_FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
+          NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES: ${{ env.FUSIONAUTH_OAUTH_SCOPES }}
