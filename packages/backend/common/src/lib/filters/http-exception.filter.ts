@@ -23,37 +23,49 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const { httpAdapter } = this.httpAdapterHost;
     const message = this.getErrorMessage(exception);
-    const statusCode = this.getStatusCode(exception, message);
+    const statusCode = this.getStatusCode(exception);
+    const path: string = httpAdapter.getRequestUrl(ctx.getRequest());
     const responseBody = {
       message,
       timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      path,
     };
 
+    this.log({ path, statusCode, message, exception });
     httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
   }
 
-  private getStatusCode(
-    exception: Error | HttpException,
-    message: string | string[],
-  ): number {
-    this.loggerService.error(
+  private log({
+    path,
+    message,
+    exception,
+    statusCode,
+  }: {
+    path: string;
+    statusCode: number;
+    message: string | string[];
+    exception: Error | HttpException;
+  }) {
+    const error =
       exception instanceof HttpException
         ? exception.getResponse()
-        : exception.message,
+        : exception.message;
+    this.loggerService.error(
+      { error, message, path, statusCode },
       HttpExceptionFilter.name,
     );
-    this.loggerService.error(
+    this.loggerService.debug(
       exception.stack,
       HttpExceptionFilter.name,
     );
+  }
 
+  private getStatusCode(exception: Error | HttpException): number {
     if (exception instanceof FusionOAuthError) {
       return exception.status;
     }
 
     if (exception instanceof HttpException) {
-      this.loggerService.debug(message, HttpExceptionFilter.name);
       return exception.getStatus();
     }
 
@@ -61,17 +73,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception.name === BadRequestError.name ||
       exception.message === 'Bad Request Exception'
     ) {
-      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 400;
     }
 
     if (exception.name === NotFoundError.name) {
-      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 404;
     }
 
     if (exception.name === UniqueError.name) {
-      this.loggerService.debug(message, HttpExceptionFilter.name);
       return 409;
     }
 

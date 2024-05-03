@@ -18,6 +18,8 @@ export default registerAs('appConfigs', (): AppConfig => {
     EnvironmentVariables,
   );
 
+  console.dir({ validatedEnvs });
+
   return validatedEnvs;
 });
 
@@ -72,8 +74,6 @@ class EnvironmentVariables implements AppConfig {
   @IsString()
   FUSIONAUTH_TENANT_ID = '40b82d21-2343-40e3-bae0-20b63210bd96';
 
-  @IsOptional()
   @IsString()
-  OAUTH_CONFIGURATION_CLIENT_SECRET =
-    'ee5e6b455bfe90afd80709da39a3b0d32f956018';
+  OAUTH_CONFIGURATION_CLIENT_SECRET: string;
 }

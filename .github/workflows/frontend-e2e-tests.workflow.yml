@@ -23,7 +23,7 @@ env:
   MONGO_INITDB_DATABASE: "you-say"
   MONGO_INITDB_ROOT_USERNAME: "mongodb-root-user-${{ github.run_id }}-${{ github.run_attempt }}"
   MONGO_INITDB_ROOT_PASSWORD: "mongodb-root-password-${{ github.run_id }}-${{ github.run_attempt }}"
-  OAUTH_CONFIGURATION_CLIENT_SECRET: "client-secret-${{ github.run_id }}-${{ github.run_attempt }}"
+  OAUTH_CONFIGURATION_CLIENT_SECRET: "client_secret_${{ github.run_id }}_${{ github.run_attempt }}"
   NODE_ENV: "production"
   FRONTEND_URL: "http://localhost:3000"
   FUSIONAUTH_OAUTH_SCOPES: offline_access openid
