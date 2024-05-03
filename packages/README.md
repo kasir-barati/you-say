@@ -1,4 +1,4 @@
-# Roles and regulations
+# Rules and regulations
 
 1. Do not import anything from other packages inside the shared package.
 2. Do not import anything from apps in packages.

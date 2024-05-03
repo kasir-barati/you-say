@@ -26,19 +26,19 @@ variable "fusionauth_api_key" {
 variable "fusionauth_tenant_id" {
   type        = string
   default     = null
-  description = "FusionAuth tenant id for local dev env"
+  description = "FusionAuth tenant id for local dev env will be read from dev.tfvars"
 }
 
 variable "fusionauth_application_id" {
   type        = string
   default     = null
-  description = "FusionAuth application id for local dev env"
+  description = "FusionAuth application id for local dev env will be read from dev.tfvars"
 }
 
 variable "fusionauth_admin_group_id" {
   type        = string
   default     = null
-  description = "FusionAuth admin group id for local dev env"
+  description = "FusionAuth admin group id for local dev env will be read from dev.tfvars"
 }
 
 variable "fusionauth_email_security" {

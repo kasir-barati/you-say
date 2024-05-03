@@ -58,6 +58,7 @@ export class MobileAuthService implements OnModuleInit {
   async login(
     mobileLoginDto: MobileLoginDto,
   ): Promise<MobileLoginResponseDto> {
+    const clientId = this.fusionAuthConfigs.fusionAuthApplicationId;
     const {
       response: {
         id_token: idToken,
@@ -70,13 +71,20 @@ export class MobileAuthService implements OnModuleInit {
       .exchangeUserCredentialsForAccessToken(
         mobileLoginDto.email,
         mobileLoginDto.password,
-        this.fusionAuthConfigs.fusionAuthApplicationId,
+        clientId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.scope,
         null,
       )
       .catch((error) => {
+        console.log(
+          mobileLoginDto.email,
+          mobileLoginDto.password,
+          clientId,
+          this.fusionAuthConfigs
+            .fusionAuthOauthConfigurationClientSecret,
+        );
         this.loggerService.error({
           message: 'Could not exchange credentials for tokens!',
           error,

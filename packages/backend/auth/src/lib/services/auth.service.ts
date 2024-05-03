@@ -113,6 +113,7 @@ export class AuthService implements OnModuleInit {
     cookies: OauthCallbackCookie;
     queries: OauthCallbackQuery;
   }): Promise<string> {
+    const clientId = this.fusionAuthConfigs.fusionAuthApplicationId;
     const {
       response: {
         id_token: idToken,
@@ -123,7 +124,7 @@ export class AuthService implements OnModuleInit {
     } = await this.fusionAuthClient
       .exchangeOAuthCodeForAccessTokenUsingPKCE(
         queries.code,
-        this.fusionAuthConfigs.fusionAuthApplicationId,
+        clientId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.fusionAuthOauthCallbackUrl,
@@ -193,6 +194,7 @@ export class AuthService implements OnModuleInit {
   }
 
   async refresh(response: Response, cookies: RefreshCookieDto) {
+    const clientId = this.fusionAuthConfigs.fusionAuthApplicationId;
     const {
       response: {
         access_token: accessToken,
@@ -203,7 +205,7 @@ export class AuthService implements OnModuleInit {
     } = await this.fusionAuthClient
       .exchangeRefreshTokenForAccessToken(
         cookies.refreshToken,
-        this.fusionAuthConfigs.fusionAuthApplicationId,
+        clientId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.scope,

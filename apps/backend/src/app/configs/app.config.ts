@@ -48,11 +48,11 @@ class EnvironmentVariables implements AppConfig {
 
   @IsOptional()
   @IsString()
-  FUSIONAUTH_HOST = 'http://fusionauth:9011';
+  FUSIONAUTH_HOST = 'http://localhost:9011';
 
   @IsOptional()
   @IsString()
-  FUSIONAUTH_ISSUER = 'http://fusionauth:9011';
+  FUSIONAUTH_ISSUER = 'http://localhost:9011';
 
   // Can be used as ClientId when communicating with FusionAuth
   @IsOptional()
