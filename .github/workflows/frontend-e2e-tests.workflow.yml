@@ -97,3 +97,4 @@ jobs:
           NEXT_PUBLIC_FRONTEND_URL: ${{ env.FRONTEND_URL }}
           NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES: ${{ env.FUSIONAUTH_OAUTH_SCOPES }}
+          CYPRESS_FRONTEND_URL: ${{ env.FRONTEND_URL }}

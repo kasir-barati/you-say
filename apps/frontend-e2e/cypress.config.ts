@@ -1,7 +1,8 @@
 import { nxE2EPreset } from '@nx/cypress/plugins/cypress-preset';
 import { defineConfig } from 'cypress';
 
-const url = 'http://localhost:3000';
+const frontendUrl =
+  process.env.CYPRESS_FRONTEND_URL ?? 'http://localhost:3000';
 
 export default defineConfig({
   e2e: {
@@ -10,7 +11,7 @@ export default defineConfig({
       webServerCommands: { default: 'nx run frontend:start' },
       ciWebServerCommand: 'nx run frontend:serve-static',
     }),
-    baseUrl: url,
-    env: { FRONTEND_URL: url },
+    baseUrl: frontendUrl,
+    env: { FRONTEND_URL: frontendUrl },
   },
 });
