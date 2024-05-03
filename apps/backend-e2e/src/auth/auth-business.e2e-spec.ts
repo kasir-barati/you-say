@@ -11,7 +11,6 @@ import { cleanup } from '../utils/cleanup.util';
 import {
   FRONTEND_URL,
   FUSIONAUTH_APPLICATION_ID,
-  FUSIONAUTH_CLIENT_ID,
   FUSIONAUTH_TENANT_ID,
 } from '../utils/env-variables.util';
 import { login } from '../utils/login.util';
@@ -75,7 +74,7 @@ describe('Auth -- business', () => {
       const response = await authApi.authControllerLogin({
         state: '/posts',
         redirectUri: FRONTEND_URL,
-        clientId: FUSIONAUTH_CLIENT_ID,
+        clientId: FUSIONAUTH_APPLICATION_ID,
       });
       const loginRedirectUrl = response.request.res.responseUrl;
 
@@ -154,7 +153,7 @@ describe('Auth -- business', () => {
       },
       {
         postLogoutRedirectUri: 'https://you-say.com',
-        clientId: FUSIONAUTH_CLIENT_ID,
+        clientId: FUSIONAUTH_APPLICATION_ID,
       },
     ])('should logout', async (queries) => {
       const tempUser = getTempUser();

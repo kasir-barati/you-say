@@ -98,7 +98,7 @@ describe('MobileAuthService', () => {
     ])(
       'should login user with the credentials',
       async (mobileLoginDto) => {
-        fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
+        fusionAuthConfigs.fusionAuthApplicationId = 'client-uuid';
         fusionAuthConfigs.fusionAuthOauthConfigurationClientSecret =
           'secret';
         fusionAuthClient.exchangeUserCredentialsForAccessToken

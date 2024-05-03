@@ -10,9 +10,11 @@ export interface AuthModuleOptions {
   fusionAuthHost: string;
   fusionAuthApiKey: string;
   fusionAuthIssuer: string;
-  fusionAuthClientId: string;
   fusionAuthTenantId: string;
   fusionAuthAdminGroupId: string;
+  /**
+   * @description This is the same as `clientId`
+   */
   fusionAuthApplicationId: string;
   fusionAuthOauthConfigurationClientSecret: string;
 }

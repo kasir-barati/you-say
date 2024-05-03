@@ -14,6 +14,5 @@ export interface AppConfig {
   FUSIONAUTH_APPLICATION_ID: string;
   FUSIONAUTH_ADMIN_GROUP_ID: string;
   FUSIONAUTH_ISSUER: string;
-  FUSIONAUTH_CLIENT_ID: string;
   OAUTH_CONFIGURATION_CLIENT_SECRET: string;
 }

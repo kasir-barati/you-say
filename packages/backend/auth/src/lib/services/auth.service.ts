@@ -123,7 +123,7 @@ export class AuthService implements OnModuleInit {
     } = await this.fusionAuthClient
       .exchangeOAuthCodeForAccessTokenUsingPKCE(
         queries.code,
-        this.fusionAuthConfigs.fusionAuthClientId,
+        this.fusionAuthConfigs.fusionAuthApplicationId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.fusionAuthOauthCallbackUrl,
@@ -203,7 +203,7 @@ export class AuthService implements OnModuleInit {
     } = await this.fusionAuthClient
       .exchangeRefreshTokenForAccessToken(
         cookies.refreshToken,
-        this.fusionAuthConfigs.fusionAuthClientId,
+        this.fusionAuthConfigs.fusionAuthApplicationId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.scope,

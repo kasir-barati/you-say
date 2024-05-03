@@ -140,7 +140,7 @@ describe('AuthService', () => {
       const response = SinonMock.with<Response>({
         req: { protocol: 'https' },
       });
-      fusionAuthConfigs.fusionAuthClientId = 'uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'uuid';
       fusionAuthClientHelper.generatePkce.resolves({
         codeChallenge: 'JR-vKNlVo4G1RPdQ2ItHcgdAYIpUr1HJuXr2hH6QIw4',
         codeVerifier: 'xqzmumbrxyzqpcj-oxznpmpclbgealhavbsabh_ibkn',
@@ -442,13 +442,13 @@ describe('AuthService', () => {
 
     it('should throw InternalServerErrorException if it could not exchange refresh token for new tokens', () => {
       const cookies: RefreshCookieDto = { refreshToken: '' };
-      fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'client-uuid';
       fusionAuthConfigs.fusionAuthOauthConfigurationClientSecret =
         'secret';
       fusionAuthClient.exchangeRefreshTokenForAccessToken
         .withArgs(
           cookies.refreshToken,
-          fusionAuthConfigs.fusionAuthClientId,
+          fusionAuthConfigs.fusionAuthApplicationId,
           fusionAuthConfigs.fusionAuthOauthConfigurationClientSecret,
           'openid offline_access',
           null,

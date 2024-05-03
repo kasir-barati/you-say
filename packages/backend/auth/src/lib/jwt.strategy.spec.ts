@@ -20,7 +20,6 @@ describe('JwtStrategy', () => {
             fusionAuthHost: 'http://fusionauth:9011',
             fusionAuthApiKey: 'long-hexadecimal-key',
             fusionAuthIssuer: 'https://you-say.com',
-            fusionAuthClientId: 'uuid',
             fusionAuthTenantId: 'uuid',
           } as AuthModuleOptions,
         },

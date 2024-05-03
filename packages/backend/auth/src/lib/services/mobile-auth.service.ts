@@ -70,7 +70,7 @@ export class MobileAuthService implements OnModuleInit {
       .exchangeUserCredentialsForAccessToken(
         mobileLoginDto.email,
         mobileLoginDto.password,
-        this.fusionAuthConfigs.fusionAuthClientId,
+        this.fusionAuthConfigs.fusionAuthApplicationId,
         this.fusionAuthConfigs
           .fusionAuthOauthConfigurationClientSecret,
         this.scope,

@@ -297,7 +297,8 @@ export class FusionAuthClientHelper implements OnModuleInit {
       this.loggerService.error({
         message: 'We are not audience of this access token!',
         jwtAudience,
-        fusionAuthClientId: this.fusionAuthConfigs.fusionAuthClientId,
+        fusionAuthApplicationId:
+          this.fusionAuthConfigs.fusionAuthApplicationId,
       });
       return false;
     }
@@ -306,7 +307,9 @@ export class FusionAuthClientHelper implements OnModuleInit {
   }
 
   private areWeTheAudienceOf(audience: string) {
-    return audience === this.fusionAuthConfigs.fusionAuthClientId;
+    return (
+      audience === this.fusionAuthConfigs.fusionAuthApplicationId
+    );
   }
 
   private didWeIssued(issuer: string) {

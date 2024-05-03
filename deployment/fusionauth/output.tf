@@ -6,10 +6,6 @@ output "default_tenant_id" {
   value = local.fusionauth_default_tenant_id
 }
 
-output "client_id" {
-  value = fusionauth_application.you-say-application.id
-}
-
 output "you_say_application_id" {
   value = fusionauth_application.you-say-application.id
 }

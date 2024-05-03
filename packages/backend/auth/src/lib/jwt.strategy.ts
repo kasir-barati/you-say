@@ -26,7 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         jwksUri: `${authModuleOptions.fusionAuthHost}/.well-known/jwks.json`,
       }),
       jwtFromRequest,
-      audience: authModuleOptions.fusionAuthClientId,
+      audience: authModuleOptions.fusionAuthApplicationId,
       issuer: authModuleOptions.fusionAuthIssuer,
       algorithms: ['RS256'],
     } as WithSecretOrKeyProvider);

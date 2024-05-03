@@ -17,7 +17,6 @@ export class AuthModuleConfig implements AuthOptionsFactory {
       fusionAuthHost: this.appConfigs.FUSIONAUTH_HOST,
       fusionAuthApiKey: this.appConfigs.FUSIONAUTH_API_KEY,
       fusionAuthIssuer: this.appConfigs.FUSIONAUTH_ISSUER,
-      fusionAuthClientId: this.appConfigs.FUSIONAUTH_CLIENT_ID,
       fusionAuthTenantId: this.appConfigs.FUSIONAUTH_TENANT_ID,
       fusionAuthOauthConfigurationClientSecret:
         this.appConfigs.OAUTH_CONFIGURATION_CLIENT_SECRET,

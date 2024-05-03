@@ -63,7 +63,7 @@ describe('FusionAuthClientHelper', () => {
       },
     ])('should pass when tokens are: %o', async (tokens) => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
-      fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'client-uuid';
       fusionAuthClient.validateJWT.resolves({
         response: {
           jwt: {
@@ -160,7 +160,7 @@ describe('FusionAuthClientHelper', () => {
     });
 
     it('should throw HttpException if audience is invalid', async () => {
-      fusionAuthConfigs.fusionAuthClientId = 'some-uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'some-uuid';
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
         response: {
@@ -185,13 +185,14 @@ describe('FusionAuthClientHelper', () => {
         loggerService.error.calledWith({
           message: 'We are not audience of this access token!',
           jwtAudience: 'client-uuid',
-          fusionAuthClientId: fusionAuthConfigs.fusionAuthClientId,
+          fusionAuthApplicationId:
+            fusionAuthConfigs.fusionAuthApplicationId,
         }),
       ).toBeTruthy();
     });
 
     it('should throw HttpException if audience is missing in jwt', async () => {
-      fusionAuthConfigs.fusionAuthClientId = 'some-uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'some-uuid';
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
       fusionAuthClient.validateJWT.resolves({
         response: {
@@ -220,7 +221,7 @@ describe('FusionAuthClientHelper', () => {
 
     it('should throw HttpException if fusionAuthClient.validateJWT says ID token is invalid', () => {
       fusionAuthConfigs.fusionAuthIssuer = 'https://you-say.com';
-      fusionAuthConfigs.fusionAuthClientId = 'client-uuid';
+      fusionAuthConfigs.fusionAuthApplicationId = 'client-uuid';
       fusionAuthClient.validateJWT.withArgs('accessToken').resolves({
         response: {
           jwt: {

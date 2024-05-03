@@ -54,11 +54,7 @@ class EnvironmentVariables implements AppConfig {
   @IsString()
   FUSIONAUTH_ISSUER = 'http://fusionauth:9011';
 
-  // TODO: Should I remove client id and use application id only since based on what I understood from terraform basically they are the same thing
-  @IsOptional()
-  @IsString()
-  FUSIONAUTH_CLIENT_ID = 'b94471aa-bc85-4538-b1a8-e3c4642c9c8b';
-
+  // Can be used as ClientId when communicating with FusionAuth
   @IsOptional()
   @IsString()
   FUSIONAUTH_APPLICATION_ID = 'b94471aa-bc85-4538-b1a8-e3c4642c9c8b';

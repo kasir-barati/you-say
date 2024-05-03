@@ -78,7 +78,6 @@ jobs:
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
-          FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
           APP_HOST: localhost
@@ -96,5 +95,5 @@ jobs:
           NEXT_PUBLIC_NODE_ENV: "production"
           BUILD_STANDALONE: "true"
           NEXT_PUBLIC_FRONTEND_URL: ${{ env.FRONTEND_URL }}
-          NEXT_PUBLIC_FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
+          NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES: ${{ env.FUSIONAUTH_OAUTH_SCOPES }}

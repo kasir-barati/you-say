@@ -1,6 +1,6 @@
 import { oauthCookieTokens } from '@shared';
 import {
-  FUSIONAUTH_CLIENT_ID,
+  FUSIONAUTH_APPLICATION_ID,
   FUSIONAUTH_HOST,
   OAUTH_CONFIGURATION_CLIENT_SECRET,
 } from './env-variables.util';
@@ -37,7 +37,7 @@ export async function login({
       password,
       grant_type: 'password',
       scope: 'openid offline_access',
-      client_id: FUSIONAUTH_CLIENT_ID,
+      client_id: FUSIONAUTH_APPLICATION_ID,
       client_secret: OAUTH_CONFIGURATION_CLIENT_SECRET,
     }),
     keepalive: false,

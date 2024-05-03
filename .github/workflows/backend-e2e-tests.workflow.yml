@@ -75,7 +75,6 @@ jobs:
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
-          FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
           FRONTEND_URL: "http://localhost:3000"
@@ -88,7 +87,6 @@ jobs:
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
-          FUSIONAUTH_CLIENT_ID: ${{ steps.terraform.outputs.fusionauth_client_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           SWAGGER_PATH: docs
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"

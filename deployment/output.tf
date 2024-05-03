@@ -6,10 +6,6 @@ output "fusionauth_default_tenant_id" {
   value = module.fusionauth.default_tenant_id
 }
 
-output "fusionauth_client_id" {
-  value = module.fusionauth.client_id
-}
-
 output "fusionauth_application_id" {
   value = module.fusionauth.you_say_application_id
 }
