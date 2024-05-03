@@ -12,13 +12,15 @@ axios.interceptors.response.use(
     const request = {
       method: error.request?.method,
       path: error.request?.path,
+      headers: error?.request?.headers,
     };
     const response = {
       statusCode: error.response?.status,
-      requestConfig: {
+      config: {
         url: error.response?.config?.url,
         method: error.response?.config?.method,
         data: error.response?.config?.data,
+        headers: error.response?.config?.headers,
       },
       data: error.response?.data,
     };
@@ -28,10 +30,11 @@ axios.interceptors.response.use(
         url: error?.config?.url,
         method: error?.config?.method,
         data: error?.config?.data,
+        headers: error?.config?.headers,
       },
     };
 
-    console.dir(errorData, { depth: null });
+    console.dir({ errorData }, { depth: null });
     console.dir({ request }, { depth: null });
     console.dir({ response }, { depth: null });
 
