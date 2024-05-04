@@ -74,11 +74,7 @@ jobs:
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Starting backend service
-        run: |
-          printenv
-          echo =============================================
-          echo $OAUTH_CONFIGURATION_CLIENT_SECRET
-          docker compose up -d
+        run: docker compose up -d
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}

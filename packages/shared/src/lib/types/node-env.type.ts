@@ -15,7 +15,7 @@ declare global {
 }
 
 export enum NodeEnv {
-  development = 'development',
+  dev = 'dev',
   production = 'production',
   test = 'test',
   provision = 'provision',

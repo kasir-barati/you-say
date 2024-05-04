@@ -13,8 +13,6 @@ declare global {
 }
 
 export default registerAs('appConfigs', (): AppConfig => {
-  console.dir(process.env);
-
   const validatedEnvs = validateEnvs(
     process.env,
     EnvironmentVariables,
@@ -36,7 +34,7 @@ class EnvironmentVariables implements AppConfig {
 
   @IsOptional()
   @IsEnum(NodeEnv)
-  NODE_ENV: NodeEnv = NodeEnv.development;
+  NODE_ENV: NodeEnv = NodeEnv.dev;
 
   @IsOptional()
   @IsString()
