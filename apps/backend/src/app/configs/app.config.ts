@@ -13,6 +13,8 @@ declare global {
 }
 
 export default registerAs('appConfigs', (): AppConfig => {
+  console.dir(process.env);
+
   const validatedEnvs = validateEnvs(
     process.env,
     EnvironmentVariables,
