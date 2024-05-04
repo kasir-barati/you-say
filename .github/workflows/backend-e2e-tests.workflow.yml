@@ -24,7 +24,9 @@ env:
   MONGO_INITDB_ROOT_USERNAME: "mongodb-root-user-${{ github.run_id }}-${{ github.run_attempt }}"
   MONGO_INITDB_ROOT_PASSWORD: "mongodb-root-password-${{ github.run_id }}-${{ github.run_attempt }}"
   OAUTH_CONFIGURATION_CLIENT_SECRET: "client_secret_${{ github.run_id }}_${{ github.run_attempt }}"
-  NODE_ENV: "production"
+  APP_HOST: localhost
+  NODE_ENV: production
+  SWAGGER_PATH: docs
   FRONTEND_URL: "http://localhost:3000"
 
 jobs:
@@ -78,8 +80,11 @@ jobs:
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
-          APP_HOST: localhost
+          APP_HOST: ${{ env.APP_HOST }}
           FUSIONAUTH_OAUTH_SCOPES: offline_access openid
+          OAUTH_CONFIGURATION_CLIENT_SECRET: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
+          NODE_ENV: ${{ env.NODE_ENV }}
+          SWAGGER_PATH: ${{ env.SWAGGER_PATH }}
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Generate Open API
@@ -88,8 +93,11 @@ jobs:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
-          SWAGGER_PATH: docs
+          SWAGGER_PATH: ${{ env.SWAGGER_PATH }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
+          OAUTH_CONFIGURATION_CLIENT_SECRET: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
+          APP_HOST: ${{ env.APP_HOST }}
+          NODE_ENV: ${{ env.NODE_ENV }}
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}
         name: Execute e2e tests
@@ -97,6 +105,10 @@ jobs:
         env:
           FUSIONAUTH_TENANT_ID: ${{ steps.terraform.outputs.fusionauth_tenant_id }}
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
+          OAUTH_CONFIGURATION_CLIENT_SECRET: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
+          APP_HOST: ${{ env.APP_HOST }}
+          NODE_ENV: ${{ env.NODE_ENV }}
+          SWAGGER_PATH: ${{ env.SWAGGER_PATH }}
 
       - name: Dump docker logs on failure
         if: failure()

@@ -78,13 +78,6 @@ export class MobileAuthService implements OnModuleInit {
         null,
       )
       .catch((error) => {
-        console.log(
-          mobileLoginDto.email,
-          mobileLoginDto.password,
-          clientId,
-          this.fusionAuthConfigs
-            .fusionAuthOauthConfigurationClientSecret,
-        );
         this.loggerService.error({
           message: 'Could not exchange credentials for tokens!',
           error,

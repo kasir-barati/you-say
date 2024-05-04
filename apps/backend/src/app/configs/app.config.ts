@@ -13,29 +13,10 @@ declare global {
 }
 
 export default registerAs('appConfigs', (): AppConfig => {
-  console.log(
-    process.env.APP_BASE_URL,
-    process.env.APP_HOST,
-    process.env.APP_PORT,
-    process.env.DATABASE_URL,
-    process.env.FUSIONAUTH_ADMIN_GROUP_ID,
-    process.env.FUSIONAUTH_API_KEY,
-    process.env.FUSIONAUTH_HOST,
-    process.env.FUSIONAUTH_ISSUER,
-    process.env.FUSIONAUTH_TENANT_ID,
-    process.env.MONGO_INITDB_DATABASE,
-    process.env.NODE_ENV,
-    process.env.OAUTH_CONFIGURATION_CLIENT_SECRET,
-    process.env.SWAGGER_PATH,
-  );
-  console.dir(process.env);
-
   const validatedEnvs = validateEnvs(
     process.env,
     EnvironmentVariables,
   );
-
-  console.dir({ validatedEnvs });
 
   return validatedEnvs;
 });
