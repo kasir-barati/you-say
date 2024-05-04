@@ -26,7 +26,7 @@ env:
   OAUTH_CONFIGURATION_CLIENT_SECRET: "client_secret_${{ github.run_id }}_${{ github.run_attempt }}"
   NODE_ENV: "production"
   FRONTEND_URL: "http://localhost:3000"
-  FUSIONAUTH_OAUTH_SCOPES: offline_access openid
+  FUSIONAUTH_OAUTH_SCOPES: "offline_access openid"
 
 jobs:
   build-and-test-frontend-e2e:
@@ -80,10 +80,6 @@ jobs:
           FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
           FUSIONAUTH_ADMIN_GROUP_ID: ${{ steps.terraform.outputs.fusionauth_admin_group_id }}
           DATABASE_URL: "mongodb://${{ env.MONGO_INITDB_ROOT_USERNAME }}:${{ env.MONGO_INITDB_ROOT_PASSWORD }}@localhost:27017"
-          OAUTH_CONFIGURATION_CLIENT_SECRET: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
-          APP_HOST: ${{ env.APP_HOST }}
-          NODE_ENV: ${{ env.NODE_ENV }}
-          SWAGGER_PATH: ${{ env.SWAGGER_PATH }}
 
       - if: ${{ steps.changed-paths.outputs.is-backend-or-frontend == 'true' }}
         # https://stackoverflow.com/a/77972789/8784518
@@ -95,13 +91,7 @@ jobs:
         run: npx nx e2e frontend-e2e
         env:
           NEXT_PUBLIC_BACKEND_BASE_URL: "http://localhost:3001"
-          NEXT_PUBLIC_NODE_ENV: "production"
+          NEXT_PUBLIC_NODE_ENV: ${{ env.NODE_ENV }}
           BUILD_STANDALONE: "true"
           NEXT_PUBLIC_FRONTEND_URL: ${{ env.FRONTEND_URL }}
           NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID: ${{ steps.terraform.outputs.fusionauth_application_id }}
-          NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES: ${{ env.FUSIONAUTH_OAUTH_SCOPES }}
-          CYPRESS_FRONTEND_URL: ${{ env.FRONTEND_URL }}
-          OAUTH_CONFIGURATION_CLIENT_SECRET: ${{ env.OAUTH_CONFIGURATION_CLIENT_SECRET }}
-          APP_HOST: ${{ env.APP_HOST }}
-          NODE_ENV: ${{ env.NODE_ENV }}
-          SWAGGER_PATH: ${{ env.SWAGGER_PATH }}
