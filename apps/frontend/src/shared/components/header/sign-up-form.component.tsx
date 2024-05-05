@@ -57,6 +57,7 @@ export function SignUpForm({
         placeholder="email@example.com"
         name="email"
         autoComplete="email"
+        inputProps={{ 'data-test': 'sign-up-form-register-input' }}
       />
       <Button
         data-test="sign-up-button-in-sign-up-form"

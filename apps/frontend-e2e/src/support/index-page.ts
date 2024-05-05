@@ -2,13 +2,16 @@ import { SHARED_SELECTORS } from './shared-selectors';
 
 const SELECTORS = {
   logo: '[aria-label="Logo"]',
+  subscribeInput:
+    'input[aria-label="Enter your email to subscribe for newsletter"]',
+  subscribeButton: "button[aria-label='Subscribe']",
   singInButtonInHeader: 'button[aria-label="Sign in"]',
   singUpButtonInHeader: 'button[aria-label="Sign up"]',
   doNotHaveAnAccountButton: 'button[aria-label="Create one!"]',
   signInButton: 'button[aria-label="Continue signing in..."]',
   singUpFirstNameInput: 'input[placeholder="Name"]',
   signUpLastNameInput: 'input[placeholder="Family"]',
-  signUpEmailInput: 'input[placeholder="email@example.com"]',
+  signUpEmailInput: 'sign-up-form-register-input',
   signUpButtonInSignUpForm: 'sign-up-button-in-sign-up-form',
   notFoundTitle: '[aria-label="404"]',
   notFoundMessage: '[aria-label="Page not found"]',
@@ -32,7 +35,7 @@ function fillLastNameInput(value: string) {
   cy.get(SELECTORS.signUpLastNameInput).type(value);
 }
 function fillEmailInput(value: string) {
-  cy.get(SELECTORS.signUpEmailInput).type(value);
+  cy.getByTestId(SELECTORS.signUpEmailInput).type(value);
 }
 function clickOnSignUpButton() {
   cy.getByTestId(SELECTORS.signUpButtonInSignUpForm).click();
@@ -40,14 +43,22 @@ function clickOnSignUpButton() {
 function clickOnSignInButton() {
   cy.get(SELECTORS.signInButton).click();
 }
+function fillSubscriptionInput(value: string) {
+  cy.get(SELECTORS.subscribeInput).type(value);
+}
+function clickOnSubscribe() {
+  cy.get(SELECTORS.subscribeButton).click();
+}
 // #endregion
 
 export const user = {
   fillEmailInput,
+  clickOnSubscribe,
   fillLastNameInput,
   fillFirstNameInput,
   clickOnSignInButton,
   clickOnSignUpButton,
+  fillSubscriptionInput,
   clickOnSignInButtonInHeader,
   clickOnSignUpButtonInHeader,
   clickOnDoNotHaveAnAccountButton,
@@ -86,6 +97,12 @@ function successfulSignIn() {
   cy.url().should('include', Cypress.env('FRONTEND_URL'));
   cy.url().should('include', 'userState=Authenticated');
 }
+function successfulSubscription() {
+  cy.get(SHARED_SELECTORS.notification).should(
+    'have.text',
+    "We've subscribed you!",
+  );
+}
 // #endregion
 
 export const verify = {
@@ -94,4 +111,5 @@ export const verify = {
   successfulSignIn,
   successfulSignUp,
   signUpFormExists,
+  successfulSubscription,
 };

@@ -435,6 +435,49 @@
         },
         "tags": ["Mobile Auth"]
       }
+    },
+    "/newsletter-subscription": {
+      "post": {
+        "operationId": "NewsletterSubscriptionController_create",
+        "summary": "Add a new subscriber to newsletter.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewsletterSubscriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Returns nothing. You can use http status code to realize whether the operation was failed or completed."
+          },
+          "400": {
+            "description": "Bad request; e.g. email address is not valid!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Newsletter Subscription"]
+      }
     }
   },
   "info": {
@@ -660,6 +703,17 @@
           "accessToken",
           "refreshToken"
         ]
+      },
+      "CreateNewsletterSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "email@example.com",
+            "description": "Email address"
+          }
+        },
+        "required": ["email"]
       }
     }
   }

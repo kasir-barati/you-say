@@ -17,6 +17,8 @@ import * as Sinon from 'sinon';
 import { AppController } from '../../app/app.controller';
 import { AppService } from '../../app/app.service';
 import appConfig from '../../app/configs/app.config';
+import { NewsletterSubscriptionController } from '../../modules/newsletter-subscription/newsletter-subscription.controller';
+import { NewsletterSubscriptionService } from '../../modules/newsletter-subscription/newsletter-subscription.service';
 
 @Module({
   imports: [
@@ -26,10 +28,19 @@ import appConfig from '../../app/configs/app.config';
       cache: true,
     }),
   ],
-  controllers: [AppController, AuthController, MobileAuthController],
+  controllers: [
+    AppController,
+    AuthController,
+    MobileAuthController,
+    NewsletterSubscriptionController,
+  ],
   providers: [
     { provide: AppService, useValue: Sinon.stub(AppService) },
     { provide: AuthService, useValue: Sinon.stub(AuthService) },
+    {
+      provide: NewsletterSubscriptionService,
+      useValue: Sinon.stub(NewsletterSubscriptionService),
+    },
     {
       provide: MobileAuthService,
       useValue: Sinon.stub(MobileAuthService),

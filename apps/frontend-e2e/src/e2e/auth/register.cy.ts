@@ -1,5 +1,5 @@
 import { generateRandomString } from '@shared';
-import { user, verify } from '../../support/app.header';
+import { user, verify } from '../../support/index-page';
 
 describe('auth => register', () => {
   beforeEach(() => cy.visit('/'));
