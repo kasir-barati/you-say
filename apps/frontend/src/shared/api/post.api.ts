@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { FindAllPostsResponse, FindAllQuery } from '@shared';
+import { FindAllPostsQuery, FindAllPostsResponse } from '@shared';
 import { createBaseQuery } from './create-base-query.api';
 
 const baseQuery = createBaseQuery(
@@ -14,7 +14,10 @@ export const postApi = createApi({
   tagTypes: tagTypes,
   endpoints(build) {
     return {
-      findAll: build.mutation<FindAllPostsResponse, FindAllQuery>({
+      findAll: build.mutation<
+        FindAllPostsResponse,
+        FindAllPostsQuery
+      >({
         query(queries) {
           return {
             url: 'posts',
