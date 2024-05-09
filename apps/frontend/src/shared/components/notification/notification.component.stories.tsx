@@ -32,7 +32,9 @@ export const SuccessNotification: Story = {
   },
   play({ canvasElement }) {
     const canvas = within(canvasElement);
-    const notification = canvas.getByText('Success notification');
+    const notification = canvas.getAllByText(
+      'Success notification',
+    )[0];
     expect(notification).toBeInTheDocument();
   },
 };
@@ -58,7 +60,7 @@ export const ErrorNotification: Story = {
   },
   play({ canvasElement }) {
     const canvas = within(canvasElement);
-    const notification = canvas.getByText('Error notification');
+    const notification = canvas.getAllByText('Error notification')[0];
     expect(notification).toBeInTheDocument();
   },
 };
@@ -84,7 +86,7 @@ export const InfoNotification: Story = {
   },
   play({ canvasElement }) {
     const canvas = within(canvasElement);
-    const notification = canvas.getByText('Info notification');
+    const notification = canvas.getAllByText('Info notification')[0];
     expect(notification).toBeInTheDocument();
   },
 };
@@ -110,7 +112,9 @@ export const WarningNotification: Story = {
   },
   play({ canvasElement }) {
     const canvas = within(canvasElement);
-    const notification = canvas.getByText('Warning notification');
+    const notification = canvas.getAllByText(
+      'Warning notification',
+    )[0];
     expect(notification).toBeInTheDocument();
   },
 };
