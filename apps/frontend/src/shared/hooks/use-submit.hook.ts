@@ -1,3 +1,5 @@
+'use client';
+
 import { UseMutation } from '@reduxjs/toolkit/dist/query/react/buildHooks';
 import { ErrorResponse } from '@shared';
 import { AxiosError } from 'axios';

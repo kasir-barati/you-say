@@ -1,3 +1,5 @@
+'use client';
+
 import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
@@ -7,10 +9,10 @@ import Modal from '@mui/material/Modal';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useMemo, useState } from 'react';
+import { ModalBox } from '../header/modal-box.component';
+import { SignInModal } from '../header/sign-in-modal.component';
 import { Logo } from '../logo/logo.component';
-import { ModalBox } from './modal-box.component';
-import { SignInModal } from './sign-in-modal.component';
-import { SignUpForm } from './sign-up-form.component';
+import { SignUpForm } from '../sign-up-button/sign-up-form.component';
 
 export function AuthModal({
   isOpen,

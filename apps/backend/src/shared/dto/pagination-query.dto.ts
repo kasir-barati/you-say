@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PaginationQuery } from '@shared';
+import { Type } from 'class-transformer';
 import { IsNotIn, IsOptional } from 'class-validator';
 import { IsInt32 } from '../decorators/is-int32.decorator';
 
@@ -11,6 +12,7 @@ export class PaginationQueryDto implements PaginationQuery {
       'Page number, it cannot be a negative number or zero.',
   })
   @IsOptional()
+  @Type(() => Number)
   @IsInt32(true)
   @IsNotIn([0])
   page = 1;
@@ -22,6 +24,7 @@ export class PaginationQueryDto implements PaginationQuery {
       'How many documents per page, it cannot be a negative number or zero..',
   })
   @IsOptional()
+  @Type(() => Number)
   @IsInt32(true)
   @IsNotIn([0])
   limit = 10;

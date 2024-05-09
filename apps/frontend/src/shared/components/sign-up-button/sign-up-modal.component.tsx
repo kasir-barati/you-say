@@ -1,13 +1,19 @@
+'use client';
+
+import { ButtonProps } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useModal } from '../../hooks/use-modal.hook';
-import { AuthModal } from './auth-modal.component';
+import { AuthModal } from '../auth-modal/auth-modal.component';
 
 const buttonStyle = {
   fontWeight: 'bold',
   textTransform: 'none',
 };
 
-export function SignUpButton() {
+export function SignUpButton({
+  variant = 'contained',
+  color = 'info',
+}: Readonly<SignUpButtonProps>) {
   const { isOpen, openModal, closeModal } = useModal();
 
   return (
@@ -15,9 +21,9 @@ export function SignUpButton() {
       <Button
         title="Sign up"
         aria-label="Sign up"
-        variant="contained"
+        variant={variant}
         onClick={openModal}
-        color="info"
+        color={color}
         sx={buttonStyle}
       >
         Sign up
@@ -29,4 +35,9 @@ export function SignUpButton() {
       />
     </>
   );
+}
+
+interface SignUpButtonProps {
+  variant?: ButtonProps['variant'];
+  color?: ButtonProps['color'];
 }

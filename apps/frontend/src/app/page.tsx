@@ -1,4 +1,6 @@
 import { Metadata, Viewport } from 'next';
+import { BackToTop } from '../shared/components/back-to-top/back-to-top.component';
+import { Footer } from '../shared/components/footer/footer.component';
 import { Header } from '../shared/components/header/header.component';
 import { Latest } from '../shared/components/latest/latest.component';
 import { SubHeader } from '../shared/components/sub-header/sub-header.component';
@@ -16,9 +18,11 @@ export const viewport: Viewport = {
 export default function Index() {
   return (
     <div>
-      <Header />
+      <Header headerId="back-to-top-anchor" />
       <SubHeader />
       <Latest />
+      <Footer />
+      <BackToTop elementId="back-to-top-anchor" />
     </div>
   );
 }

@@ -7,17 +7,17 @@ import Toolbar from '@mui/material/Toolbar';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Link from 'next/link';
 import { Logo } from '../logo/logo.component';
+import { SignUpButton } from '../sign-up-button/sign-up-modal.component';
 import { SearchModal } from './search-modal.component';
 import { SignInButton } from './sign-in-button.component';
-import { SignUpButton } from './sign-up-modal.component';
 
-export function Header() {
+export function Header({ headerId }: Readonly<HeaderProps>) {
   // const { isAuthenticated, login, logout } = useFusionAuth();
 
   return (
     <AppBar position="static" data-test="AppBar">
       <Container>
-        <Toolbar disableGutters>
+        <Toolbar disableGutters id={headerId}>
           <Grid2
             container
             flexGrow={1}
@@ -67,4 +67,8 @@ export function Header() {
       </Container>
     </AppBar>
   );
+}
+
+interface HeaderProps {
+  headerId: string;
 }
