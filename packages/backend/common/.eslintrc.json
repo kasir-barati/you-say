@@ -20,6 +20,12 @@
       "rules": {
         "@nx/dependency-checks": "off"
       }
+    },
+    {
+      "files": ["*.decorator.ts"],
+      "rules": {
+        "@typescript-eslint/ban-types": ["off"]
+      }
     }
   ]
 }

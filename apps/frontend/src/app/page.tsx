@@ -1,5 +1,6 @@
 import { Metadata, Viewport } from 'next';
 import { Header } from '../shared/components/header/header.component';
+import { Latest } from '../shared/components/latest/latest.component';
 import { SubHeader } from '../shared/components/sub-header/sub-header.component';
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function Index() {
     <div>
       <Header />
       <SubHeader />
+      <Latest />
     </div>
   );
 }

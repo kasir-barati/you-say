@@ -2,6 +2,7 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { ErrorResponse } from '@shared';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
+import { logger } from '../utils/logger.util';
 
 interface AxiosBaseQuery {
   baseUrl: string;
@@ -50,7 +51,7 @@ export function axiosBaseQuery({
       const status = axiosError.response?.status;
       const data = genData(axiosError);
 
-      console.log(axiosError);
+      logger.log(axiosError);
 
       return {
         error: {

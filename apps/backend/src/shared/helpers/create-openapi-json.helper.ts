@@ -19,6 +19,8 @@ import { AppService } from '../../app/app.service';
 import appConfig from '../../app/configs/app.config';
 import { NewsletterSubscriptionController } from '../../modules/newsletter-subscription/newsletter-subscription.controller';
 import { NewsletterSubscriptionService } from '../../modules/newsletter-subscription/newsletter-subscription.service';
+import { PostController } from '../../modules/post/post.controller';
+import { PostService } from '../../modules/post/services/post.service';
 
 @Module({
   imports: [
@@ -31,12 +33,14 @@ import { NewsletterSubscriptionService } from '../../modules/newsletter-subscrip
   controllers: [
     AppController,
     AuthController,
+    PostController,
     MobileAuthController,
     NewsletterSubscriptionController,
   ],
   providers: [
     { provide: AppService, useValue: Sinon.stub(AppService) },
     { provide: AuthService, useValue: Sinon.stub(AuthService) },
+    { provide: PostService, useValue: Sinon.stub(PostService) },
     {
       provide: NewsletterSubscriptionService,
       useValue: Sinon.stub(NewsletterSubscriptionService),

@@ -1,10 +1,21 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { HttpResponse, http } from 'msw';
+import { mockedFindAllPostsResponse } from '../shared/__mocks__/posts.mock';
 import { MockProvider } from '../shared/test-utils/mock-provider.test-util';
 import Index from './page';
 
 type Story = StoryObj<typeof Index>;
 
 export default {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('*/posts?limit=3&createdAt=desc', () =>
+          HttpResponse.json(mockedFindAllPostsResponse),
+        ),
+      ],
+    },
+  },
   component: Index,
   render() {
     return (

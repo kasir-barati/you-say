@@ -1,3 +1,5 @@
+import { logger } from './logger.util';
+
 type Cookie = 'id_token';
 
 export function getCookie(cookie: Cookie) {
@@ -18,7 +20,7 @@ function getCookies(): Map<string, string> {
 
     return new Map(sanitizedCookies as Array<[string, string]>);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return new Map();
   }
 }

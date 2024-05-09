@@ -1,3 +1,4 @@
+import '@mdxeditor/editor/style.css';
 import { Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import { Application } from '../shared/components/application/application.component';

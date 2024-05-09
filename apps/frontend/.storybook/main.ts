@@ -18,7 +18,10 @@ export default {
       ),
     },
   },
-  staticDirs: [join(__dirname, '..', 'public')],
+  staticDirs: [
+    join(__dirname, 'static'),
+    join(__dirname, '..', 'public'),
+  ],
   core: {
     disableProjectJson: true,
     enableCrashReports: true,

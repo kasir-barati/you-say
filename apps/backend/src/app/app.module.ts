@@ -7,6 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { NewsletterSubscriptionModule } from '../modules/newsletter-subscription/newsletter-subscription.module';
+import { PostModule } from '../modules/post/post.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import appConfig from './configs/app.config';
@@ -37,6 +38,7 @@ import { MongooseModuleConfig } from './configs/mongoose.config';
       useClass: AuthModuleConfig,
     }),
     NewsletterSubscriptionModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [

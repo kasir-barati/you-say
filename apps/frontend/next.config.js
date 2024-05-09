@@ -21,6 +21,14 @@ const nextConfig = {
       ? 'standalone'
       : undefined,
   cleanDistDir: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'you-say.com',
+      },
+    ],
+  },
 };
 
 const plugins = [

@@ -9,7 +9,6 @@ import {
 const decoratorName = 'IsUrl';
 
 export function IsUrl(validationOptions?: ValidationOptions) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: decoratorName,

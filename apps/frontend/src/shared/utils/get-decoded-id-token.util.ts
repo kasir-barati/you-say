@@ -1,5 +1,6 @@
 import { DecodedIdToken } from '@shared';
 import { decode } from 'jsonwebtoken';
+import { logger } from './logger.util';
 
 export function getDecodedIdToken(
   idToken: string,
@@ -18,6 +19,6 @@ export function getDecodedIdToken(
 
     return decodedIdToken;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 }

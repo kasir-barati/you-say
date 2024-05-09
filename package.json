@@ -37,6 +37,7 @@
     "@emotion/styled": "^11.11.5",
     "@fusionauth/react-sdk": "^1.0.6",
     "@fusionauth/typescript-client": "^1.49.1",
+    "@mdxeditor/editor": "^3.0.5",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@nestjs/common": "^10.3.7",
@@ -118,6 +119,8 @@
     "jest-environment-node": "^29.7.0",
     "lint-staged": "^15.2.2",
     "madge": "^6.1.0",
+    "msw": "^2.2.14",
+    "msw-storybook-addon": "^2.0.2",
     "nx": "18.2.2",
     "prettier": "^3.2.5",
     "sass": "1.72.0",
@@ -127,5 +130,10 @@
     "ts-node": "10.9.2",
     "typescript": "5.4.3",
     "webpack-cli": "^5.1.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "apps/frontend/.storybook/static"
+    ]
   }
 }

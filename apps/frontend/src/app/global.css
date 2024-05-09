@@ -1,0 +1,19 @@
+@import '../../../../node_modules/@mdxeditor/editor/dist/style.css';
+
+.w-full {
+  width: 100%;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.wrap-mdxeditor-lines {
+  line-clamp: 2;
+  margin-bottom: 1;
+  overflow: 'hidden';
+  -webkit-line-clamp: '2';
+  display: '-webkit-box';
+  text-overflow: 'ellipsis';
+  -webkit-box-orient: 'vertical';
+}
