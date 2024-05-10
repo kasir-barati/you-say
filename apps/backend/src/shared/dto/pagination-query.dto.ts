@@ -10,6 +10,8 @@ export class PaginationQueryDto implements PaginationQuery {
     required: false,
     description:
       'Page number, it cannot be a negative number or zero.',
+    example: 1,
+    type: Number,
   })
   @IsOptional()
   @Type(() => Number)
@@ -22,6 +24,8 @@ export class PaginationQueryDto implements PaginationQuery {
     required: false,
     description:
       'How many documents per page, it cannot be a negative number or zero..',
+    example: 3,
+    type: Number,
   })
   @IsOptional()
   @Type(() => Number)

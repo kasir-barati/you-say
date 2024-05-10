@@ -27,13 +27,14 @@ export class PostService implements OnModuleInit {
     queries: FindAllQueryDto,
   ): Promise<FindAllResponseDto> {
     const { limit, page, createdAt } = queries;
+    const skip = (page - 1) * limit;
     const { items, pages } = await paginate({
       model: this.postModel,
       limit,
       filter: {},
     });
     const data = await this.postModel
-      .find({}, {}, { limit, skip: page })
+      .find({}, {}, { limit, skip })
       .sort({ createdAt });
 
     return {

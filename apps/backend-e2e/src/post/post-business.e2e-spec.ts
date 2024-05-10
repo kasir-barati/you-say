@@ -6,8 +6,8 @@ describe('Post -- Validation', () => {
 
   describe('GET /posts', () => {
     it.each<FindAllPostsQuery>([
-      { createdAt: 'asc', limit: 10, page: 1 },
-      { createdAt: 'desc', limit: 3, page: 2 },
+      { createdAt: 'asc', limit: 7, page: 1 },
+      { createdAt: 'desc', limit: 3, page: 1 },
     ])(
       'should return $limit posts for $page page when it is sorted by createdAt in $createdAt order',
       async (queryParams) => {

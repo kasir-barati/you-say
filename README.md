@@ -67,7 +67,7 @@ I used these resources to draw the lines a define boundaries and a little bit of
 2. Nx plugins lift the burden of things like scaffolding a new app (e.g. NestJS, NextJS), testing, building, etc
 3. You can use `nx graph` and `nx show projects` to see what is going on in your monorepo.
 4. Upgrade dependencies: `nx migrate latest`.
-   Please note that this command is not gonna upgrade your devDeps and deps to the latest version. It is only upgrading nx and its belongings. So we can use other approaches to upgrade our dependencies:
+   Please note that this command is not gonna upgrade your devDeps and deps to the latest version. It is only upgrading `nx` and its belongings. So we can use other approaches to upgrade our dependencies:
    ```cmd
    npm outdated
    npm update
