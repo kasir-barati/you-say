@@ -21,3 +21,7 @@ A community-driven platform where YOUR input shapes the future of the app. Wheth
 | Redux             | An open-source JavaScript library for managing and centralizing application state.                              |
 | MongoDB           | A source-available, cross-platform, document-oriented database program. Classified as a NoSQL database.         |
 | Terraform         | An IaC software tool to streamline deployment in local environment and CI/CD pipelines.                         |
+
+# Wanna collaborate
+
+Read the [contribution guideline](./CONTRIBUTING.md) for understanding how we work. It is not a complete guideline though, so feel free to reach out to us if you have any questions. Our software is licensed under the [GPL version 3 license](./LICENSE), so you can check it out if you like.
