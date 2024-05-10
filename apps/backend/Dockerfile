@@ -3,7 +3,7 @@
 # Run the container with `docker run -p 3001:3001 -t you-say-api-image`.
 FROM docker.io/node:20.10.0-alpine AS build_stage
 WORKDIR /build
-COPY tsconfig.base.json jest.preset.js nx.json ./
+COPY tsconfig.base.json .eslintrc.json jest.preset.js nx.json ./
 COPY package*.json ./
 # README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
 RUN npm ci --include="dev" --ignore-scripts

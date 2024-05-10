@@ -23,7 +23,7 @@ function clickOnSignInButtonInHeader() {
   cy.get(SELECTORS.singInButtonInHeader).click();
 }
 function clickOnSignUpButtonInHeader() {
-  cy.get(SELECTORS.singUpButtonInHeader).click();
+  cy.get(SELECTORS.singUpButtonInHeader).first().click();
 }
 function clickOnDoNotHaveAnAccountButton() {
   cy.get(SELECTORS.doNotHaveAnAccountButton).click();
@@ -72,7 +72,7 @@ function successfulSignUp() {
   );
 }
 function signUpFormExists() {
-  cy.get(SELECTORS.signUpEmailInput).should('be.visible');
+  cy.getByTestId(SELECTORS.signUpEmailInput).should('be.visible');
   cy.get(SELECTORS.signUpLastNameInput).should('be.visible');
   cy.get(SELECTORS.singUpFirstNameInput).should('be.visible');
   cy.getByTestId(SELECTORS.signUpButtonInSignUpForm).should(
