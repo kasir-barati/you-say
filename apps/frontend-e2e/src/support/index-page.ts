@@ -44,10 +44,10 @@ function clickOnSignInButton() {
   cy.get(SELECTORS.signInButton).click();
 }
 function fillSubscriptionInput(value: string) {
-  cy.get(SELECTORS.subscribeInput).type(value);
+  cy.get(SELECTORS.subscribeInput).first().type(value);
 }
 function clickOnSubscribe() {
-  cy.get(SELECTORS.subscribeButton).click();
+  cy.get(SELECTORS.subscribeButton).first().click();
 }
 // #endregion
 
