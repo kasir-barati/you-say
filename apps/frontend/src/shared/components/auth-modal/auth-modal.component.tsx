@@ -39,7 +39,11 @@ export function AuthModal({
   const title = useMemo(() => {
     if (isSignInModal) {
       return (
-        <Typography data-test="auth-modal-sign-in-title" variant="h4">
+        <Typography
+          color="black"
+          data-test="auth-modal-sign-in-title"
+          variant="h4"
+        >
           Sign in
         </Typography>
       );
@@ -104,7 +108,7 @@ function toggler({
   onClick: () => void;
 }) {
   return (
-    <Typography variant="body2">
+    <Typography color="black" variant="body2">
       {text}
       <Button
         title={buttonText}
