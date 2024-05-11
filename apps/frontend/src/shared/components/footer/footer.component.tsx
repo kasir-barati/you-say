@@ -22,27 +22,30 @@ export function Footer() {
           alignItems="center"
           justifyContent="space-between"
           letterSpacing={3}
+          rowGap={2}
         >
-          <Grid2>
+          <Grid2 sm="auto" xs={12}>
             <MuiLink
               component={Link}
               href="/"
               aria-label="Index page"
               data-test="logo-link-in-footer"
               underline="none"
+              display="inline-flex"
             >
               <Logo variant="h4" />
             </MuiLink>
           </Grid2>
-          <Grid2>
+          <Grid2 sm="auto" xs={12}>
             <SignUpButton variant="text" color="inherit" />
           </Grid2>
-          <Grid2>
+          <Grid2 sm="auto" xs={12}>
             <MuiLink
               href="mailto:todo@email.com"
               color="inherit"
               component={Link}
               data-test="contact-us-link-in-footer"
+              display="inline-flex"
             >
               Contact Us
             </MuiLink>
@@ -50,7 +53,9 @@ export function Footer() {
         </Grid2>
       </Container>
       <Divider />
-      <Box sx={{ paddingY: 17 }}>
+      <Box
+        sx={{ paddingY: 17, display: { xs: 'none', sm: 'block' } }}
+      >
         <Grid2
           container
           rowGap={1}

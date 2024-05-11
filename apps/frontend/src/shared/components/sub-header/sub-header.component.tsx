@@ -21,7 +21,13 @@ export function SubHeader() {
         alignContent="center"
       >
         <Grid2>
-          <Typography variant="h3" fontWeight="bold" color="white">
+          <Typography
+            sx={{
+              typography: { sm: 'h3', xs: 'h4' },
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
             Thoughts, comments, etc
           </Typography>
         </Grid2>

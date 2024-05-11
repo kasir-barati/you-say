@@ -29,14 +29,14 @@ export function Post({
       alignItems="center"
       alignContent="center"
     >
-      <Grid2 xs>
+      <Grid2 sm="auto" xs={12}>
         <img
           src={postImage}
           alt="Post image"
           style={{ width: '100%', borderRadius: 8 }}
         />
       </Grid2>
-      <Grid2 container xs={9}>
+      <Grid2 container sm={9} xs={12}>
         <Typography width={'100%'} variant="h6" fontWeight="bold">
           {title}
         </Typography>

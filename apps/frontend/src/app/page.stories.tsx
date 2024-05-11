@@ -8,6 +8,9 @@ type Story = StoryObj<typeof Index>;
 
 export default {
   parameters: {
+    backgrounds: {
+      default: 'dark',
+    },
     msw: {
       handlers: [
         http.get('*/posts?limit=3&createdAt=desc', () =>

@@ -1,69 +1,25 @@
 'use client';
 
+import { useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import MuiLink from '@mui/material/Link';
-import Toolbar from '@mui/material/Toolbar';
-import Grid2 from '@mui/material/Unstable_Grid2';
-import Link from 'next/link';
-import { Logo } from '../logo/logo.component';
-import { SignUpButton } from '../sign-up-button/sign-up-modal.component';
-import { SearchModal } from './search-modal.component';
-import { SignInButton } from './sign-in-button.component';
+import { DesktopToolbar } from './desktop-toolbar/desktop-toolbar.component';
+import { MobileToolbar } from './mobile-toolbar/mobile-toolbar.componenrt';
 
 export function Header({ headerId }: Readonly<HeaderProps>) {
   // const { isAuthenticated, login, logout } = useFusionAuth();
+  const isMobile = useMediaQuery('(max-width:600px)', {
+    noSsr: true,
+  });
 
   return (
     <AppBar position="static" data-test="AppBar">
       <Container>
-        <Toolbar disableGutters id={headerId}>
-          <Grid2
-            container
-            flexGrow={1}
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Grid2 letterSpacing={1.2}>
-              <MuiLink
-                href="/"
-                color="#fff"
-                underline="none"
-                fontWeight="bold"
-                component={Link}
-                data-test="home-link"
-                marginRight={4}
-              >
-                Home
-              </MuiLink>
-              <MuiLink
-                href="/about"
-                color="#fff"
-                underline="none"
-                fontWeight="bold"
-                component={Link}
-                data-test="about-link"
-              >
-                About
-              </MuiLink>
-            </Grid2>
-            <Grid2>
-              <MuiLink
-                component={Link}
-                href="/"
-                aria-label="Index page"
-                data-test="logo-link"
-              >
-                <Logo variant="h4" />
-              </MuiLink>
-            </Grid2>
-            <Grid2>
-              <SearchModal />
-              <SignInButton />
-              <SignUpButton />
-            </Grid2>
-          </Grid2>
-        </Toolbar>
+        {isMobile ? (
+          <MobileToolbar id={headerId} />
+        ) : (
+          <DesktopToolbar id={headerId} />
+        )}
       </Container>
     </AppBar>
   );
