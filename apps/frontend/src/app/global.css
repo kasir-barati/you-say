@@ -1,5 +1,10 @@
 @import '../../../../node_modules/@mdxeditor/editor/dist/style.css';
 
+body {
+  color: white;
+  background-color: #010023;
+}
+
 .w-full {
   width: 100%;
 }

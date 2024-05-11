@@ -9,7 +9,7 @@ export function SubHeader() {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(70deg, #201878, #95326E)',
+        background: 'linear-gradient(145deg, #72F1EA, #010023)',
         paddingY: 17,
       }}
     >

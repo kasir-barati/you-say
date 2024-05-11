@@ -1,13 +1,13 @@
 'use client';
 
 import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { FindAllPostsResponse } from '@shared';
 import { useEffect, useState } from 'react';
 import { useFindAllMutation } from '../../api/post.api';
 import { logger } from '../../utils/logger.util';
+import { Divider } from '../divider/divider.component';
 import { Post } from './post.component';
 
 export function Latest() {
