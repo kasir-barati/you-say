@@ -97,7 +97,7 @@ export class StaticLoggerService extends Logger {
     context,
     optionalParams,
   }: StaticLoggerArgs) {
-    if (process.env.NODE_ENV !== NodeEnv.dev) {
+    if (process.env.NODE_ENV !== NodeEnv.development) {
       return;
     }
 

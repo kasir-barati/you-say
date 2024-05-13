@@ -110,7 +110,7 @@ export class LoggerService extends ConsoleLogger {
     message: unknown,
     contextOrOptionalParams?: unknown,
   ): void {
-    if (this.loggerModuleOptions.nodeEnv !== NodeEnv.dev) {
+    if (this.loggerModuleOptions.nodeEnv !== NodeEnv.development) {
       return;
     }
 

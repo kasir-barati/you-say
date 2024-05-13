@@ -14,9 +14,9 @@ declare global {
   }
 }
 
+// https://nextjs.org/docs/messages/non-standard-node-env
 export enum NodeEnv {
-  dev = 'dev',
+  development = 'development',
   production = 'production',
   test = 'test',
-  provision = 'provision',
 }

@@ -4,7 +4,7 @@ import { FusionAuthProvider } from '@fusionauth/react-sdk';
 import CssBaseline from '@mui/material/CssBaseline';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
-import { fusionAuthConfig } from '../../../config';
+import { fusionAuthProviderConfig } from '../../../config';
 import { getStore } from '../../store';
 import { BackToTop } from '../back-to-top/back-to-top.component';
 import { Footer } from '../footer/footer.component';
@@ -20,7 +20,7 @@ export function Application({
     <Provider store={store}>
       <CssBaseline />
       <Notification />
-      <FusionAuthProvider {...fusionAuthConfig}>
+      <FusionAuthProvider {...fusionAuthProviderConfig}>
         <Header headerId="back-to-top-anchor" />
         {children}
         <Footer />

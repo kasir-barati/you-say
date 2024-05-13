@@ -9,7 +9,7 @@ describe('LoggerService', () => {
   describe(`NODE_ENV != ${NodeEnv.test}`, () => {
     beforeAll(() => {
       loggerModuleOptions = SinonMock.with<LoggerModuleOptions>({
-        nodeEnv: NodeEnv.dev,
+        nodeEnv: NodeEnv.development,
       });
       loggerService = new LoggerService(loggerModuleOptions);
     });
@@ -129,7 +129,7 @@ describe('LoggerService', () => {
     });
   });
 
-  describe(`NODE_ENV != ${NodeEnv.dev}`, () => {
+  describe(`NODE_ENV != ${NodeEnv.development}`, () => {
     beforeAll(() => {
       loggerModuleOptions = SinonMock.with<LoggerModuleOptions>({
         nodeEnv: NodeEnv.production,

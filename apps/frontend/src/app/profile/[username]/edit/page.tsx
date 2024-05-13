@@ -1,3 +1,5 @@
+'use client';
+
 import { useFusionAuth } from '@fusionauth/react-sdk';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Avatar from '@mui/material/Avatar';

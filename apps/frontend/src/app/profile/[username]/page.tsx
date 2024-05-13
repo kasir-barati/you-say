@@ -1,3 +1,5 @@
+'use client';
+
 import { useFusionAuth } from '@fusionauth/react-sdk';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';

@@ -10,7 +10,7 @@ describe('StaticLoggerService', () => {
 
   describe(`NODE_ENV != ${NodeEnv.test}`, () => {
     beforeAll(() => {
-      process.env.NODE_ENV = NodeEnv.dev;
+      process.env.NODE_ENV = NodeEnv.development;
     });
 
     it('should log the message and context when NODE_ENV is not test', () => {
@@ -128,7 +128,7 @@ describe('StaticLoggerService', () => {
     });
   });
 
-  describe(`NODE_ENV != ${NodeEnv.dev}`, () => {
+  describe(`NODE_ENV != ${NodeEnv.development}`, () => {
     beforeAll(() => {
       process.env.NODE_ENV = NodeEnv.production;
     });

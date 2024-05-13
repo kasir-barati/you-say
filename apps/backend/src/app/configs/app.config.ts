@@ -34,7 +34,7 @@ class EnvironmentVariables implements AppConfig {
 
   @IsOptional()
   @IsEnum(NodeEnv)
-  NODE_ENV: NodeEnv = NodeEnv.dev;
+  NODE_ENV: NodeEnv = NodeEnv.development;
 
   @IsOptional()
   @IsString()

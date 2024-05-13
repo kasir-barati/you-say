@@ -12,8 +12,8 @@ input:-webkit-autofill,
 }
 
 body {
-  color: white;
-  background-color: #010023;
+  color: white !important;
+  background-color: #010023 !important;
 }
 
 .w-full {
