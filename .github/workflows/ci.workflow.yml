@@ -2,6 +2,7 @@ name: Continuous Integration
 
 env:
   NODE_ENV: "production"
+  BUILD_STANDALONE: "true"
 
 on:
   push:
