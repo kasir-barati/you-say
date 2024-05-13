@@ -1,5 +1,16 @@
 @import '../../../../node_modules/@mdxeditor/editor/dist/style.css';
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.5) inset !important;
+}
+input:-webkit-autofill,
+.MuiInputBase-root:has(> input:-webkit-autofill) {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 body {
   color: white;
   background-color: #010023;

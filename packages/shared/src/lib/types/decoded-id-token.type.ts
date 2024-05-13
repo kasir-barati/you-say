@@ -1,6 +1,9 @@
 import { Role } from './role.type';
 
 export interface DecodedIdToken {
+  family_name: string;
+  given_name: string;
+  picture: string;
   sub: string;
   roles: Role[] | null;
   aud: string;

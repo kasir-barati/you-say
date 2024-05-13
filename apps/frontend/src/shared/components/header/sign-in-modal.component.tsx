@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 
 export function SignInModal() {
   const pathname = usePathname();
-  const { login } = useFusionAuth();
-  const handleLogin = () => {
-    login(pathname ?? undefined);
+  const { startLogin } = useFusionAuth();
+  const handleClick = () => {
+    startLogin(pathname ?? undefined);
   };
 
   return (
@@ -16,7 +16,7 @@ export function SignInModal() {
         title="Continue signing in..."
         aria-label="Continue signing in..."
         color="primary"
-        onClick={handleLogin}
+        onClick={handleClick}
         fullWidth
         variant="contained"
       >

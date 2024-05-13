@@ -16,6 +16,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Logo } from '../../logo/logo.component';
+import { ShopButton } from '../../shop-button/shop-button.component';
+import { SingOutButton } from '../../sign-out-button/sign-out.component';
 import { SearchModal } from '../search-modal.component';
 
 const drawerWidth = 240;
@@ -27,9 +29,9 @@ const navItems = [
 export function MobileToolbar({ id }: Readonly<MobileToolbarProps>) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname = usePathname();
-  const { login } = useFusionAuth();
+  const { startLogin, isLoggedIn } = useFusionAuth();
   const handleLogin = () => {
-    login(pathname ?? undefined);
+    startLogin(pathname ?? undefined);
   };
   const handleDrawerToggle = () => {
     setIsDrawerOpen((prevState) => !prevState);
@@ -84,24 +86,33 @@ export function MobileToolbar({ id }: Readonly<MobileToolbarProps>) {
               </ListItem>
             ))}
           </List>
-          <Button
-            title="Sign in"
-            aria-label="Sign in"
-            color="primary"
-            onClick={handleLogin}
-            variant="contained"
-          >
-            Sign in
-          </Button>
-          <MuiLink
-            marginLeft={1}
-            href="/sign-up"
-            underline="none"
-            component={Link}
-            textTransform="uppercase"
-          >
-            Sign up
-          </MuiLink>
+          {isLoggedIn ? (
+            <>
+              <SingOutButton />
+              <ShopButton />
+            </>
+          ) : (
+            <>
+              <Button
+                title="Sign in"
+                aria-label="Sign in"
+                color="primary"
+                onClick={handleLogin}
+                variant="contained"
+              >
+                Sign in
+              </Button>
+              <MuiLink
+                marginLeft={1}
+                href="/sign-up"
+                underline="none"
+                component={Link}
+                textTransform="uppercase"
+              >
+                Sign up
+              </MuiLink>
+            </>
+          )}
         </Box>
       </Drawer>
       <Box>

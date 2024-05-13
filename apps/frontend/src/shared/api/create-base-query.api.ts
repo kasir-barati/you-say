@@ -1,6 +1,5 @@
 import { Mutex } from 'async-mutex';
 import axios from 'axios';
-import { userSignedOut } from '../store/auth.slice';
 import {
   AxiosBaseQueryError,
   axiosBaseQuery,
@@ -11,6 +10,7 @@ const mutex = new Mutex();
 export function createBaseQuery(
   backendUrl: string,
 ): ReturnType<typeof axiosBaseQuery> {
+  // const {logout} = useFusionAuth(); // TODO: can I do this?
   const baseQuery = axiosBaseQuery({
     baseUrl: backendUrl,
     // Request won't fails soly due to absence of credentials, rather server will throw an error at us if it needed the credentials.
@@ -46,7 +46,7 @@ export function createBaseQuery(
 
         return await baseQuery(args, api, extraOption);
       } catch (error) {
-        api.dispatch(userSignedOut());
+        // logout()
       } finally {
         mutexReleaser();
         // TODO: should not we return undefined or throw an error in case we have dispatched an signOut and our refreshing failed?

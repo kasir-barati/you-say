@@ -7,10 +7,8 @@ import {
   NotificationState,
   notificationReducer,
 } from '../components/notification/notification.slice';
-import { AuthState, authReducer } from './auth.slice';
 
 const rootReducer = combineReducers({
-  auth: authReducer,
   notifications: notificationReducer,
   [authApi.reducerPath]: authApi.reducer,
   [postApi.reducerPath]: postApi.reducer,
@@ -19,7 +17,6 @@ const rootReducer = combineReducers({
 });
 
 export interface PreloadedState {
-  auth?: AuthState;
   notifications?: NotificationState[];
 }
 export function createStore(preloadedState?: PreloadedState) {

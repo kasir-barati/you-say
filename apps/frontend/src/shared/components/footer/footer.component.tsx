@@ -1,3 +1,4 @@
+import { useFusionAuth } from '@fusionauth/react-sdk';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import MuiLink from '@mui/material/Link';
@@ -7,10 +8,13 @@ import Grid2 from '@mui/material/Unstable_Grid2';
 import Link from 'next/link';
 import { Divider } from '../divider/divider.component';
 import { Logo } from '../logo/logo.component';
+import { ShopButton } from '../shop-button/shop-button.component';
 import { SignUpButton } from '../sign-up-button/sign-up-modal.component';
 import { SubscriptionTextField } from '../subscription-text-field/subscription-text-field.component';
 
 export function Footer() {
+  const { isLoggedIn } = useFusionAuth();
+
   return (
     <Stack paddingY={3} rowGap={2}>
       <Divider />
@@ -37,7 +41,11 @@ export function Footer() {
             </MuiLink>
           </Grid2>
           <Grid2 sm="auto" xs={12}>
-            <SignUpButton variant="text" color="inherit" />
+            {isLoggedIn ? (
+              <ShopButton />
+            ) : (
+              <SignUpButton variant="text" color="inherit" />
+            )}
           </Grid2>
           <Grid2 sm="auto" xs={12}>
             <MuiLink

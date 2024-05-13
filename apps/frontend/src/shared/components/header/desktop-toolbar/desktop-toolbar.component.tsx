@@ -1,5 +1,6 @@
 'use client';
 
+import { useFusionAuth } from '@fusionauth/react-sdk';
 import MuiLink from '@mui/material/Link';
 import Toolbar from '@mui/material/Toolbar';
 import Grid2 from '@mui/material/Unstable_Grid2';
@@ -8,10 +9,13 @@ import { Logo } from '../../logo/logo.component';
 import { SignUpButton } from '../../sign-up-button/sign-up-modal.component';
 import { SearchModal } from '../search-modal.component';
 import { SignInButton } from '../sign-in-button.component';
+import { AccountButton } from './account-button.component';
 
 export function DesktopToolbar({
   id,
 }: Readonly<DesktopToolbarProps>) {
+  const { isLoggedIn } = useFusionAuth();
+
   return (
     <Toolbar disableGutters id={id}>
       <Grid2
@@ -55,8 +59,14 @@ export function DesktopToolbar({
         </Grid2>
         <Grid2>
           <SearchModal />
-          <SignInButton />
-          <SignUpButton />
+          {isLoggedIn ? (
+            <AccountButton />
+          ) : (
+            <>
+              <SignInButton />
+              <SignUpButton />
+            </>
+          )}
         </Grid2>
       </Grid2>
     </Toolbar>

@@ -18,7 +18,7 @@ describe('RoleGuard', () => {
   });
 
   it.each<{
-    requestUser: RequestWithUser['user'];
+    requestUser: Partial<RequestWithUser['user']>;
     expectedRoles: Role[];
   }>([
     {
@@ -55,7 +55,7 @@ describe('RoleGuard', () => {
   );
 
   it.each<{
-    requestUser: RequestWithUser['user'];
+    requestUser: Partial<RequestWithUser['user']>;
     expectedRoles: Role[];
   }>([
     {
