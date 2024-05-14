@@ -4,6 +4,12 @@
   "sourceRoot": "apps/frontend",
   "projectType": "application",
   "targets": {
+    "build:local": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx env-cmd -f .env nx build frontend"]
+      }
+    },
     "build:docker": {
       "executor": "nx:run-commands",
       "options": {
