@@ -4,6 +4,7 @@
 .next
 Docker*
 **/*.tsbuildinfo
+mockServiceWorker.js
 
 .DS_STORE
 
