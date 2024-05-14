@@ -1,3 +1,5 @@
+'use client';
+
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';

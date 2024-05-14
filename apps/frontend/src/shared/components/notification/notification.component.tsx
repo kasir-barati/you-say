@@ -1,3 +1,5 @@
+'use client';
+
 import { SnackbarCloseReason, SnackbarOrigin } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';

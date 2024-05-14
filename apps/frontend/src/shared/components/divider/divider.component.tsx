@@ -1,3 +1,5 @@
+'use client';
+
 import MuiDivider from '@mui/material/Divider';
 import { StandardCSSProperties } from '@mui/system/styleFunctionSx';
 

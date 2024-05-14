@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@mui/material/Button';
 import { useModal } from '../../hooks/use-modal.hook';
 import { AuthModal } from '../auth-modal/auth-modal.component';

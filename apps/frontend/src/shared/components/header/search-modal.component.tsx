@@ -1,3 +1,5 @@
+'use client';
+
 import MuiSearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';

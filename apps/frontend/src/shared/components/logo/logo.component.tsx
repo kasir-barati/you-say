@@ -1,3 +1,5 @@
+'use client';
+
 import Typography from '@mui/material/Typography';
 import { Leckerli_One } from 'next/font/google';
 

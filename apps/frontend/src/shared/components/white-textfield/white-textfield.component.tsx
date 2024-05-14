@@ -1,3 +1,5 @@
+'use client';
+
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 
 const WhiteInputLabelProps = {

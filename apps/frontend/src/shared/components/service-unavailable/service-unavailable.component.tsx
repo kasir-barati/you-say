@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -13,7 +15,7 @@ const containerStyle = {
   borderRadius: '20px',
 };
 
-export default function ServiceUnavailablePage() {
+export function ServiceUnavailable() {
   return (
     <Container sx={containerStyle}>
       <Stack spacing={2} marginX={3} marginY={13}>

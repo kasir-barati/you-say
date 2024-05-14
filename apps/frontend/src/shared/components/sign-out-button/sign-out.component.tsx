@@ -1,3 +1,5 @@
+'use client';
+
 import { useFusionAuth } from '@fusionauth/react-sdk';
 import Button from '@mui/material/Button';
 
