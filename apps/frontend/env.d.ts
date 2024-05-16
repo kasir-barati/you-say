@@ -5,6 +5,5 @@ namespace NodeJS {
     NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID: string;
     NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES: string;
     NEXT_PUBLIC_NODE_ENV: import('../../packages/shared/src/index').NodeEnv;
-    BUILD_STANDALONE?: 'true' | 'false';
   }
 }

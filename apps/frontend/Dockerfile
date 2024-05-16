@@ -8,7 +8,6 @@ FROM docker.io/node:20.10.0-alpine AS dependencies_stage
 RUN apk add --no-cache libc6-compat
 
 FROM dependencies_stage AS build_stage
-ENV BUILD_STANDALONE true
 WORKDIR /build
 COPY tsconfig.base.json jest.preset.js nx.json ./
 COPY package*.json ./

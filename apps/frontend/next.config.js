@@ -16,10 +16,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: join(__dirname, '../../'),
   },
-  output:
-    process.env.BUILD_STANDALONE === 'true'
-      ? 'standalone'
-      : undefined,
+  output: 'standalone',
   cleanDistDir: true,
   images: {
     remotePatterns: [
