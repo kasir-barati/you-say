@@ -48,7 +48,7 @@ jobs:
             is-backend:
               - 'apps/backend/**'
               - 'apps/backend-e2e/**'
-              - 'packages/backend/auth/**'
+              - 'libs/backend/auth/**'
               - '.github/workflows/backend-e2e-tests.workflow.yml'
 
       - if: ${{ steps.changed-paths.outputs.is-backend == 'true' }}

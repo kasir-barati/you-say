@@ -15,7 +15,7 @@
           "docker compose down -v",
           "docker compose -f fusionauth.docker-compose.yml down -v",
           "rm -rf ./dist/apps/backend",
-          "rm -rf ./dist/packages",
+          "rm -rf ./dist/libs",
           "rm -rf deployment/terraform.tfstate* deployment/.terraform*",
           "docker system prune -f"
         ]

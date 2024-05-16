@@ -1,4 +1,4 @@
-#### Please note that all the packages that we have created here for our backend are not NestJS dynamic modules but they are also normal Nx packages
+#### Please note that all the libs that we have created here for our backend are not NestJS dynamic modules but they are also normal Nx libs
 
 # What are the NestJS modules
 

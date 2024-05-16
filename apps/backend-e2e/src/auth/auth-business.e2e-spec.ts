@@ -79,7 +79,7 @@ describe('Auth -- business', () => {
       const loginRedirectUrl = response.request.res.responseUrl;
 
       expect(response.status).toBe(200);
-      // README: a more exhaustive test to check generate URL had been written here: packages/backend/auth/src/lib/services/auth.service.spec.ts
+      // README: a more exhaustive test to check generate URL had been written here: libs/backend/auth/src/lib/services/auth.service.spec.ts
       expect(loginRedirectUrl).toEqual(expect.any(String));
     });
   });

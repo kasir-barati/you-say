@@ -2,7 +2,7 @@
 
 Auth package, created and will serve our backend application to communicate and work with FusionAuth API. Task such as registering new users etc will be managed and handled by this package.
 
-#### Super important: This package comes with its own RESTful API, so be aware of it. It is defined under `/auth` and you can find them in `packages/backend/auth/src/lib/auth.controller.ts`
+#### Super important: This package comes with its own RESTful API, so be aware of it. It is defined under `/auth` and you can find them in `libs/backend/auth/src/lib/auth.controller.ts`
 
 ## Building
 

@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm ci --include="dev" --ignore-scripts
 COPY apps/backend/healthcheck.js .
 COPY apps/backend ./apps/backend
-COPY packages ./packages
+COPY libs ./libs
 RUN npx nx build backend
 
 FROM docker.io/node:20.10.0-alpine
@@ -21,7 +21,7 @@ COPY --chown=backend:backend --from=build_stage /build/healthcheck.js ./
 COPY --chown=backend:backend --from=build_stage /build/package*.json ./
 # RUN npm prune --omit=dev
 COPY --chown=backend:backend --from=build_stage /build/dist/apps/backend ./dist/apps/backend
-COPY --chown=backend:backend --from=build_stage /build/dist/packages ./dist/packages
+COPY --chown=backend:backend --from=build_stage /build/dist/libs ./dist/libs
 
 EXPOSE 3001
 

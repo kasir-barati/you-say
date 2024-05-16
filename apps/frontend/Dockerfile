@@ -15,7 +15,7 @@ COPY tsconfig.base.json jest.preset.js nx.json ./
 COPY package*.json ./
 # README: Why --ignore-scripts? https://github.com/typicode/husky/issues/920#issuecomment-809851650
 RUN npm ci --include="dev" --ignore-scripts
-COPY packages/shared ./packages/shared
+COPY libs/shared ./libs/shared
 COPY apps/frontend ./apps/frontend
 RUN npx nx build frontend
 
