@@ -7,7 +7,7 @@
     "build:local": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npx env-cmd -f .env nx build frontend"]
+        "commands": ["NODE_ENV=production nx build frontend"]
       }
     },
     "build:docker": {
