@@ -15,10 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@backend/auth": ["packages/backend/auth/src/index.ts"],
-      "@backend/common": ["packages/backend/common/src/index.ts"],
-      "@backend/logger": ["packages/backend/logger/src/index.ts"],
-      "@shared": ["packages/shared/src/index.ts"]
+      "@backend/auth": ["libs/backend/auth/src/index.ts"],
+      "@backend/common": ["libs/backend/common/src/index.ts"],
+      "@backend/logger": ["libs/backend/logger/src/index.ts"],
+      "@shared": ["libs/shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -10,5 +10,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/packages/backend/common',
+  coverageDirectory: '../../../coverage/libs/backend/common',
 };

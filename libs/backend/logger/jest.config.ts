@@ -2,7 +2,7 @@ import type { Config } from 'jest';
 
 /* eslint-disable */
 export default {
-  displayName: '@backend/auth',
+  displayName: 'logger',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -12,5 +12,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/packages/backend/auth',
+  coverageDirectory: '../../../coverage/libs/backend/logger',
 } satisfies Config;
