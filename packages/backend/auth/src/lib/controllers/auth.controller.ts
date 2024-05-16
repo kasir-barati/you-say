@@ -170,10 +170,8 @@ export class AuthController {
     return userInfo;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('logout')
   @Redirect()
-  @ApiBearerAuth()
   @ApiOperation({
     summary:
       'Log the User out of the OAuth server SSO session using a GET request',
@@ -186,11 +184,6 @@ export class AuthController {
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorException,
     description: 'Internal server error.',
-  })
-  @ApiUnauthorizedResponse({
-    type: UnauthorizedException,
-    description:
-      'Could not validate and verify the provided JWT token',
   })
   @ApiBadRequestResponse({
     type: ErrorResponseDto,
