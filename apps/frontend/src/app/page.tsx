@@ -1,6 +1,6 @@
 import { Metadata, Viewport } from 'next';
-// import { Latest } from '../shared/components/latest/latest.component';
-// import { SubHeader } from '../shared/components/sub-header/sub-header.component';
+import { Latest } from '../shared/components/latest/latest.component';
+import { SubHeader } from '../shared/components/sub-header/sub-header.component';
 
 export const metadata: Metadata = {
   title: 'you-say',
@@ -15,8 +15,8 @@ export const viewport: Viewport = {
 export default function Index() {
   return (
     <div>
-      {/* <SubHeader />
-      <Latest /> */}
+      <SubHeader />
+      <Latest />
     </div>
   );
 }

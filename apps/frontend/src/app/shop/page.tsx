@@ -1,10 +1,7 @@
-// 'use client';
+'use client';
 
-// import Container from '@mui/material/Container';
+import Container from '@mui/material/Container';
 
 export default function Shop() {
-  return (
-    <></>
-    // <Container>SHOP</Container>
-  );
+  return <Container>SHOP</Container>;
 }
