@@ -1,4 +1,4 @@
-import { FusionAuthProviderConfig } from '@fusionauth/react-sdk';
+import { FusionAuthConfig as FusionAuthProviderConfig } from '@fusionauth/react-sdk';
 
 export const fusionAuthProviderConfig: FusionAuthProviderConfig = {
   mePath: '/auth/me',
@@ -9,10 +9,9 @@ export const fusionAuthProviderConfig: FusionAuthProviderConfig = {
   redirectUri: process.env.NEXT_PUBLIC_FRONTEND_URL,
   serverUrl: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
   scope: process.env.NEXT_PUBLIC_FUSIONAUTH_OAUTH_SCOPES,
-  clientId: process.env.NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID,
-  shouldAutoFetchUserInfo: true,
-  shouldAutoRefresh: true,
-  onRedirect(_state) {
-    // TODO: Add notification
-  },
+  clientID: process.env.NEXT_PUBLIC_FUSIONAUTH_APPLICATION_ID,
+  // TODO: https://github.com/FusionAuth/fusionauth-javascript-sdk/issues/99
+  // shouldAutoFetchUserInfo: true,
+  // shouldAutoRefresh: true,
+  // onRedirect(_state) {},
 };

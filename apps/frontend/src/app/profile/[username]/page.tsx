@@ -12,7 +12,7 @@ import { DefaultCoverImage } from '../../../shared/components/default-cover-imag
 
 // TODO: utilize useFusionAuth + http calls to fetch necessary data for profile page
 export default function Profile({ params }: Readonly<ProfileProps>) {
-  const { userInfo } = useFusionAuth();
+  const { user: userInfo } = useFusionAuth();
   const username = params.username;
   const bio = 'water earth fire air '.repeat(50).trim();
 

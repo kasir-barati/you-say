@@ -40,7 +40,7 @@ const countDownGrid2Sx = {
 };
 
 export function AccountButton() {
-  const { userInfo } = useFusionAuth();
+  const { user: userInfo } = useFusionAuth();
   const { isOpen, openModal, closeModal } = useModal();
   const avatarAlt = userInfo?.given_name ?? 'Avatar';
   const avatarUrl = userInfo?.picture;

@@ -29,7 +29,8 @@ const navItems = [
 export function MobileToolbar({ id }: Readonly<MobileToolbarProps>) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname = usePathname();
-  const { startLogin, isLoggedIn } = useFusionAuth();
+  const { login: startLogin, isAuthenticated: isLoggedIn } =
+    useFusionAuth();
   const handleLogin = () => {
     startLogin(pathname ?? undefined);
   };

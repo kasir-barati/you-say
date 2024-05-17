@@ -56,7 +56,7 @@ const gap = 2;
 export default function EditProfile({
   params,
 }: Readonly<EditProfileProps>) {
-  const { userInfo } = useFusionAuth();
+  const { user: userInfo } = useFusionAuth();
   const username = params.username;
   const handleRemoveInterest = (value: string) => {
     console.log(value);

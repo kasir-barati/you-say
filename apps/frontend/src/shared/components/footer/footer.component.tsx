@@ -15,7 +15,7 @@ import { SignUpButton } from '../sign-up-button/sign-up-modal.component';
 import { SubscriptionTextField } from '../subscription-text-field/subscription-text-field.component';
 
 export function Footer() {
-  const { isLoggedIn } = useFusionAuth();
+  const { isAuthenticated: isLoggedIn } = useFusionAuth();
 
   return (
     <Stack paddingY={3} rowGap={2}>

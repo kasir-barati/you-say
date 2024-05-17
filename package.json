@@ -35,7 +35,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@fusionauth/react-sdk": "^2.1.1",
+    "@fusionauth/react-sdk": "^1.0.6",
     "@fusionauth/typescript-client": "^1.49.1",
     "@mdxeditor/editor": "^3.0.5",
     "@mui/icons-material": "^5.15.17",

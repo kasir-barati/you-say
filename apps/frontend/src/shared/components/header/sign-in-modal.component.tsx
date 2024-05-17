@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 
 export function SignInModal() {
   const pathname = usePathname();
-  const { startLogin } = useFusionAuth();
+  const { login: startLogin } = useFusionAuth();
   const handleClick = () => {
     startLogin(pathname ?? undefined);
   };

@@ -14,7 +14,7 @@ import { AccountButton } from './account-button.component';
 export function DesktopToolbar({
   id,
 }: Readonly<DesktopToolbarProps>) {
-  const { isLoggedIn } = useFusionAuth();
+  const { isAuthenticated: isLoggedIn } = useFusionAuth();
 
   return (
     <Toolbar disableGutters id={id}>
