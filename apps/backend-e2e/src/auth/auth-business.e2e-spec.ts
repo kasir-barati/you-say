@@ -134,7 +134,7 @@ describe('Auth -- business', () => {
         email_verified: true,
         family_name: 'Kazuya',
         given_name: 'Souma',
-        preferred_username: 'souma.kazuya@you-say.com',
+        preferred_username: 'souma_kazuya',
         roles: [],
         scope: 'openid offline_access',
         settings: {},
