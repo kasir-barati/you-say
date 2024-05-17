@@ -41,13 +41,15 @@ export class PostDto implements Post {
 
   @ApiProperty({
     description: 'Post created at',
-    example: new Date().toString(),
+    example:
+      'Fri May 17 2024 16:33:54 GMT+0200 (Central European Summer Time)',
   })
   createdAt: string;
 
   @ApiProperty({
     description: 'Post updated at',
-    example: new Date().toString(),
+    example:
+      'Fri May 17 2024 16:33:54 GMT+0200 (Central European Summer Time)',
   })
   updatedAt: string;
 }

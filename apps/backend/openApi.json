@@ -283,16 +283,6 @@
               }
             }
           },
-          "401": {
-            "description": "Could not validate and verify the provided JWT token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedException"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -304,8 +294,7 @@
             }
           }
         },
-        "tags": ["Auth"],
-        "security": [{ "bearer": [] }]
+        "tags": ["Auth"]
       }
     },
     "/auth/refresh": {
@@ -761,12 +750,12 @@
           "createdAt": {
             "type": "string",
             "description": "Post created at",
-            "example": "Fri May 10 2024 14:19:53 GMT+0200 (Central European Summer Time)"
+            "example": "Fri May 17 2024 16:33:54 GMT+0200 (Central European Summer Time)"
           },
           "updatedAt": {
             "type": "string",
             "description": "Post updated at",
-            "example": "Fri May 10 2024 14:19:53 GMT+0200 (Central European Summer Time)"
+            "example": "Fri May 17 2024 16:33:54 GMT+0200 (Central European Summer Time)"
           }
         },
         "required": [

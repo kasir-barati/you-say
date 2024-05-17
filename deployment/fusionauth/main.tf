@@ -260,7 +260,7 @@ data "httpclient_request" "set-default-tenant-theme" {
 resource "fusionauth_user" "you-say-admin-user" {
   tenant_id  = fusionauth_tenant.you-say-tenant.id
   email      = "admin@you-say.com"
-  username   = "admin@you-say.com"
+  username   = "admin"
   first_name = "Admin"
   last_name  = "Admin"
   password   = "adminadmin"
@@ -275,7 +275,7 @@ resource "fusionauth_registration" "you-say-admin-registration" {
 resource "fusionauth_user" "you-say-temp-user" {
   tenant_id                = fusionauth_tenant.you-say-tenant.id
   email                    = "souma.kazuya@you-say.com"
-  username                 = "souma.kazuya@you-say.com"
+  username                 = "souma_kazuya"
   first_name               = "Souma"
   last_name                = "Kazuya"
   password                 = "souma.kazuya"
@@ -305,7 +305,7 @@ data "httpclient_request" "create-super-admin-user" {
       "skipVerification" : true,
       "registration" : {
         "roles" : ["admin"],
-        "username" : "admin@admin.com"
+        "username" : "admin"
         "applicationId" : "${local.fusionauth_default_application_id}",
       }
       "user" : {

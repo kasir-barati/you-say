@@ -34,7 +34,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 const EditProfileGrid2Box = styled(Grid2)({
   width: '100%',
-  backgroundColor: '#455572',
+  backgroundColor: '#45557211',
   borderRadius: '8px',
 });
 const EditProfileTitle = ({
@@ -63,7 +63,7 @@ export default function EditProfile({
   };
 
   return (
-    <Container>
+    <Container sx={{ paddingY: 3 }}>
       <Box
         display="flex"
         alignItems="center"

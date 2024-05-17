@@ -47,7 +47,7 @@ export function AccountButton() {
   const name = userInfo?.family_name ?? 'Family';
   const email = userInfo?.email ?? 'email@example.com';
   // TODO: https://github.com/FusionAuth/fusionauth-javascript-sdk/issues/94
-  const username = 'userInfo?.preferred_username';
+  const username = userInfo?.preferred_username;
   // TODO: fetch countdown data in quests collection!
   const handleComplete = () => {
     console.log('');
@@ -96,6 +96,7 @@ export function AccountButton() {
                       component={Link}
                       href={`/profile/${username}/edit`}
                       underline="none"
+                      onClick={closeModal}
                     >
                       Edit
                     </MuiLink>

@@ -367,6 +367,7 @@ describe('FusionAuthClientHelper', () => {
               firstName: registerArgs.firstName,
               password: registerArgs.password,
               fullName: `${registerArgs.firstName} ${registerArgs.lastName}`,
+              username: Sinon.match.string,
               data: {},
             },
           }),
