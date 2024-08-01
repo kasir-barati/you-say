@@ -14,11 +14,15 @@
   7. Code-On-Demand.
   8. Style Derivation Summary.
 
+  <br />
   <details>
     <summary>
       Two Perspectives on Architectural Design (#1 explanation)
     </summary>
     <table>
+      <caption>
+        <strong>REST follows "Incremental Constraints Approach".</strong>
+      </caption>
       <thead>
         <tr>
           <th></th>
@@ -35,19 +39,20 @@
         <tr>
           <td>Description</td>
           <td>
-            Designer begins with <em>no</em>
-            preconceived constraints <small>(predetermined rules or limitations.)</small>
-            or guidelines. They start with a blank canvas, creating an
-            architecture by gradually adding familiar components until the
-            system meets its intended requirements.
+            Designer begins with <em>no</em> preconceived constraints
+            <small>(predetermined rules or limitations)</small> or guidelines.
+            <br />
+            They start with a blank canvas, creating an architecture by gradually
+            adding familiar components until the system meets its intended requirements.
           </td>
           <td>
             Designer starts by considering the overall needs of the system
-            without any constraints. They then gradually impose
-            constraints on different parts of the system. These
-            constraints help ensure that
-            various factors<small>(E.g. efficiency, usability, or scalability.)</small>
-            influencing the system are addressed naturally.
+            without any constraints. They then gradually impose constraints
+            on different parts of the system. 
+            <br />
+            These constraints help ensure that various factors
+            <small>(E.g. efficiency, usability, or scalability)</small>
+            influencing the system, are addressed naturally.
           </td>
         </tr>
         <tr>
@@ -110,13 +115,15 @@
             <ul>
               <li>
                 Improved visibility: monitoring system does not have to look beyond a single request 
-                datum <small>(a single piece of information)</small>
+                <a href="../glossary/README.md#datum">datum</a>
                 in order to determine the full nature of the request.
               </li>
               <li>
                 More reliable because it eases the task of recovering from
-                partial failures <small>(some components of the system fail while others continue to function)</small>.
-                Since each request is completely self-contained and independent of previous requests, in case of failure client can simply retry
+                <a href="../glossary/README.md#partialFailures">partial failures</a>.
+                <br />
+                Remember, each request is completely self-contained and independent of previous requests,
+                in case of failure client can simply retry
                 <small>(The concept of idempotency is closely related to the idea of statelessness)</small> it.
               </li>
               <li>
@@ -133,9 +140,10 @@
                 Decreased network performance: by increasing the repetitive data <small>(per-interaction overhead)</small> sent in a series of requests.
               </li>
               <li>
-                Reduced server control over consistent
-                application behavior<small>(UI/UX)</small>: 
-                application becomes dependent on the correct implementation of semantics across multiple client versions. For example, a newer client version might handle certain data or state management differently than an older version, leading to varying user experiences or even errors.
+                Reduced server control over consistent application behavior<small>(UI/UX)</small>: 
+                application becomes dependent on the correct implementation of semantics across multiple client versions.
+                <br />
+                E.g., a newer client version might handle certain data or state management differently than an older version, leading to varying user experiences or even errors.
               </li>
             </ul>
           </td>
@@ -151,6 +159,7 @@
     <ul>
       <li>
         This is all about Client-Side Caching: not server-side caching or intermediary caching <small>(infrastructure layer)</small>.
+        <br />
         <img src="./caching.png" />
       </li>
       <li>
@@ -165,10 +174,11 @@
     </summary>
     <ul>
       <li>
-        Consistent set of operations and conventions <small>(HTTP spec)</small> for interactions between clients and servers.
+        We will have consistent set of operations and conventions
+        <small>(HTTP spec)</small> for interactions between clients and servers.
       </li>
       <li>
-        Generality and simplification principle.
+        This is also well aligned with generality and simplification principle.
       </li>
     </ul>
   </details>
@@ -236,7 +246,7 @@
 - Different HTTP verbs should be utilized for different purposes:
 
   - [GET](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1): Fetching data.
-  - [Post](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.3): How the server processes the data send along the request depends on what the server is set up to do with it. Different endpoints or resources on the server might handle the data in different ways based on their own specific logic or rules.
+  - [Post](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.3): What the server will do with the data in the request body <em>depends<em> on what the server is set up to do with it. <strong>Different endpoints or resources</strong>, on the server, <strong>might handle the data in different ways</strong> based on their own specific logic or rules.
   - [PATCH](https://datatracker.ietf.org/doc/html/rfc5789): Partially update the resource, rather than replacing the whole thing.
   - [PUT](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.4): Create or replace the resource.
   - [DELETE](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.5): Remove the resource specified in the URI.
@@ -247,18 +257,18 @@
 
   ![HTTP status codes](./http-status-codes.png)
 
-- Idempotent:
+- [Idempotent](../glossary/README.md#idempotency):
 
   - When an endpoint is idempotent we **can** retry the request if it failed with 500.
-  - I said we can since all HTTP verbs ain't idempotent. For example POST is not idempotent.
+  - We say **can** since all HTTP verbs ain't idempotent. E.g. `POST` ain't idempotent.
 
 - Versioning:
 
   - APIs only need to be up-versioned when a breaking change is made. Breaking changes include:
-    - A change in the format of the response data for one or more calls
-    - A change in the request or response type (i.e. changing an integer to a float)
+    - A change in the format of the response data for one or more calls.
+    - A change in the request or response type (i.e. changing an integer to a float).
     - Removing any part of the API.
-  - The version do not need be numeric, nor specified using the `v[x]` syntax. Alternatives include:
+  - The version do not need be numeric, nor specified using the `vX` syntax. E.g. you can use these as your version too:
     - Dates.
     - Project names.
     - Seasons.

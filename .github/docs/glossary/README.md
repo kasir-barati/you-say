@@ -36,4 +36,25 @@
     </ul>
     E.g. authentication, authorization, rate limiting, and general data format validation.
   </dd>
+  <dt id="datum">
+    <a href="#datum">#</a>
+    Datum
+  </dt>
+  <dd>
+    A single piece of information.
+  </dd>
+  <dt id="partialFailures">
+    <a href="#partialFailures">#</a>
+    Partial failures
+  </dt>
+  <dd>
+    Some components of the system fail while others continue to function.
+  </dd>
+  <dt id="idempotency">
+    <a href="#idempotency">#</a>
+    Idempotency
+  </dt>
+  <dd>
+    An operation can be repeated or retried as often as necessary without causing unintended effects.
+  </dd>
 </dl>
