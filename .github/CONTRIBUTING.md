@@ -1,3 +1,23 @@
+# How to create new tickets in backlog
+
+# Before moving a ticket to in progress column
+
+Ask these questions first:
+
+1. Do we have all the necessary info to start it?
+2. Have we ever done something similar in the past?
+3. What technical challenges we might face in this ticket?
+4. Do we care about non-functional requirements?
+   - Scalability.
+   - Security.
+   - Performance.
+5. Can we modularize or reuse something?
+6. What kind of tests do we need for it?
+   - Smoke test.
+   - Regression test.
+   - Sanity test.
+7. Is there other tickets related/connected to this ticket?
+
 ## Start the application
 
 Run `nx dev backend` to start the development server. Happy coding!

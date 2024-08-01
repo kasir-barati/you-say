@@ -246,6 +246,57 @@
         },
         "tags": ["Auth"],
         "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "AuthController_updateMe",
+        "summary": "Will update user.",
+        "description": "This endpoint gonna update user info which we get from OAuth server. Each user can only update their own user info with this endpoint.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "It won't return anything." },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Could not validate and verify the provided JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedException"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorException"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [{ "bearer": [] }]
       }
     },
     "/auth/logout": {
@@ -687,6 +738,19 @@
         ]
       },
       "UnauthorizedException": { "type": "object", "properties": {} },
+      "UpdateUserInfoDto": {
+        "type": "object",
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "Change your last name."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Change your first name."
+          }
+        }
+      },
       "FusionAuthUserDto": {
         "type": "object",
         "properties": {
