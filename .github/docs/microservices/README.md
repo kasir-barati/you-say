@@ -328,19 +328,22 @@ We can have our validations in two different places:
       <td>
         <ul>
           <li>
-            Single point of failure<small>(Can be mitigated with replication.)</small>.
+            <b>Single point of failure</b>
+            <small>(Can be mitigated with replication)</small>.
           </li>
-          <li>Coupling API gateway with other services.</li>
+          <li>
+            <b>Coupling API gateway with other services</b>.
+          </li>
         </ul>
       </td>
       <td>
         <ul>
           <li>
-            Duplicated validation logic across services.
-             <small>(Can be mitigated with things like having a monorepo, shared libs.)</small>.
+            <b>Duplicated validation logic across services</b>
+            <small>(Can be mitigated with things like having a monorepo, shared libs)</small>.
           </li>
           <li>
-            Inconsistent validation logic across multiple services.
+            <b>Inconsistent validation logic across multiple services.</b>
           </li>
         </ul>
       </td>
