@@ -30,9 +30,18 @@
        <tbody>
          <tr>
            <td>
-             Message Broker/Message Queue
+             Message Broker/Queue
            </td>
-           <td>RabbitMQ</td>
+           <td>
+             <ul>
+               <li>
+                 RabbitMQ.
+               </li>
+               <li>
+                 ActiveMQ.
+               </li>
+             </ul>
+           </td>
            <td><img src="./message-broker.png" /></td>
          </tr>
          <tr>
@@ -42,10 +51,12 @@
          </tr>
          <tr>
            <th>
-             Event Streaming Platform/Distributed Streaming Platform
+             Event Streaming Platform
+             <br />
+             Distributed Streaming Platform
            </th>
            <td>
-             Kafka/Apache Kafka
+             Apache Kafka
            </td>
            <td><img src="./kafka.png" /></td>
          </tr>
@@ -68,7 +79,9 @@
        <tbody>
          <tr>
            <td>
-             Optimized for high-throughput and scalable processing of event data. While they can provide near real-time processing, the speed can vary depending on factors like:
+             Optimized for high-throughput
+             <small>(Throughput measures the volume of data that passes through a network in a given period.)</small>
+             and scalable processing of event data. While they can provide near real-time processing, the speed can vary depending on factors like:
              <ul>
                <li>Network latency.</li>
                <li>Volume of events.</li>
@@ -87,7 +100,9 @@
              Generally slower than RPC because they involve more overhead. Messages are placed into queues and then processed, which introduces latency, especially if the system needs to:
              <ul>
                <li>Handle complex routing.</li>
-               <li>Message durability.</li>
+               <li>
+                 Message <a href="../glossary/README.md#durability">durability</a>
+               </li>
                <li>Large numbers of consumers.</li>
              </ul>
            </td>
