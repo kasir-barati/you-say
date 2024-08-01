@@ -6,7 +6,7 @@
 4. Each service handles a dedicated task/function inside a large app.
 5. Each function/task is called a domain.
 6. They have small surface areas (APIs) <img src="./iceburge.png" width=100>.
-   - This makes it easier to <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="it's simpler to understand, analyze, and predict the behavior of each system individually.">reason</span> about each system in the context of entire app.
+   - This makes it easier to reason[^1] about each system in the context of entire app.
 7. Microservices talk to one another over
 
    |                | Event streaming | Remote Procedural Call (RPC) | Message brokers |
@@ -123,13 +123,7 @@
              Designed with fault tolerance in mind. They offer features like:
              <ul>
                <li>
-                 <span
-                   style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" 
-                   title="Durable storage: A durable storage system will reliably store data without data loss."
-                 >
-                   Data replication:
-                 </span>
-                 ensures that data is not lost if a node fails.
+                 Data replication[^2] ensures that data is not lost if a node fails.
                </li>
                <li>Partitioning: enhances both fault-tolerance and scalability.</li>
                <li>replaying events, which can be beneficial for system recovery or auditing purposes.</li>
@@ -140,13 +134,7 @@
            </td>
            <td>
              Limited built-in fault-tolerance.<br />
-             Since RPC involves direct communication between services, failures in each one the following can lead to
-             <span 
-               style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-               title="It's crucial to handle timeouts and errors gracefully to prevent the entire system from becoming unresponsive"
-             >
-               errors or timeouts:
-             </span>
+             Since RPC involves direct communication between services, failures in each one the following can lead to errors or timeouts[^3]:
              <ul>
                <li>The network.</li>
                <li>The service being called.</li>
@@ -216,12 +204,7 @@
                <li>Changes in the interface or the location.</li>
              </ul>
              of one service can propagate and impact other services. This is happening because of
-             <span 
-               style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-               title="They need to know the exact location and interface details of the services they are calling."
-             >
-               tight coupling between services
-             </span>.
+             tight coupling between services[^4].
            </td>
            <td>
              Producers and consumers of events operate independently, and the system can handle large volumes of events even if some services are temporarily unavailable. In this communication method we support:
@@ -238,12 +221,12 @@
 
 8. You can deploy faster since each service is independent of others.
 9. You can scale each service horizontally and vertically.
-10. Well microservices architecture practice strong information hiding: meaning that each service's database schema is <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="Separate schema or database all together.">not exposed</span> to the other services.
+10. Well microservices architecture practice strong information hiding: meaning that each service's database schema is not exposed[^5] to the other services.
 11. One of the implementation difficulties in a microservices architecture is that:
     ![Referential integrity](./referential-integrity.png)
 12. API gateway plays a key role in this architecture.
 
-    - We'll handle our auth flow with an <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="E.g. FusionAuth, Keycloak.">OAuth server</span>.
+    - We'll handle our auth flow with an OAuth server[^6].
     - For routing to different services we'll need to have a service registry and discovery.
 
       ![Service discovery and registry](./service-discovery-and-registry.png)
@@ -261,7 +244,7 @@
 
 ## API gateway
 
-- A <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="Central access point through which all client requests pass to reach the backend services.">single point of entry</span> to the <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="Web browsers, mobile apps, or other services">clients</span> of an application.
+- A single point of entry[^7] to the clients[^8] of an application.
 - It abstracts the complexity of the underlying microservices architecture, presenting a unified interface.
 - [See how a requests flows in each part of API gateway](https://youtu.be/6ULyxuHKxg8?t=50).
 
@@ -321,18 +304,7 @@ We can have our validations in two different places:
           </li>
           <li>
             <b>Ease of Management</b>: Centralizing common validation
-            logic can make it easier to manage and update
-            <span
-              style="
-                text-decoration: underline dotted;
-                text-underline-offset: 0.1em;
-                cursor: help;
-              "
-              title="Changes in security protocols, rate limits, or data
-            formats can be made in one place rather than across
-            multiple services."
-              >policies</span
-            >.
+            logic can make it easier to manage and update policies[^9].
           </li>
         </ul>
       </td>
@@ -384,3 +356,13 @@ We can have our validations in two different places:
 1. [What Are Microservices Really All About? (And When Not To Use It)](https://www.youtube.com/watch?v=lTAcCNbJ7KE&t=22s)
 
 # Footnotes
+
+[^1]: It's simpler to understand, analyze, and predict the behavior of each system individually.
+[^2]: Durable storage: A durable storage system will reliably store data without data loss.
+[^3]: It's crucial to handle timeouts and errors gracefully to prevent the entire system from becoming unresponsive
+[^4]: They need to know the exact location and interface details of the services they are calling.
+[^5]: Separate schema or database all together.
+[^6]: E.g. FusionAuth, Keycloak.
+[^7]: Central access point through which all client requests pass to reach the backend services.
+[^8]: Web browsers, mobile apps, or other services.
+[^9]: Changes in security protocols, rate limits, or data formats can be made in one place rather than across multiple services.
