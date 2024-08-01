@@ -29,11 +29,8 @@
        </thead>
        <tbody>
          <tr>
-           <td 
-             style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-             title="Message Queue"
-           >
-             Message Broker
+           <td>
+             Message Broker/Message Queue
            </td>
            <td>RabbitMQ</td>
            <td><img src="./message-broker.png" /></td>
@@ -44,17 +41,11 @@
            <td><img src="./grpc.png" /></td>
          </tr>
          <tr>
-           <th
-             style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-             title="Distributed Streaming Platform"
-           >
-             Event Streaming Platform
+           <th>
+             Event Streaming Platform/Distributed Streaming Platform
            </th>
-           <td
-             style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-             title="Apache Kafka"
-           >
-             Kafka
+           <td>
+             Kafka/Apache Kafka
            </td>
            <td><img src="./kafka.png" /></td>
          </tr>
@@ -123,7 +114,10 @@
              Designed with fault tolerance in mind. They offer features like:
              <ul>
                <li>
-                 Data replication[^2] ensures that data is not lost if a node fails.
+                 Data replication ensures that data is not lost if a node fails.
+               </li>
+               <li>
+                 Durable storage: A durable storage system will reliably store data without data loss.
                </li>
                <li>Partitioning: enhances both fault-tolerance and scalability.</li>
                <li>replaying events, which can be beneficial for system recovery or auditing purposes.</li>
@@ -134,13 +128,13 @@
            </td>
            <td>
              Limited built-in fault-tolerance.<br />
-             Since RPC involves direct communication between services, failures in each one the following can lead to errors or timeouts[^3]:
+             Since RPC involves direct communication between services, failures in each one the following can lead to errors or timeouts:
              <ul>
                <li>The network.</li>
                <li>The service being called.</li>
                <li>The caller.</li>
              </ul>
-             Fault-tolerance can be enhanced by implementing:
+             It's crucial to handle timeouts and errors gracefully to prevent the entire system from becoming unresponsive. Fault-tolerance can be enhanced by implementing:
              <ul>
                <li>Retry mechanisms.</li>
                <li>Circuit breakers.</li>
@@ -186,11 +180,8 @@
              <ul>
                <li>Fails.</li>
                <li>Slowdown.</li>
-               <li
-                 style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-                 title="Assuming that it won't change its message format."
-               >
-                 Evolve.
+               <li>
+                 Evolve<small>(Assuming that it won't change its message format)</small>.
                </li>
              </ul>
              It does not directly impact others. Messages can be buffered until the receiving service is available again.
@@ -204,7 +195,7 @@
                <li>Changes in the interface or the location.</li>
              </ul>
              of one service can propagate and impact other services. This is happening because of
-             tight coupling between services[^4].
+             tight coupling between services -- They need to know the exact location and interface details of the services they are calling.
            </td>
            <td>
              Producers and consumers of events operate independently, and the system can handle large volumes of events even if some services are temporarily unavailable. In this communication method we support:
@@ -221,12 +212,12 @@
 
 8. You can deploy faster since each service is independent of others.
 9. You can scale each service horizontally and vertically.
-10. Well microservices architecture practice strong information hiding: meaning that each service's database schema is not exposed[^5] to the other services.
+10. Well microservices architecture practice strong information hiding: meaning that each service's database schema is not exposed[^2] to the other services.
 11. One of the implementation difficulties in a microservices architecture is that:
     ![Referential integrity](./referential-integrity.png)
 12. API gateway plays a key role in this architecture.
 
-    - We'll handle our auth flow with an OAuth server[^6].
+    - We'll handle our auth flow with an OAuth server[^3].
     - For routing to different services we'll need to have a service registry and discovery.
 
       ![Service discovery and registry](./service-discovery-and-registry.png)
@@ -244,7 +235,7 @@
 
 ## API gateway
 
-- A single point of entry[^7] to the clients[^8] of an application.
+- A single point of entry[^4] to the clients[^5] of an application.
 - It abstracts the complexity of the underlying microservices architecture, presenting a unified interface.
 - [See how a requests flows in each part of API gateway](https://youtu.be/6ULyxuHKxg8?t=50).
 
@@ -271,8 +262,8 @@ We can have our validations in two different places:
   <thead>
     <tr>
       <th></th>
-      <th style="text-align: center">API gateway</th>
-      <th style="text-align: center">Individual services</th>
+      <th>API gateway</th>
+      <th>Individual services</th>
     </tr>
   </thead>
   <tbody>
@@ -281,18 +272,12 @@ We can have our validations in two different places:
       <td>
         <ul>
           <li>
-            <b
-              style="
-                text-decoration: underline dotted;
-                text-underline-offset: 0.1em;
-                cursor: help;
-              "
-              title="Can be mitigated with things like having a monorepo, shared libs."
-              >Consistency</b
-            >: ensuring consistent enforcement of rules across all
+            <b>Consistency</b>:
+            ensuring consistent enforcement of rules across all
             services. Particularly useful for cross-cutting concerns
             such as authentication, authorization, rate limiting, and
-            general data format validation.
+            general data format validation
+            <small>(Can be mitigated with things like having a monorepo, shared libs.)</small>.
           </li>
           <li>
             <b>Security</b>: blocking potentially harmful requests
@@ -304,7 +289,7 @@ We can have our validations in two different places:
           </li>
           <li>
             <b>Ease of Management</b>: Centralizing common validation
-            logic can make it easier to manage and update policies[^9].
+            logic can make it easier to manage and update policies -- Changes in security protocols, rate limits, or data formats can be made in one place rather than across multiple services.
           </li>
         </ul>
       </td>
@@ -326,15 +311,8 @@ We can have our validations in two different places:
       <td>Cons</td>
       <td>
         <ul>
-          <li
-            style="
-              text-decoration: underline dotted;
-              text-underline-offset: 0.1em;
-              cursor: help;
-            "
-            title="Can be mitigated with replication."
-          >
-            Single point of failure
+          <li>
+            Single point of failure<small>(Can be mitigated with replication.)</small>.
           </li>
           <li>Coupling API gateway with other services.</li>
         </ul>
@@ -358,11 +336,7 @@ We can have our validations in two different places:
 # Footnotes
 
 [^1]: It's simpler to understand, analyze, and predict the behavior of each system individually.
-[^2]: Durable storage: A durable storage system will reliably store data without data loss.
-[^3]: It's crucial to handle timeouts and errors gracefully to prevent the entire system from becoming unresponsive
-[^4]: They need to know the exact location and interface details of the services they are calling.
-[^5]: Separate schema or database all together.
-[^6]: E.g. FusionAuth, Keycloak.
-[^7]: Central access point through which all client requests pass to reach the backend services.
-[^8]: Web browsers, mobile apps, or other services.
-[^9]: Changes in security protocols, rate limits, or data formats can be made in one place rather than across multiple services.
+[^2]: Separate schema or database all together.
+[^3]: E.g. FusionAuth, Keycloak.
+[^4]: Central access point through which all client requests pass to reach the backend services.
+[^5]: Web browsers, mobile apps, or other services.

@@ -2,7 +2,7 @@
 
 - REpresentational State Transfer.
 - Communication standard.
-- Most common one used <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="At this moment">ATM</span>.
+- Most common one used ATM<small>(At this moment)</small>.
 - It's not specification. But an architectural style, and these are design principles of REST APIs:
 
   1. Starting with the Null Style.
@@ -36,16 +36,7 @@
           <td>Description</td>
           <td>
             Designer begins with <em>no</em>
-            <span
-              style="
-                text-decoration: underline dotted;
-                text-underline-offset: 0.1em;
-                cursor: help;
-              "
-              title="predetermined rules or limitations."
-            >
-              preconceived constraints
-            </span>
+            preconceived constraints <small>(predetermined rules or limitations.)</small>
             or guidelines. They start with a blank canvas, creating an
             architecture by gradually adding familiar components until the
             system meets its intended requirements.
@@ -55,20 +46,11 @@
             without any constraints. They then gradually impose
             constraints on different parts of the system. These
             constraints help ensure that
-            <span
-              style="
-                text-decoration: underline dotted;
-                text-underline-offset: 0.1em;
-                cursor: help;
-              "
-              title="E.g. efficiency, usability, or scalability."
-            >
-              various factors
-            </span>
+            various factors<small>(E.g. efficiency, usability, or scalability.)</small>
             influencing the system are addressed naturally.
           </td>
         </tr>
-        <tr style="color: yellow">
+        <tr>
           <td>Characteristics</td>
           <td>
             Emphasizes creativity and an unrestricted vision, allowing the
@@ -93,13 +75,13 @@
       <li>
         Separation of concerns is the principle behind the client-server constraints.
       </li>
-      <li style="color: yellow;">
+      <li>
         Separate UI concerns from the data storage concerns.
       </li>
       <li>
         More portable UI across multiple platforms.
       </li>
-      <li style="color: yellow;">
+      <li>
         Better scalability by simplifying the server components.
       </li>
       <li>
@@ -128,52 +110,31 @@
             <ul>
               <li>
                 Improved visibility: monitoring system does not have to look beyond a single request 
-                <span 
-                  style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-                  title="a single piece of information"
-                >
-                  datum
-                </span>
+                datum <small>(a single piece of information)</small>
                 in order to determine the full nature of the request.
               </li>
-              <li style="color: yellow">
+              <li>
                 More reliable because it eases the task of recovering from
-                <span 
-                  style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-                  title="some components of the system fail while others continue to function."
-                >
-                  partial failures.
-                </span>
-                Since each request is completely self-contained and independent of previous requests, in case of failure client can simply
-                <span
-                  style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-                  title="The concept of idempotency is closely related to the idea of statelessness"
-                >
-                  retry
-                </span>
-                it.
+                partial failures <small>(some components of the system fail while others continue to function)</small>.
+                Since each request is completely self-contained and independent of previous requests, in case of failure client can simply retry
+                <small>(The concept of idempotency is closely related to the idea of statelessness)</small> it.
               </li>
               <li>
                 Improved scalability: not having to store state between requests allows the server component to quickly free resources.
               </li>
-              <li style="color: yellow">
+              <li>
                 Simplified implementation: server doesn't have to manage resource usage across requests.
               </li>
             </ul>
           </td>
           <td>
             <ul>
-              <li style="color: yellow">
+              <li>
                 Decreased network performance: by increasing the repetitive data <small>(per-interaction overhead)</small> sent in a series of requests.
               </li>
               <li>
                 Reduced server control over consistent
-                <span
-                  style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;"
-                  title="UI/UX"
-                >
-                  application behavior:
-                </span> 
+                application behavior<small>(UI/UX)</small>: 
                 application becomes dependent on the correct implementation of semantics across multiple client versions. For example, a newer client version might handle certain data or state management differently than an older version, leading to varying user experiences or even errors.
               </li>
             </ul>
@@ -192,7 +153,7 @@
         This is all about Client-Side Caching: not server-side caching or intermediary caching <small>(infrastructure layer)</small>.
         <img src="./caching.png" />
       </li>
-      <li style="color: yellow">
+      <li>
         The data within a response to a request, implicitly/explicitly is labeled as cacheable or non-cacheable. A cacheable response signifies that a client cache can reuse that response data for later, equivalent requests.
       </li>
     </ul>
@@ -206,7 +167,7 @@
       <li>
         Consistent set of operations and conventions <small>(HTTP spec)</small> for interactions between clients and servers.
       </li>
-      <li style="color: yellow">
+      <li>
         Generality and simplification principle.
       </li>
     </ul>
@@ -220,7 +181,7 @@
       <li>
         This style allows an architecture to be composed of hierarchical layers.
       </li>
-      <li style="color: yellow">
+      <li>
         Each component cannot "see" beyond the immediate layer with which they are interacting.
       </li>
       <li>
@@ -237,7 +198,7 @@
       <li>
         Server can send executable code to a client, allowing the client to run this code to extend its functionality.
       </li>
-      <li style="color: yellow">
+      <li>
         Reduces Visibility: When a client dynamically downloads and executes code, it can be harder to predict and monitor the exact behavior of the client application
       </li>
       <li>
@@ -268,7 +229,7 @@
 
 - Resources:
 
-  - Grouped by <span style="text-decoration: underline dotted; text-underline-offset: 0.1em; cursor: help;" title="Not verb">noun</span>.
+  - Grouped by noun <small>(Not verb)</small>.
 
     ![Noun not verb](./noun-not-verb.png)
 
