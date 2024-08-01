@@ -102,7 +102,7 @@
              <ul>
                <li>Handle complex routing.</li>
                <li>
-                 Message <a href="../glossary/README.md#durability">durability</a>
+                 Message <a href="../glossary/README.md#durability">durability</a>.
                </li>
                <li>Large numbers of consumers.</li>
              </ul>
@@ -231,7 +231,7 @@
 8. You can deploy faster since each service is independent of others.
 9. You can scale each service horizontally and vertically.
 10. Well microservices architecture practice strong information hiding: meaning that each service's database schema is not exposed[^2] to the other services.
-11. One of the implementation difficulties in a microservices architecture is that:
+11. One of the implementation difficulties in a microservices architecture is referential integrity:
     ![Referential integrity](./referential-integrity.png)
 12. API gateway plays a key role in this architecture.
 
@@ -292,10 +292,8 @@ We can have our validations in two different places:
           <li>
             <b>Consistency</b>:
             ensuring consistent enforcement of rules across all
-            services. Particularly useful for cross-cutting concerns
-            such as authentication, authorization, rate limiting, and
-            general data format validation
-            <small>(Can be mitigated with things like having a monorepo, shared libs.)</small>.
+            services. Particularly useful for
+            <a href="../glossary/README.md#crossCuttingConcerns">cross-cutting concerns</a>.
           </li>
           <li>
             <b>Security</b>: blocking potentially harmful requests
@@ -337,7 +335,10 @@ We can have our validations in two different places:
       </td>
       <td>
         <ul>
-          <li>Duplicated validation logic across services.</li>
+          <li>
+            Duplicated validation logic across services.
+             <small>(Can be mitigated with things like having a monorepo, shared libs.)</small>.
+          </li>
           <li>
             Inconsistent validation logic across multiple services.
           </li>
