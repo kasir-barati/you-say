@@ -50,11 +50,13 @@
            <td><img src="./grpc.png" /></td>
          </tr>
          <tr>
-           <th>
+           <td>
              Event Streaming Platform
              <br />
+             AKA
+             <br />
              Distributed Streaming Platform
-           </th>
+           </td>
            <td>
              Apache Kafka
            </td>
@@ -79,8 +81,7 @@
        <tbody>
          <tr>
            <td>
-             Optimized for high-throughput
-             <small>(Throughput measures the volume of data that passes through a network in a given period.)</small>
+             Optimized for high-<a href="../glossary/README.md#throughput">throughput</a>
              and scalable processing of event data. While they can provide near real-time processing, the speed can vary depending on factors like:
              <ul>
                <li>Network latency.</li>
@@ -132,7 +133,7 @@
                  Data replication ensures that data is not lost if a node fails.
                </li>
                <li>
-                 Durable storage: A durable storage system will reliably store data without data loss.
+                 <a href="../glossary/README.md#durableStorage">Durable storage</a>.
                </li>
                <li>Partitioning: enhances both fault-tolerance and scalability.</li>
                <li>replaying events, which can be beneficial for system recovery or auditing purposes.</li>
@@ -199,7 +200,9 @@
                  Evolve<small>(Assuming that it won't change its message format)</small>.
                </li>
              </ul>
-             It does not directly impact others. Messages can be buffered until the receiving service is available again.
+             It does not directly impact others.
+             <br />
+             And messages can be buffered until the receiving service is available again.
            </td>
            <td>
              Less isolation compared to other methods. Since services communicate synchronously and directly, things like:
@@ -215,8 +218,8 @@
            <td>
              Producers and consumers of events operate independently, and the system can handle large volumes of events even if some services are temporarily unavailable. In this communication method we support:
              <ol>
-               <li>real-time processing</li>
-               <li>replay events</li>
+               <li>Real-time processing.</li>
+               <li>Replay events.</li>
              </ol>
              Which can be useful for data recovery and analytics.
            </td>
@@ -256,7 +259,7 @@
 
 ![API gateway functionalities](./api-gateway-functionalities.png)
 
-By having an API gateway client interactions with the microservices architecture will be much simpler, security and scalability improves, and we can centrally managing traffics and apply policies.
+By having an API gateway, client interactions with the microservices architecture, will be much simpler, security and scalability improves, and we can centrally managing traffics and apply policies.
 
 | Functionality            | Description                                                                                                                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
