@@ -55,6 +55,6 @@
     Idempotency
   </dt>
   <dd>
-    An operation can be repeated or retried as often as necessary without causing unintended effects.
+    An operation can be repeated or retried as often as necessary without causing unintended effects (Learn more <a href="https://github.com/kasir-barati/nestjs-materials/tree/main/.github/docs/designing-restful-api#idempotency">here</a>).
   </dd>
 </dl>

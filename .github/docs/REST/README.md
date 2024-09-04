@@ -252,36 +252,9 @@
 
   - When an endpoint is idempotent we **can** retry the request if it failed with 500.
   - We say **can** since all HTTP verbs ain't idempotent. E.g. `POST` ain't idempotent.
+  - Learn more about it [here](https://github.com/kasir-barati/nestjs-materials/tree/main/.github/docs/designing-restful-api#idempotency).
 
-- Versioning:
-
-  - APIs only need to be up-versioned when a breaking change is made. Breaking changes include:
-    - A change in the format of the response data for one or more calls.
-    - A change in the request or response type (i.e. changing an integer to a float).
-    - Removing any part of the API.
-  - The version do not need be numeric, nor specified using the `vX` syntax. E.g. you can use these as your version too:
-    - Dates.
-    - Project names.
-    - Seasons.
-  - 2 common approaches to versioning:
-
-    1. URI Versioning:
-
-       - E.g. prefixing the resource with `v1`.
-
-       ```cmd
-       http://api.example.com/v1/vehicles
-       http://apiv1.example.com/vehicles
-       ```
-
-    2. Custom Request Header:
-
-       - E.g. `Accept-version`
-
-       ```cmd
-       Accept-version: v1
-       Accept-version: v2
-       ```
+- Versioning: Learn more [here](https://github.com/kasir-barati/nestjs-materials/tree/main/.github/docs/designing-restful-api#versioning-api).
 
 # Refs
 
