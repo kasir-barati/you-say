@@ -26,9 +26,9 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 
 - NPM packages.
 - Build on top of the fundamental capabilities provided by the Nx.
-- Contain code generators, executors (to abstract lower-level build tooling) and automated code migrations for keeping your tools up to date.
+- Contain code generators, [executors](./glossary.md#executorDefinitionInGlossary) and automated code migrations for keeping your tools up to date.
 - Are usually technology specific.
-- Increases productive by removing any friction of integrating different tools with each other and by providing utilities to keep them up to date.
+- Increases productivity by removing any friction of integrating different tools with each other and by providing utilities to keep them up to date.
 - Use the `@nx/plugin` package to easily scaffold a new plugin or even just automate your local workspace.
 
 ### Devkit
@@ -40,11 +40,11 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 ![Run a task](./tasks.png)
 
 - Run multiple tasks: `npx nx --run-many targetName1 targetName2`
-- <a href="#executorDefinitionInNx" id="executorDefinitionInNx">#</a> Each task has what we call it "executor": it is the tool or script used to run that target.
+- Each task has what we call it ["executor"](./glossary.md#executorDefinitionInGlossary).
 - Nx picks up tasks from:
 
   1. `package.json` scripts.
-  2. Defined inside `project.json`.
+  2. Defined inside `project.json`/`nx.json`.
 
   And their config:
 

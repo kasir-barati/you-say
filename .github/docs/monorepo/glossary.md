@@ -1,6 +1,11 @@
 # Glossary
 
 <dl>
+  <dt id="executorDefinitionInGlossary">
+    <a href="#executorDefinitionInGlossary">#</a>
+    Executors
+  </dt>
+  <dd>The tool or script used to run that target.</dd>
   <dt id="projectRootDefinitionInNx">
     <a href="#projectRootDefinitionInNx">#</a>
     <code>projectRoot</code>
