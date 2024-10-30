@@ -1,0 +1,16 @@
+{
+  "name": "lib1",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/lib1/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "options": {
+        "assets": ["libs/lib1/*.md", "libs/lib1/src/images/*"]
+      }
+    },
+    "lint": {},
+    "test": {}
+  },
+  "tags": []
+}
