@@ -3,7 +3,7 @@
 In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 
 - A software-development strategy.
-- The code for a number of projects is stored in the same repository.
+- Where the code for a number of projects is stored in the same repository.
 
 ## What does Nx for me?
 
