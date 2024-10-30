@@ -38,27 +38,10 @@ sudo pacman -Syu actionlint
 - **Reference**: Easer to reference key terms as needed, without having to search for definitions elsewhere.
 - **Transparency**: It is a sign of commitment to transparency and clarity in this project's governance and communication practices.
 
-# Important notes about `Nx`
-
-1. Make sure to install the `@nx/whatever` version that matches the version of `nx` in your repository. If the version numbers get out of sync, you can encounter some difficult to debug errors. You can [fix Nx version mismatches with this recipe](https://nx.dev/recipes/tips-n-tricks/keep-nx-versions-in-sync).
-2. Nx plugins lift the burden of things like scaffolding a new app (e.g. NestJS, NextJS), testing, building, etc
-3. You can use `nx graph` and `nx show projects` to see what is going on in your monorepo.
-4. Upgrade dependencies: `nx migrate latest`.
-   Please note that this command is not gonna upgrade your devDeps and deps to the latest version. It is only upgrading `nx` and its belongings. So we can use other approaches to upgrade our dependencies:
-   ```cmd
-   npm outdated
-   npm update
-   ```
-   But most of the times `npm update` will not do the trick. So in those cases we need to rely on tools such as [npm-check-updates](https://www.npmjs.com/package/npm-check-updates)
-   ```cmd
-   npm install -g npm-check-updates
-   ncu
-   ```
-   if do not need `migrations.json` (scenarios such as applying same migration in other branches) remove it.
-
 # How to tests
 
-- Run `nx appOrPkgName test` for unit test
+- Run `nx appOrPkgName test` for unit test.
+- Learn about Nx [here](./docs/monorepo/README.md#tasks).
 
 ## Testing strategy
 
