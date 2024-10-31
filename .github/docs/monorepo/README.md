@@ -30,6 +30,12 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 - Are usually technology specific.
 - Increases productivity by removing any friction of integrating different tools with each other and by providing utilities to keep them up to date.
 - Use the `@nx/plugin` package to easily scaffold a new plugin or even just automate your local workspace.
+- [`@nx/js:node`](./nx-js-node-executor.md).
+
+#### Webpack plugin -- `@nx/webpack/plugin`
+
+- **The basic plugin** works with a standard webpack configuration file, and adds them to the plugins option.
+- `NxAppWebpackPlugin`provides common confs for the build. Thins like TypeScript support and linking workspace libraries (via `paths` conf declared in `tsconfig.json`).
 
 ### Devkit
 
@@ -120,6 +126,10 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
   - If you have to make exceptions for most of the projects in your repository, then that setting probably should not be a default.
 
 ![project.json](./project-build-docker.png)
+
+> [!IMPORTANT]
+>
+> Learn more about `project.json` [here](./project-json.md).
 
 ### Caching
 
