@@ -22,20 +22,7 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 - `npx create-nx-workspace --pm pnpm`
   - Will ask you a bunch of question about what kind of workspace do you need.
 
-### `Plugins`
-
-- NPM packages.
-- Build on top of the fundamental capabilities provided by the Nx.
-- Contain code generators, [executors](./glossary.md#executorDefinitionInGlossary) and automated code migrations for keeping your tools up to date.
-- Are usually technology specific.
-- Increases productivity by removing any friction of integrating different tools with each other and by providing utilities to keep them up to date.
-- Use the `@nx/plugin` package to easily scaffold a new plugin or even just automate your local workspace.
-- [`@nx/js:node`](./nx-js-node-executor.md).
-
-#### Webpack plugin -- `@nx/webpack/plugin`
-
-- **The basic plugin** works with a standard webpack configuration file, and adds them to the plugins option.
-- `NxAppWebpackPlugin`provides common confs for the build. Thins like TypeScript support and linking workspace libraries (via `paths` conf declared in `tsconfig.json`).
+### [`Plugins`](./plugins.md)
 
 ### Devkit
 
