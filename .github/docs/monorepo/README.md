@@ -147,7 +147,7 @@ In [VCS](https://en.wikipedia.org/wiki/Version_control), a monorepo is:
 
 - Nx plugin automatically configure caching based on your configuration files and also the executor.
 
-  ![Nx plugins can automatically infer tasks and configure caching based on your underlying tooling configuration files.](image.png)
+  ![Nx plugins can automatically infer tasks and configure caching based on your underlying tooling configuration files.](vite-cache.png)
 
 ### Important notes about `Nx`
 
