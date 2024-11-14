@@ -57,4 +57,9 @@ Keep them:
 - Then write your tests in Jest.
   - Then we can capitalize on its snapshots feature to check that something stays the same during different runs.
     - Of course if we change our implementation or initial data snapshots would break but that is a different story.
+    - And on a relate note, you need to check the generated snapshot first to see if the returned data makes sense to you.
+    - Just double checking, you're [committing your Jest snapshots](https://jestjs.io/docs/snapshot-testing#snapshot-testing-with-jest), right?
+
+      ![meme about committing jest snapshots](./assets/commiting-snapshots.png)
+
   - Reuse the same tool that we love to use in unit testing.
