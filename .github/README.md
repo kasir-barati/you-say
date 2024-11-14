@@ -25,3 +25,7 @@ A community-driven platform where YOUR input shapes the future of the app. Wheth
 # Wanna collaborate
 
 Read the [contribution guideline](./CONTRIBUTING.md) for understanding how we work. It is not a complete guideline though, so feel free to reach out to us if you have any questions. Our software is licensed under the [GPL version 3 license](./LICENSE), so you can check it out if you like.
+
+# Docs
+
+- [Testing](./docs/testing/README.md)
