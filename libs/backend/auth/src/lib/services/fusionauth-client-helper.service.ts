@@ -142,10 +142,12 @@ export class FusionAuthClientHelper implements OnModuleInit {
     applicationId,
   }: Register): Promise<string> | never {
     const memberships = this.getMemberships(groups);
-    const username = email
-      .substring(0, email.indexOf('@'))
-      .replace(/[!#$%&'*+-/=?^_`{|}~]/g, '_')
-      .trim();
+    const username =
+      firstName.toLowerCase() +
+      '_' +
+      lastName.toLowerCase() +
+      '_' +
+      generateRandomString(10);
 
     try {
       // Passing an empty string as userId signifies that FusionAuth should create it automatically.
@@ -162,9 +164,8 @@ export class FusionAuthClientHelper implements OnModuleInit {
           memberships,
           ...(password ? { password } : {}),
           fullName: `${firstName} ${lastName}`,
-          username,
           data: {
-            // Here we can save meta data, or settings and other info
+            username,
           },
         },
       });

@@ -24,6 +24,7 @@ import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { UpdateUserInfoDto } from '../dtos/update-user-info.dto';
 import {
   AuthModuleOptions,
   FusionAuthUserGroup,
@@ -173,6 +174,19 @@ export class AuthService implements OnModuleInit {
       );
 
     return response as MeResponse;
+  }
+
+  /**
+   * @description In this method we'll update user's first name, last name and their username.
+   * Thanks to the fact that we are getting user id in the OAuth server we do not need to add another guard to verify they are changing their own user info.
+   */
+  async updateMe(id: string, updateUserInfoDto: UpdateUserInfoDto) {
+    await this.fusionAuthClient.patchUser(id, {
+      user: {
+        lastName: updateUserInfoDto.lastName,
+        firstName: updateUserInfoDto.firstName,
+      },
+    });
   }
 
   logout(response: Response, queries: LogoutQueryDto) {

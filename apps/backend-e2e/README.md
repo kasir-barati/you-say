@@ -4,6 +4,7 @@
 
 - `nx test:e2e:docker backend-e2e` starts backend application, and then execute e2e tests against it.
 - `nx test:e2e backend-e2e` starts integration tests; if you only touched the unit tests and not the codes of the backend and you are are sure that data is not corrupted.
+- For a deep dive into this read [this](../../.github/docs/monorepo/README.md#tasks).
 
 # Some general notes:
 

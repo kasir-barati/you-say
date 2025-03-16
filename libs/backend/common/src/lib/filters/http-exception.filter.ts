@@ -11,6 +11,8 @@ import { ForbiddenError } from '../contracts/forbidden-error.contract';
 import { FusionOAuthError } from '../contracts/fusionauth-error.contract';
 import { NotFoundError } from '../contracts/not-found-error.contract';
 import { UniqueError } from '../contracts/unique-error';
+import { fusionAuthErrorDeserializer } from '../helpers/fusionauth-error-deserializer.helper';
+import { FusionAuthErrorResponse } from '../types/fusionauth-error.type';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -70,6 +72,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (
+      'fieldErrors' in exception['exception'] &&
+      'generalErrors' in exception['exception']
+    ) {
+      return 500;
+    }
+
+    if (
       exception.name === BadRequestError.name ||
       exception.message === 'Bad Request Exception'
     ) {
@@ -96,6 +105,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
   ): string | string[] {
     if (exception instanceof FusionOAuthError) {
       return exception.message;
+    }
+
+    if ('fieldErrors' in exception['exception']) {
+      const fusionAuthErrorResponse =
+        exception as unknown as FusionAuthErrorResponse;
+      const fieldErrors = fusionAuthErrorDeserializer(
+        fusionAuthErrorResponse.exception.fieldErrors,
+      );
+      // TODO: https://github.com/users/kasir-barati/projects/1/views/1?pane=issue&itemId=69210299
+
+      return fieldErrors;
     }
 
     const errorMessages = exception?.['response']?.message;

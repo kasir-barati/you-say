@@ -1,7 +1,7 @@
+import { RequestWithUser } from '@backend/common';
 import { Role, SinonMock } from '@shared';
 import { Response } from 'express';
 import { RoleValidatorMiddlewareFactory } from './role-validator.middleware';
-import { RequestWithUser } from './types/request-with-user.type';
 
 describe('RoleValidatorMiddlewareFactory', () => {
   let roleValidatorMiddleware: RoleValidatorMiddlewareFactory;

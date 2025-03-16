@@ -12,6 +12,7 @@
 - Run `nx build:docker frontend` to build it in production mode
 - Run `nx build:local frontend` to build it in your own system
 - It won't utilizes caching mechanism during building docker image
+- For a deep dive into this read [this](../../.github/docs/monorepo/README.md#tasks).
 
 **Note**: Do not use these two configuration options in your `next.config.js`, since by doing that it is gonna make it harder for us to build our app: `output: 'export'` and `distDir: '../../dist/apps/frontend'`. Better to follow the their [official docs](https://nextjs.org/docs/app/building-your-application/deploying#docker-image).
 

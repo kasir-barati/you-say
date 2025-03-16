@@ -1,7 +1,7 @@
+import { RequestWithUser } from '@backend/common';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { MockedEntityWithSinonStubs, Role, SinonMock } from '@shared';
-import { RequestWithUser } from '../types/request-with-user.type';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {

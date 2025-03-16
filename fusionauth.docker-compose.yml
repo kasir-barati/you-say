@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   fusionauth:
     image: fusionauth-image

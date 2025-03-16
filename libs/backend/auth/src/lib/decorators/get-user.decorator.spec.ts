@@ -1,7 +1,9 @@
-import { getParamDecoratorFactory } from '@backend/common';
+import {
+  RequestWithUser,
+  getParamDecoratorFactory,
+} from '@backend/common';
 import { ExecutionContext } from '@nestjs/common';
 import { Role } from '@shared';
-import { RequestWithUser } from '../types/request-with-user.type';
 import { GetUser } from './get-user.decorator';
 
 describe('GetUser', () => {

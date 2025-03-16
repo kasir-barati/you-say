@@ -1,3 +1,4 @@
+export * from './json-patch-format.type';
 export * from './login.type';
 export * from './mobile-login.type';
 export * from './mobile-register.type';

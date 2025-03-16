@@ -7,3 +7,4 @@
   1. Remove all the containers created by the `docker-compose.yml`
   2. Execute `docker system prune`
   3. Remove the built artifacts for backend
+- For a deep dive into this read [this](../../.github/docs/monorepo/README.md#tasks).

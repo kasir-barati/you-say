@@ -1,4 +1,4 @@
-import { Cookies, ErrorResponseDto } from '@backend/common';
+import { Cookies, ErrorResponseDto, GetUser } from '@backend/common';
 import {
   Body,
   Controller,
@@ -6,6 +6,8 @@ import {
   HttpCode,
   HttpRedirectResponse,
   InternalServerErrorException,
+  ParseArrayPipe,
+  Patch,
   Post,
   Query,
   Redirect,
@@ -23,7 +25,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { MeResponse } from '@shared';
+import { MeResponse, User } from '@shared';
 import { Response } from 'express';
 import { LoginQueryDto } from '../dtos/login-query.dto';
 import { LogoutQueryDto } from '../dtos/logout-query.dto';
@@ -33,6 +35,7 @@ import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { UpdateUserInfoOperationDto } from '../dtos/update-user-info.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { AuthService } from '../services/auth.service';
 
@@ -168,6 +171,38 @@ export class AuthController {
     const userInfo = await this.authService.me(cookies);
 
     return userInfo;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('me')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Will update user.',
+    description:
+      'This endpoint gonna update user info which we get from OAuth server. Each user can only update their own user info with this endpoint. We are gonna only accept JSON Patch format requests ([learn more](https://jsonpatch.com/)).',
+  })
+  @ApiOkResponse({
+    description: "It won't return anything.",
+  })
+  @ApiInternalServerErrorResponse({
+    type: InternalServerErrorException,
+    description: 'Internal server error',
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description: 'Bad request',
+  })
+  @ApiUnauthorizedResponse({
+    type: UnauthorizedException,
+    description:
+      'Could not validate and verify the provided JWT token',
+  })
+  async updateMe(
+    @GetUser() { sub: id }: User,
+    @Body(new ParseArrayPipe({ items: UpdateUserInfoOperationDto }))
+    operation: UpdateUserInfoOperationDto[],
+  ): Promise<void> {
+    await this.authService.updateMe(id, operation);
   }
 
   @Get('logout')

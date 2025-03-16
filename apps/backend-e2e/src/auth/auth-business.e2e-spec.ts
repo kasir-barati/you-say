@@ -1,4 +1,5 @@
 import {
+  JsonPatchFormat,
   generateRandomString,
   getTempUser,
   oauthCookieTokens,
@@ -146,6 +147,39 @@ describe('Auth -- business', () => {
     });
   });
 
+  describe('PATCH /auth/me', () => {
+    it.each<JsonPatchFormat>([
+      {
+        firstName: 'First name',
+        lastName: 'Last name',
+      },
+      {
+        firstName: 'Another name',
+        lastName: 'Family',
+      },
+    ])('should change user info: %o', async (updateUserInfoDto) => {
+      const user = getTempUser();
+      const { headers } = await login({
+        username: user.email,
+        password: user.password,
+      });
+
+      const { status } = await authApi.authControllerUpdateMe(
+        {
+          updateUserInfoDto,
+        },
+        {
+          headers,
+        },
+      );
+      const { data } = await authApi.authControllerMe({ headers });
+
+      expect(status).toEqual(200);
+      expect(data.family_name).toBe(updateUserInfoDto.lastName);
+      expect(data.given_name).toBe(updateUserInfoDto.firstName);
+    });
+  });
+
   describe('GET /auth/logout', () => {
     it.each<AuthApiAuthControllerLogoutRequest>([
       {
@@ -208,8 +242,6 @@ describe('Auth -- business', () => {
             return status >= 200;
           },
         });
-
-      console.log(data, status);
 
       expect(status).toEqual(204);
       expectNewCookies(

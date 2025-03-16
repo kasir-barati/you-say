@@ -1,7 +1,7 @@
+import { RequestWithUser } from '@backend/common';
 import { Injectable } from '@nestjs/common';
 import { Role } from '@shared';
 import { NextFunction, Response } from 'express';
-import { RequestWithUser } from './types/request-with-user.type';
 
 @Injectable()
 export class RoleValidatorMiddlewareFactory {

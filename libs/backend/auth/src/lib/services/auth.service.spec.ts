@@ -16,6 +16,7 @@ import { OauthCallbackCookie } from '../dtos/oauth-callback-cookies.dto';
 import { OauthCallbackQuery } from '../dtos/oauth-callback-query.dto';
 import { RefreshCookieDto } from '../dtos/refresh-cookie.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { UpdateUserInfoOperationDto } from '../dtos/update-user-info.dto';
 import { AuthModuleOptions } from '../types/auth.type';
 import { AuthService } from './auth.service';
 import { FusionAuthClientHelper } from './fusionauth-client-helper.service';
@@ -330,6 +331,48 @@ describe('AuthService', () => {
       const result = authService.me({ accessToken: '' });
 
       expect(result).rejects.toThrow(Error);
+    });
+  });
+
+  describe('updateMe', () => {
+    it.each<[string, UpdateUserInfoOperationDto]>([
+      [
+        'oauth-server-uuid',
+        {
+          firstName: 'さいたま',
+          lastName: 'きむら',
+        },
+      ],
+      [
+        'another-uuid',
+        {
+          firstName: 'やみ',
+          lastName: 'すけひろ',
+        },
+      ],
+    ])('should update user info', async (id, userInfo) => {
+      fusionAuthClient.updateUser
+        .withArgs(id, {
+          user: {
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+          },
+        })
+        .resolves();
+
+      const result = await authService.updateMe(id, userInfo);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should blow up if OAuth server SDK blows up with an error', async () => {
+      fusionAuthClient.updateUser.rejects();
+
+      const result = authService.updateMe('uuid', {
+        firstName: 'さとる',
+      });
+
+      await expect(result).rejects.toThrow();
     });
   });
 

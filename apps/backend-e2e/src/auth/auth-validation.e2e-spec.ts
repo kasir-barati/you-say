@@ -1,6 +1,7 @@
 import {
   LoginRequestQuery,
   OauthCallbackRequestQuery,
+  UpdateUserInfo,
   generateRandomString,
   getTempUser,
   oauthCookieTokens,
@@ -266,6 +267,74 @@ describe('Auth -- validation', () => {
         });
 
         expect(status).toEqual(401);
+      },
+    );
+  });
+
+  describe('PATCH /auth/me', () => {
+    it.each<UpdateUserInfo>([
+      {
+        firstName: 'First name',
+        lastName: 'Last name',
+      },
+      {
+        firstName: 'Jäschke',
+        lastName: 'براتی',
+      },
+    ])(
+      'should pass the validation layer: %o',
+      async (updateUserInfoDto) => {
+        const user = getTempUser();
+        const { headers } = await login({
+          username: user.email,
+          password: user.password,
+        });
+
+        const { status, data } = await authApi.authControllerUpdateMe(
+          {
+            updateUserInfoDto,
+          },
+          {
+            headers,
+            validateStatus(statusCode) {
+              return statusCode >= 200;
+            },
+          },
+        );
+
+        expect(status).not.toEqual(400);
+      },
+    );
+
+    it.each<UpdateUserInfo>([
+      {
+        lastName: 'user!\name^',
+      },
+      {
+        firstName: '()ser Name',
+      },
+    ])(
+      'should not pass the validation layer: %o',
+      async (updateUserInfoDto) => {
+        const user = getTempUser();
+        const { headers } = await login({
+          username: user.email,
+          password: user.password,
+        });
+
+        const { status } = await authApi.authControllerUpdateMe(
+          {
+            updateUserInfoDto,
+          },
+          {
+            headers,
+            validateStatus(statusCode) {
+              return statusCode >= 200;
+            },
+          },
+        );
+
+        expect(status).toEqual(400);
       },
     );
   });

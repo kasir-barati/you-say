@@ -68,8 +68,7 @@
           "docker compose build",
           "docker compose up -d",
           "nx init:terraform backend -var-file=./dev.tfvars",
-          "nx apply:terraform backend -var-file=./dev.tfvars",
-          "nx apply:terraform backend -var-file=./dev.tfvars"
+          "for i in {1..2}; do nx apply:terraform backend -var-file=./dev.tfvars; done"
         ]
       }
     },

@@ -1,9 +1,9 @@
+import { RequestWithUser } from '@backend/common';
 import {
   createParamDecorator,
   ExecutionContext,
 } from '@nestjs/common';
 import { User } from '@shared';
-import { RequestWithUser } from '../types/request-with-user.type';
 
 export const GetUser = createParamDecorator(
   (key: string, ctx: ExecutionContext): User | unknown => {

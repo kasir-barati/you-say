@@ -1,6 +1,7 @@
 import {
   SinonMock,
   SinonMockType,
+  User,
   generateRandomString,
 } from '@shared';
 import { Response } from 'express';
@@ -137,6 +138,36 @@ describe('AuthController', () => {
       const result = controller.me(cookies);
 
       expect(result).rejects.toThrow(Error);
+    });
+  });
+
+  describe('PATCH /me', () => {
+    let user: User;
+
+    beforeEach(() => {
+      user = SinonMock.with<User>({ sub: '' });
+    });
+
+    it('should not blow up', async () => {
+      authService.updateMe.resolves();
+
+      const result = await controller.updateMe(user, {
+        firstName: 'ひなた',
+        lastName: 'たなか',
+      });
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should blow up when something bad happened in service', () => {
+      authService.updateMe.rejects();
+
+      const result = controller.updateMe(user, {
+        firstName: 'なると',
+        lastName: 'うずまき',
+      });
+
+      expect(result).rejects.toThrow();
     });
   });
 

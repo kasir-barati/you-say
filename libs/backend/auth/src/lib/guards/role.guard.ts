@@ -1,3 +1,4 @@
+import { RequestWithUser } from '@backend/common';
 import {
   CanActivate,
   ExecutionContext,
@@ -7,7 +8,6 @@ import { Reflector } from '@nestjs/core';
 import { Role } from '@shared';
 import { Observable } from 'rxjs';
 import { ROLES_KEY } from '../types/auth.type';
-import { RequestWithUser } from '../types/request-with-user.type';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

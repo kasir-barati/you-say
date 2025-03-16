@@ -260,11 +260,12 @@ data "httpclient_request" "set-default-tenant-theme" {
 resource "fusionauth_user" "you-say-admin-user" {
   tenant_id  = fusionauth_tenant.you-say-tenant.id
   email      = "admin@you-say.com"
-  username   = "admin"
   first_name = "Admin"
   last_name  = "Admin"
   password   = "adminadmin"
-  # data       = jsonencode({})
+  data = jsonencode({
+    username : "you_say_admin"
+  })
 }
 
 resource "fusionauth_registration" "you-say-admin-registration" {
@@ -275,13 +276,14 @@ resource "fusionauth_registration" "you-say-admin-registration" {
 resource "fusionauth_user" "you-say-temp-user" {
   tenant_id                = fusionauth_tenant.you-say-tenant.id
   email                    = "souma.kazuya@you-say.com"
-  username                 = "souma_kazuya"
-  first_name               = "Souma"
-  last_name                = "Kazuya"
+  first_name               = "そうま"
+  last_name                = "かずや"
   password                 = "souma.kazuya"
   skip_verification        = true
   password_change_required = false
-  # data       = jsonencode({})
+  data = jsonencode({
+    username : "souma_kazuya"
+  })
 }
 
 resource "fusionauth_registration" "you-say-temp-user-registration" {
@@ -305,7 +307,6 @@ data "httpclient_request" "create-super-admin-user" {
       "skipVerification" : true,
       "registration" : {
         "roles" : ["admin"],
-        "username" : "admin"
         "applicationId" : "${local.fusionauth_default_application_id}",
       }
       "user" : {
@@ -313,6 +314,9 @@ data "httpclient_request" "create-super-admin-user" {
         "password" : "adminadmin",
         "lastName" : "Admin"
         "firstName" : "Admin",
+        "data" : {
+          "username" : "super_admin"
+        }
       }
     }
   )
